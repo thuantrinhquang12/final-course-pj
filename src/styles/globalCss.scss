@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
+
+body {
+  margin: 0 auto;
+  font-family: 'Jost', sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  a:hover {
+    cursor: pointer;
+  }
+}
+code {
+  font-family: 'Jost', sans-serif;
+}
