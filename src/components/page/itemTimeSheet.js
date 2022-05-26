@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
-import LeaveModal from '../page/leaveModal/leaveModal'
+import ForgetModal from './forgetModal/forgetModal'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
@@ -10,10 +10,10 @@ const ItemTimeSheet = ({ row }) => {
   })
   const handleClickModal = (requestType) => {
     switch (requestType) {
-      case 'leave':
+      case 'forget':
         setIsOpen({
           ...isOpen,
-          isOpenLeave: !isOpen.isOpenLeave,
+          isOpenForget: !isOpen.isOpenForget,
         })
         break
       default:
@@ -38,19 +38,19 @@ const ItemTimeSheet = ({ row }) => {
       <button
         type="button"
         onClick={() => {
-          handleClickModal('leave')
+          handleClickModal('forget')
         }}
       >
-        Leave
+        Forget
       </button>
-      {isOpen.isOpenLeave && (
-        <LeaveModal
-          isOpen={isOpen.isOpenLeave}
+      {isOpen.isOpenForget && (
+        <ForgetModal
+          isOpen={isOpen.isOpenForget}
           row={row}
-          handleCloseLeave={() => {
+          handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
-        ></LeaveModal>
+        ></ForgetModal>
       )}
     </div>
   )
