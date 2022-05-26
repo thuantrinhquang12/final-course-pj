@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: '',
+  baseURL: 'https://628cae88a3fd714fd037179c.mockapi.io/',
 })
 
 const get = async (url, params = {}) => {
