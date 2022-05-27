@@ -1,7 +1,14 @@
 import axios from 'axios'
+import { LOCAL_STORAGE } from '../constant/localStorage'
+
+const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
 
 const instance = axios.create({
-  baseURL: '',
+  baseURL: process.env.REACT_APP_API_ENDPOINT,
+  headers: {
+    Authorization: 'Bearer ' + tokenAccess,
+  },
+  timeout: 5000,
 })
 
 const get = async (url, params = {}) => {

@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import reducerRegister from '../components'
+import reducerRegister from '../components/utils/ReducerRegister'
 
 export const store = configureStore({
   reducer: {
@@ -14,3 +14,5 @@ reducerRegister.setChangeListener((reducers) => {
     }),
   )
 })
+
+export default store
