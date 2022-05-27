@@ -7,7 +7,7 @@ const PrivateRoute = ({ allowedRoles }) => {
   const location = useLocation()
   // get role from Store and get Token from LOCAL_STORAGE
   const role = 'manager'
-  const auth = role === 'user' ? [1] : role === 'manager' ? [1, 2] : [3]
+  const auth = role === 'user' ? [1] : role === 'manager' ? [1, 2] : [1, 3]
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
   return auth?.find((role) => allowedRoles?.includes(role)) ? (
     <Outlet />

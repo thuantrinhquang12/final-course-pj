@@ -6,22 +6,23 @@ import popupNotice from '../../common/popupNotice/popupNotice'
 import { typePopup } from '../../index'
 import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { login } from './Slice/sliceLogin'
+// import { useDispatch } from 'react-redux'
+// import { login, loginAccess } from './Slice/sliceLogin'
 
 const Login = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   const onFinish = async (values) => {
     console.log(values)
 
     try {
-      useEffect(() => {
-        dispatch(login(values))
-      }, [dispatch])
+      // useEffect(() => {
+      //   const dataUser = login(values)
+      //   const { values } = dataUser
+      //   dispatch(loginAccess(dataUser))
+      // }, [dispatch])
       if (true) {
-        // get token, roles
         localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, true)
         popupNotice(typePopup.SUCCESS_MESSAGE, 'Success', 'Login Successful')
         navigate('/homepage', { replace: true })

@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { post } from '../../../service/requestApi'
 import ReducerRegister from '../../../utils/ReducerRegister'
 
 export const login = createAsyncThunk('user/login', async (data) => {
-  // const res = await CallApiLogin(data)
-  // return res
+  const res = await post(data)
+  return res
 })
 
 const userSlice = createSlice({
@@ -38,7 +39,7 @@ const userSlice = createSlice({
 
     builder.addCase(login.rejected, (state, action) => {
       state.isLoading = false
-      // state.errorMessage = action.payload.message
+      state.errorMessage = action.payload.message
     })
   },
 })
