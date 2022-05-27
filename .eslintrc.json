@@ -22,7 +22,8 @@
       "error",
       "after",
       { "overrides": { "?": "before", ":": "before" } }
-    ]
+    ],
+    "linebreak-style": 0
   },
   "settings": {
     "react": {
