@@ -1,4 +1,7 @@
 .ant-modal {
+  .ant-row {
+    margin-bottom: 20px;
+  }
   .ant-form-item-label {
     flex-basis: 20%;
     text-align: left;
@@ -11,15 +14,8 @@
 }
 @media (max-width: 767px) {
   .ant-modal {
-    max-width: 100%;
-    padding: 8px 10px;
-    .ant-form-item-label {
-      flex: 0 0 25%;
-      max-width: 100%;
-    }
-    .ant-col .ant-form-item-label {
-      flex-basis: 50%;
-    }
+    max-width: calc(100% - 16px) !important;
+    margin: auto !important;
     .ant-checkbox-wrapper + .ant-checkbox-wrapper {
       margin-left: 0;
     }
@@ -28,18 +24,6 @@
 
 @media (max-width: 575px) {
   .ant-modal {
-    .ant-form-item-label {
-      flex: 0 0 30% !important;
-      max-width: 100%;
-    }
-
-    .ant-form-item-control {
-      flex: 0 0 70% !important;
-      max-width: 100%;
-    }
-    .ant-col .ant-form-item-control {
-      flex: unset !important;
-    }
     .ant-col .ant-form-item-label {
       flex: 0 0 60% !important;
     }
