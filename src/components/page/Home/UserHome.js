@@ -1,10 +1,14 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import ChangePassword from '../ChangePassword/ChangePassword'
 
 const UserHome = () => {
+  const data = useSelector((state) => state.userInfo?.currentUser?.role)
+  console.log(data)
   return (
-    <div>
-      <h1>Đây là trang của Người dùng</h1>
-    </div>
+    <>
+      <ChangePassword />
+    </>
   )
 }
 

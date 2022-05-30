@@ -6,27 +6,29 @@ import popupNotice from '../../common/popupNotice/popupNotice'
 import { typePopup } from '../../index'
 import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
-// import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 // import { login, loginAccess } from './Slice/sliceLogin'
+import { loginAccess } from './Slice/sliceLogin'
 
 const Login = () => {
   const navigate = useNavigate()
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
   const onFinish = async (values) => {
     console.log(values)
-
+    // call APi xong trả dataTest + truy cập vào trang Home
+    const dataTest = {
+      role: 'admin',
+      tokenAccess: 'This is Token Access',
+    }
     try {
-      // useEffect(() => {
-      //   const dataUser = login(values)
-      //   const { values } = dataUser
-      //   dispatch(loginAccess(dataUser))
-      // }, [dispatch])
-      if (true) {
-        localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, true)
-        popupNotice(typePopup.SUCCESS_MESSAGE, 'Success', 'Login Successful')
-        navigate('/homepage', { replace: true })
-      }
+      await dispatch(
+        loginAccess({ role: dataTest.role, tokenAccess: dataTest.tokenAccess }),
+      )
+      localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, dataTest.tokenAccess)
+      localStorage.setItem(LOCAL_STORAGE.ROLE, dataTest.role)
+      popupNotice(typePopup.SUCCESS_MESSAGE, 'Success', 'Login Successful')
+      navigate('/', { replace: true })
     } catch (e) {
       popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Login Failed')
     }

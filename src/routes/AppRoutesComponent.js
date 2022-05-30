@@ -7,13 +7,30 @@ import UserHome from '../components/page/Home/UserHome'
 import Unauthorized from '../components/page/Home/Unauthorized'
 import Admin from '../components/page/Home/Admin'
 import ErrorPage from '../components/page/Home/ErrorPage'
+import { LOCAL_STORAGE } from '../components/constant/localStorage'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
 
 const AppRoutesComponent = () => {
+  const dispatch = useDispatch()
+
   const ROLES = {
     User: 1,
     Manager: 2,
     Admin: 3,
   }
+
+  const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+  const data = useSelector((state) => state.userInfo?.currentUser?.role)
+
+  if (tokenAccess && !data) {
+    const data = {
+      role: localStorage.getItem(LOCAL_STORAGE.ROLE),
+    }
+    dispatch(loginAccess({ role: data.role }))
+  }
+
+  console.log('app route')
 
   return (
     <>
