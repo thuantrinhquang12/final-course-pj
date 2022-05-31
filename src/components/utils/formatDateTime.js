@@ -1,8 +1,8 @@
 import moment from 'moment'
 
-const formatDateTimeType = 'YYYY-MM-DD H:mm:s'
-const formatTimeType = 'H:mm'
-const formatDateType = 'YYYY-MM-DD'
+export const formatDateTimeType = 'YYYY-MM-DD H:mm:s'
+export const formatTimeType = 'H:mm'
+export const formatDateType = 'YYYY-MM-DD'
 
 export const formatDateTime = (value) => {
   return moment(value).format(formatDateTimeType)
@@ -16,4 +16,8 @@ export const formatDate = (value) => {
 
 export const formatTimestampToDate = (value) => {
   return moment.unix(value).format(formatDateType)
+}
+
+export const momentType = (value) => {
+  return moment(value, formatTimeType)
 }

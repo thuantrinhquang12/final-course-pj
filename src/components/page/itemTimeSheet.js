@@ -28,7 +28,7 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>{moment.unix(row.date).format('MM/DD/YYYY')}</div>
+      <div>{moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
       <div>{moment(row.check_in).format('hh:mm:ss a')}</div>
       <div>{moment(row.check_out).format('hh:mm:ss a')}</div>
       <div>{row.late}</div>
