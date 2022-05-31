@@ -2,15 +2,6 @@
   .ant-row {
     margin-bottom: 20px;
   }
-  .ant-form-item-label {
-    flex-basis: 20%;
-    text-align: left;
-    overflow: unset;
-    white-space: nowrap;
-  }
-  .ant-col .ant-form-item-label {
-    flex-basis: 40%;
-  }
 }
 @media (max-width: 767px) {
   .ant-modal {
@@ -18,14 +9,6 @@
     margin: auto !important;
     .ant-checkbox-wrapper + .ant-checkbox-wrapper {
       margin-left: 0;
-    }
-  }
-}
-
-@media (max-width: 575px) {
-  .ant-modal {
-    .ant-col .ant-form-item-label {
-      flex: 0 0 60% !important;
     }
   }
 }
