@@ -1,12 +1,32 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import styles from './index.module.scss'
 import Cat from './CrazyCat.jpg'
 import PropTypes from 'prop-types'
 
 const UserList = ({ open }) => {
+  const modalRef = useRef(null)
+
+  useEffect(() => {
+    const modal = modalRef.current
+
+    const handleClick = (e) => {
+      e.stopPropagation()
+    }
+
+    if (modal) {
+      modal.addEventListener('click', handleClick)
+    }
+
+    return () => {
+      if (modal) {
+        modal.removeEventListener('click', handleClick)
+      }
+    }
+  }, [open])
+
   if (!open) return null
   return (
-    <div className={styles.UserList}>
+    <div className={styles.UserList} ref={modalRef}>
       <div className={styles.UserHeader}>
         <div className={styles.UserHeader__Image}>
           <img src={Cat} alt="CrazyCat" />
