@@ -6,11 +6,10 @@ export const SUCCESS_MESSAGE = 'success'
 export const SUCCESS_WARNING = 'warning'
 export const SUCCESS_INFO = 'info'
 
-const popupNotice = (type, message, description) => {
+export const popupNotice = (type, message, description, duration) => {
   notification[type]({
-    message: message,
-    description: description,
+    message,
+    description,
+    duration,
   })
 }
-
-export default popupNotice
