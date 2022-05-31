@@ -1,119 +1,333 @@
 /* eslint-disable react/prop-types */
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
+import { useForm, Controller } from 'react-hook-form'
+import { useDispatch, useSelector } from 'react-redux'
 import {
-  Form,
+  TimePicker,
   Input,
   Divider,
   Button,
-  TimePicker,
-  Space,
+  Checkbox,
   Radio,
   Row,
+  Space,
   Col,
+  Skeleton,
 } from 'antd'
-import { Dialog } from '../../index'
-// import styles from './leaveModal.module.scss'
+import {
+  getRequests,
+  postRequests,
+  putRequests,
+  deleteRequests,
+} from './requestSlice'
+import {
+  Dialog,
+  dateTime,
+  statusRequest,
+  typeRequest,
+  getDateTime,
+} from '../../index'
 
-const format = 'HH:mm'
+const format = 'H:mm'
+import styles from './leaveModal.module.scss'
+
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
-  const currentDate = new Date()
-  if (!isOpen) return null
+  const [requestExists, setRequestExists] = useState(false)
+  const [leaveStart, setLeaveStart] = useState('08:00')
+  const [leaveEnd, setLeaveEnd] = useState('17:00')
+  const [timeCount, setTimeCount] = useState()
+  const currentTime = useRef(getDateTime.getCurrentTime())
+  const { handleSubmit, control, setValue } = useForm()
+  const dispatch = useDispatch()
+  const { request, status, message } = useSelector((state) => state.requests)
+  console.log(message)
+  useEffect(() => {
+    if (row.requests.length !== 0) {
+      for (const request of row.requests) {
+        if (
+          request.request_type === typeRequest.REQUEST_LEAVE_PAID ||
+          request.request_type === typeRequest.REQUEST_LEAVE_UNPAID
+        ) {
+          setRequestExists(true)
+          dispatch(getRequests(request.request_id))
+          break
+        }
+      }
+    }
+  }, [])
+  useEffect(() => {
+    if (Object.keys(request).length !== 0) {
+      setValue(
+        'checkboxLeaveAllDay',
+        request.leave_all_day === typeRequest.LEAVE_ALL_DAY
+          ? [typeRequest.LEAVE_ALL_DAY]
+          : [],
+      )
+      setValue(
+        'radioPaid',
+        request.request_type === typeRequest.REQUEST_LEAVE_PAID
+          ? 'paid'
+          : request.request_type === typeRequest.REQUEST_LEAVE_UNPAID
+          ? 'unpaid'
+          : '',
+      )
+      setValue('inputReason', request.reason)
+      setLeaveStart(request?.leave_start)
+      setLeaveEnd(request?.leave_end)
+    }
+  }, [request])
+  useEffect(() => {
+    if (leaveStart && leaveEnd) {
+      const start = moment(leaveStart, format)
+      const end = moment(leaveEnd, format)
+      const millisecond = end.diff(start, 'millisecond')
+      const timeCount = moment()
+        .hour(0)
+        .minute(0)
+        .millisecond(millisecond)
+        .format('H:mm')
+      setTimeCount(timeCount)
+    }
+  }, [leaveStart, leaveEnd])
+
+  const handleOnChange = (values, timeString) => {
+    const [leaveStart, leaveEnd] = timeString
+    setLeaveStart(leaveStart)
+    setLeaveEnd(leaveEnd)
+  }
+  const handleCloseModal = () => {
+    handleCloseLeave()
+    dispatch(getRequests(-1))
+  }
+  const onSubmit = async (values, e) => {
+    const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
+    switch (buttonSubmit) {
+      case 'REGISTER':
+        const newRequest = {
+          request_type:
+            values.radioPaid == 'paid'
+              ? typeRequest.REQUEST_LEAVE_PAID
+              : values.radioPaid == 'unpaid'
+              ? typeRequest.REQUEST_LEAVE_UNPAID
+              : '',
+          leave_start: leaveStart,
+          leave_end: leaveEnd,
+          request_for_date: dateTime.formatTimestampToDate(row.work_date),
+          leave_all_day: !!values.checkboxLeaveAllDay
+            ? typeRequest.LEAVE_ALL_DAY
+            : typeRequest.LEAVE_BY_RANGE,
+          reason: values.inputReason,
+          status: statusRequest.SEND,
+          created_at: currentTime.current,
+        }
+        setRequestExists(true)
+        await dispatch(postRequests(newRequest))
+        break
+      case 'UPDATE':
+        const updateRequest = {
+          request_type:
+            values.radioPaid == 'paid'
+              ? typeRequest.REQUEST_LEAVE_PAID
+              : values.radioPaid == 'unpaid'
+              ? typeRequest.REQUEST_LEAVE_UNPAID
+              : '',
+          leave_start: leaveStart,
+          leave_end: leaveEnd,
+          leave_all_day: !!values.checkboxLeaveAllDay.length
+            ? typeRequest.LEAVE_ALL_DAY
+            : typeRequest.LEAVE_BY_RANGE,
+          reason: values.inputReason,
+          update_at: currentTime.current,
+        }
+        await dispatch(
+          putRequests({ id: request.id, requestData: updateRequest }),
+        )
+        break
+      case 'DELETE':
+        await dispatch(deleteRequests(request.id))
+        break
+      default:
+        throw new Error('CO loi roi dmm')
+    }
+  }
   return (
     <Dialog
       isOpen={isOpen}
-      handleModal={handleCloseLeave}
+      handleModal={handleCloseModal}
       title="Register Leave"
     >
       <>
-        <Form
-          name="leave"
-          initialValues={
-            {
-              // 'input-number': 3,
-            }
-          }
-        >
-          <Form.Item label="Resgistration: ">
-            <span className="ant-form-text">
-              {moment(currentDate).format('YYYY-MM-DD h:mm')}
-            </span>
-          </Form.Item>
-          <Form.Item label="Resgister for date: ">
-            <span className="ant-form-text">
-              {moment.unix(row.date).format('YYYY-MM-DD')}
-            </span>
-          </Form.Item>
-          <Row>
-            <Col span={12}>
-              <Form.Item label="Check-in">
-                <span className="ant-form-text">
-                  {moment(row.check_in).format('hh:mm')}
-                </span>
-              </Form.Item>
-              <Form.Item label="Check-out" className>
-                <span className="ant-form-text">
-                  {moment(row.check_out).format('hh:mm')}
-                </span>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="Work time:">
-                <span className="ant-form-text">
-                  {moment(row.check_in).format('hh:mm')}
-                </span>
-              </Form.Item>
-              <Form.Item label="Lack time: ">
-                <span className="ant-form-text">
-                  {moment(row.check_out).format('hh:mm')}
-                </span>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item label="Ranger">
-            <Space style={{ flexWrap: 'wrap' }}>
-              <TimePicker
-                defaultValue={moment('08:00', format)}
-                format={format}
-                style={{
-                  width: '100px',
-                  marginRight: '10px',
-                  maxWidth: '100%',
-                }}
-              />
-              <span> to </span>
-              <TimePicker
-                defaultValue={moment('17:00', format)}
-                format={format}
-                style={{
-                  width: '100px',
-                  marginRight: '10px',
-                  maxWidth: '100%',
-                }}
-              />
-              <Radio.Group style={{ display: 'flex', flexDirection: 'column' }}>
-                <Radio value="paid">Paid</Radio>
-                <Radio value="unpaid">Unpaid</Radio>
-              </Radio.Group>
-              <span>| time count: 01:00 </span>
-            </Space>
-          </Form.Item>
-          <Form.Item label="Reason  ">
-            <Input.TextArea rows={4} />
-          </Form.Item>
-          <Divider>
-            <Space>
-              <Button>Register</Button>
-              <Button>Cancel</Button>
-            </Space>
-          </Divider>
-        </Form>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {status === 'loading' ? (
+            <Skeleton paragraph={{ rows: 10 }}></Skeleton>
+          ) : (
+            <>
+              <Row>
+                <Col flex="150px">Registration: </Col>
+                <Col flex="auto">
+                  {request?.create_at || currentTime.current}
+                </Col>
+              </Row>
+              <Row>
+                <Col flex="150px">Register for date: </Col>
+                <Col flex="auto">
+                  {dateTime.formatTimestampToDate(row.work_date)}
+                </Col>
+              </Row>
+              <Row>
+                <div className={styles.groupCol}>
+                  <Col flex="150px">Check-in: </Col>
+                  <Col flex="auto">
+                    {dateTime.formatTime(row?.checkin_original)}
+                  </Col>
+                </div>
+                <div className={styles.groupCol}>
+                  <Col flex="150px">Check-out: </Col>
+                  <Col flex="auto">
+                    {dateTime.formatTime(row?.checkout_original)}
+                  </Col>
+                </div>
+              </Row>
+              <Row>
+                <div className={styles.groupCol}>
+                  <Col flex="150px">Work time: </Col>
+                  <Col flex="auto">{dateTime.formatTime(row?.work_time)}</Col>
+                </div>
+                <div className={styles.groupCol}>
+                  <Col flex="150px">Lack time: </Col>
+                  <Col flex="auto">{dateTime.formatTime(row?.lack_time)}</Col>
+                </div>
+              </Row>
+              <Row>
+                <Col flex="auto">
+                  <Controller
+                    name="checkboxLeaveAllDay"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Checkbox.Group {...field}>
+                          <Checkbox value={typeRequest.LEAVE_ALL_DAY}>
+                            Leave All Day
+                          </Checkbox>
+                        </Checkbox.Group>
+                      </>
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
+                <Col flex="150px">Range</Col>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <div>
+                    <Col flex="auto">
+                      <TimePicker.RangePicker
+                        disabled={
+                          request.status === statusRequest.CONFIRMED ||
+                          request.status === statusRequest.APPROVED
+                            ? true
+                            : false
+                        }
+                        showTime={{
+                          defaultValue:
+                            Object.keys(request).length !== 0
+                              ? [
+                                  moment(request.leave_start, format),
+                                  moment(request.leave_end, format),
+                                ]
+                              : [
+                                  moment('08:00', format),
+                                  moment('17:00', format),
+                                ],
+                        }}
+                        onChange={handleOnChange}
+                        format={format}
+                        style={{
+                          width: '201px',
+                          marginRight: '10px',
+                          maxWidth: '100%',
+                        }}
+                      />
+                    </Col>
+                  </div>
+                  <div>
+                    <Controller
+                      name="radioPaid"
+                      control={control}
+                      render={({ field }) => (
+                        <>
+                          <Radio.Group {...field}>
+                            <Radio value={'paid'}>Paid</Radio>
+                            <Radio value={'unpaid'}>Unpaid</Radio>
+                          </Radio.Group>
+                        </>
+                      )}
+                    />
+                  </div>
+                  <div>| TimeCount: {timeCount}</div>
+                </div>
+              </Row>
+              <Row>
+                <Col flex="150px">Reason</Col>
+                <Col flex="100%">
+                  <Controller
+                    name="inputReason"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input.TextArea
+                          rows={4}
+                          disabled={
+                            request.status === statusRequest.CONFIRMED ||
+                            request.status === statusRequest.APPROVED
+                              ? true
+                              : false
+                          }
+                          {...field}
+                        />
+                      </>
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Divider>
+                <Space>
+                  {!requestExists && (
+                    <Button name="register" htmlType="submit">
+                      Register
+                    </Button>
+                  )}
+                  {requestExists &&
+                    request.status !== statusRequest.APPROVED &&
+                    request.status !== statusRequest.CONFIRMED && (
+                      <>
+                        <Button name="update" htmlType="submit">
+                          Update
+                        </Button>
+                        <Button name="delete" htmlType="submit">
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  <Button onClick={handleCloseModal}>Cancel</Button>
+                </Space>
+              </Divider>
+            </>
+          )}
+        </form>
       </>
     </Dialog>
   )
 }
 LeaveModal.propTypes = {
   isOpen: PropTypes.bool,
+  handleCloseLeave: PropTypes.func,
 }
 export default LeaveModal

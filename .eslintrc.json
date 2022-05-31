@@ -18,7 +18,8 @@
     "semi": ["error", "never"],
     "indent": "off",
     "require-jsdoc": "off",
-    "linebreak-style": 0
+    "linebreak-style": "off",
+    "operator-linebreak": "off"
   },
   "settings": {
     "react": {
