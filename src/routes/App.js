@@ -1,12 +1,12 @@
 import React from 'react'
 import '../styles/reset.scss'
 import '../styles/globalCss.scss'
-import SearchField from '../timesheet/Search-field'
+import AppRoutesComponent from './AppRoutesComponent'
 
 const App = () => {
   return (
     <>
-      <SearchField />
+      <AppRoutesComponent />
     </>
   )
 }
