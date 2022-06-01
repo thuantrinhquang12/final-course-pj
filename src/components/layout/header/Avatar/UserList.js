@@ -1,10 +1,8 @@
 import React from 'react'
 import styles from './index.module.scss'
 import Cat from './CrazyCat.jpg'
-import PropTypes from 'prop-types'
 
-const UserList = ({ open }) => {
-  if (!open) return null
+const UserList = () => {
   return (
     <div className={styles.UserList}>
       <div className={styles.UserHeader}>
@@ -29,10 +27,6 @@ const UserList = ({ open }) => {
       </div>
     </div>
   )
-}
-
-UserList.propTypes = {
-  open: PropTypes.bool,
 }
 
 export default UserList
