@@ -1,13 +1,7 @@
-/* eslint-disable react/prop-types */
-
-/* Xử lý khi người dùng hết lượt request
-Xử lý khi request tồn tại và set default valute cho checkbox
-Khi gui request set request da ton tai, va tim cach de lay dc
-request ngay luc do de có thể update luôn
-Xử lý lấy dữ liệu của check box specialReason khi request tòn tại
- */
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -26,7 +20,7 @@ import {
   postRequests,
   putRequests,
   deleteRequests,
-} from '../requestSlice'
+} from './requestSlice'
 import {
   Dialog,
   typeRequest,
@@ -34,15 +28,34 @@ import {
   getDateTime,
   dateTime,
 } from '../../index'
-// import styles from './forgetModal.module.scss'
+import styles from './forgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
   const currentTime = useRef(getDateTime.getCurrentTime())
-  const { handleSubmit, control, setValue } = useForm()
   const dispatch = useDispatch()
+
+  const schema = yup.object().shape({
+    reasonInput: yup
+      .string()
+      .required('Please enter reason')
+      .max(100, 'Please enter not too 100 characters'),
+    checkInTime: yup.date().nullable().required('Please enter check-in'),
+    checkOutTime: yup.date().nullable().required('Please enter check-out'),
+  })
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
+
   const { request, status, message } = useSelector((state) => state.requests)
   console.log(message)
+
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('checkInTime', dateTime.momentType(request.check_in))
@@ -71,7 +84,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_type: typeRequest.REQUEST_FORGET,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          request_for_date: dateTime.formatDate(row.date),
+          request_for_date: dateTime.formatDate(row.work_date),
           error_count: +!!values.specialReason,
           reason: values.reason,
           status: statusRequest.SEND,
@@ -96,7 +109,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
         await dispatch(deleteRequests(request.id))
         break
       default:
-        throw new Error('CO loi roi dmm')
+        throw new Error('An error occurred')
     }
   }
 
@@ -137,21 +150,28 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     defaultValue={dateTime.momentType('08:00')}
                     control={control}
                     render={({ field }) => (
-                      <TimePicker
-                        disabled={
-                          request.status === statusRequest.CONFIRMED ||
-                          request.status === statusRequest.APPROVED
-                            ? true
-                            : false
-                        }
-                        format={dateTime.formatTimeType}
-                        style={{
-                          width: '100px',
-                          marginRight: '10px',
-                          maxWidth: '100%',
-                        }}
-                        {...field}
-                      />
+                      <>
+                        <TimePicker
+                          disabled={
+                            request.status === statusRequest.CONFIRMED ||
+                            request.status === statusRequest.APPROVED
+                              ? true
+                              : false
+                          }
+                          format={dateTime.formatTimeType}
+                          style={{
+                            width: '100px',
+                            marginRight: '10px',
+                            maxWidth: '100%',
+                          }}
+                          {...field}
+                        />
+                        {errors.checkOutTime && (
+                          <span className={styles.errorField}>
+                            {errors.checkInTime?.message}
+                          </span>
+                        )}
+                      </>
                     )}
                   />
                   <span className="ant-form-text">
@@ -167,17 +187,24 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     defaultValue={dateTime.momentType('17:00')}
                     control={control}
                     render={({ field }) => (
-                      <TimePicker
-                        disabled={
-                          request.status === statusRequest.CONFIRMED ||
-                          request.status === statusRequest.APPROVED
-                            ? true
-                            : false
-                        }
-                        format={dateTime.formatTimeType}
-                        style={{ width: '100px', marginRight: '10px' }}
-                        {...field}
-                      />
+                      <>
+                        <TimePicker
+                          disabled={
+                            request.status === statusRequest.CONFIRMED ||
+                            request.status === statusRequest.APPROVED
+                              ? true
+                              : false
+                          }
+                          format={dateTime.formatTimeType}
+                          style={{ width: '100px', marginRight: '10px' }}
+                          {...field}
+                        />
+                        {errors.checkOutTime && (
+                          <span className={styles.errorField}>
+                            {errors.checkOutTime?.message}
+                          </span>
+                        )}
+                      </>
                     )}
                   />
                   <span className="ant-form-text">
@@ -192,24 +219,26 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     name="specialReason"
                     control={control}
                     render={({ field }) => (
-                      <Checkbox.Group
-                        disabled={
-                          request.status === statusRequest.CONFIRMED ||
-                          request.status === statusRequest.APPROVED
-                            ? true
-                            : false
-                        }
-                        {...field}
-                      >
-                        <Row style={{ marginBottom: 0 }}>
-                          <Checkbox value={1}>
-                            Check-in not counted as error
-                          </Checkbox>
-                          <Checkbox value={0}>
-                            Check-out not counted as error
-                          </Checkbox>
-                        </Row>
-                      </Checkbox.Group>
+                      <>
+                        <Checkbox.Group
+                          disabled={
+                            request.status === statusRequest.CONFIRMED ||
+                            request.status === statusRequest.APPROVED
+                              ? true
+                              : false
+                          }
+                          {...field}
+                        >
+                          <Row style={{ marginBottom: 0 }}>
+                            <Checkbox value={1}>
+                              Check-in not counted as error
+                            </Checkbox>
+                            <Checkbox value={0}>
+                              Check-out not counted as error
+                            </Checkbox>
+                          </Row>
+                        </Checkbox.Group>
+                      </>
                     )}
                   />
                 </Col>
@@ -237,6 +266,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                             }
                             {...field}
                           />
+                          {errors.reasonInput && (
+                            <span className={styles.errorField}>
+                              {errors.reasonInput?.message}
+                            </span>
+                          )}
                         </>
                       )}
                     />
@@ -275,5 +309,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 ForgetModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseForget: PropTypes.func,
+  // row: PropTypes.shape({
+  //   requests: PropTypes.array,
+  //   work_date: PropTypes.string,
+  //   check_in: PropTypes.string,
+  //   check_out: PropTypes.string,
+  // }),
 }
 export default ForgetModal

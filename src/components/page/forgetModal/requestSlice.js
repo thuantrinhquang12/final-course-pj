@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import ReducerRegistry from '../../store/ReducerRegister'
-import { get, post, put, del } from '../service/requestApi'
+import ReducerRegistry from '../../../store/ReducerRegister'
+import { get, post, put, del } from '../../service/requestApi'
 
 export const getRequests = createAsyncThunk(
   'requests/getRequests',
@@ -50,13 +50,13 @@ const requestsSlice = createSlice({
       state.status = 'failed'
     },
     [postRequests.fulfilled]: (state, action) => {
-      state.message = 'Tạo request thanh cong'
+      state.message = 'Create request successfully'
     },
     [putRequests.fulfilled]: (state, action) => {
-      state.message = 'Sua thanh cong'
+      state.message = 'Edit request successfully'
     },
     [deleteRequests.fulfilled]: (state, action) => {
-      state.message = 'Xoá thanh cong'
+      state.message = 'Delete request successfully'
     },
   },
 })
