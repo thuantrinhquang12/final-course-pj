@@ -2,18 +2,26 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/forgetModal'
+import LeaveModal from './leaveModal/leaveModal'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
   })
-  const handleClickModal = (requestType) => {
-    switch (requestType) {
-      case 'forget':
+  const handleClickModal = (type) => {
+    const modalType = type.toUpperCase()
+    switch (modalType) {
+      case 'FORGET':
         setIsOpen({
           ...isOpen,
           isOpenForget: !isOpen.isOpenForget,
+        })
+        break
+      case 'LEAVE':
+        setIsOpen({
+          ...isOpen,
+          isOpenLeave: !isOpen.isOpenLeave,
         })
         break
       default:
@@ -43,6 +51,14 @@ const ItemTimeSheet = ({ row }) => {
       >
         Forget
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('leave')
+        }}
+      >
+        Leave
+      </button>
       {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={isOpen.isOpenForget}
@@ -51,6 +67,15 @@ const ItemTimeSheet = ({ row }) => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
         ></ForgetModal>
+      )}
+      {isOpen.isOpenLeave && (
+        <LeaveModal
+          isOpen={isOpen.isOpenLeave}
+          row={row}
+          handleCloseLeave={() => {
+            setIsOpen((isOpen.isOpenLeave = false))
+          }}
+        ></LeaveModal>
       )}
     </div>
   )
