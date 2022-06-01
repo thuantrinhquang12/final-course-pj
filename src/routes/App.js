@@ -1,13 +1,15 @@
 import React from 'react'
 import '../styles/reset.scss'
 import '../styles/globalCss.scss'
-import AppRoutesComponent from './AppRoutesComponent'
+import Header from '../components/layout/header/index'
+
+import Home from '../components/page/Home/index/index'
 
 const App = () => {
-  ;``
   return (
     <>
-      <AppRoutesComponent />
+      <Header />
+      <Home />
     </>
   )
 }
