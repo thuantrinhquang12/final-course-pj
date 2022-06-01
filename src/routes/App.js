@@ -8,9 +8,7 @@ import Worksheet from '../components/page'
 const App = () => {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Worksheet />} />
-      </Routes>
+      <AppRoutesComponent />
     </>
   )
 }
