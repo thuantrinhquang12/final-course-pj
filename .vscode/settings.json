@@ -5,7 +5,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.configPath": ".prettierrc.json",
   "editor.formatOnSave": true,
-  // "eslint.autoFixOnSave": true,
+  "eslint.autoFixOnSave": true,
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
