@@ -2,6 +2,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -29,8 +31,6 @@ import {
   typeRequest,
   getDateTime,
 } from '../../index'
-
-const format = 'H:mm'
 import styles from './leaveModal.module.scss'
 
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
@@ -39,10 +39,28 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [leaveEnd, setLeaveEnd] = useState('17:00')
   const [timeCount, setTimeCount] = useState()
   const currentTime = useRef(getDateTime.getCurrentTime())
-  const { handleSubmit, control, setValue } = useForm()
   const dispatch = useDispatch()
+
+  const schema = yup.object().shape({
+    reasonInput: yup
+      .string()
+      .required('Please enter reason')
+      .max(100, 'Please enter not too 100 characters'),
+    checkInTime: yup.date().nullable().required('Please enter check-in'),
+    checkOutTime: yup.date().nullable().required('Please enter check-out'),
+  })
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
+
   const { request, status, message } = useSelector((state) => state.requests)
   console.log(message)
+
   useEffect(() => {
     if (row.requests.length !== 0) {
       for (const request of row.requests) {
@@ -57,6 +75,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       }
     }
   }, [])
+
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue(
@@ -73,15 +92,16 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           ? 'unpaid'
           : '',
       )
-      setValue('inputReason', request.reason)
+      setValue('reasonInput', request.reason)
       setLeaveStart(request?.leave_start)
       setLeaveEnd(request?.leave_end)
     }
   }, [request])
+
   useEffect(() => {
     if (leaveStart && leaveEnd) {
-      const start = moment(leaveStart, format)
-      const end = moment(leaveEnd, format)
+      const start = moment(leaveStart, dateTime.formatTimeType)
+      const end = moment(leaveEnd, dateTime.formatTimeType)
       const millisecond = end.diff(start, 'millisecond')
       const timeCount = moment()
         .hour(0)
@@ -97,10 +117,12 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     setLeaveStart(leaveStart)
     setLeaveEnd(leaveEnd)
   }
+
   const handleCloseModal = () => {
     handleCloseLeave()
     dispatch(getRequests(-1))
   }
+
   const onSubmit = async (values, e) => {
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
@@ -118,7 +140,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           leave_all_day: !!values.checkboxLeaveAllDay
             ? typeRequest.LEAVE_ALL_DAY
             : typeRequest.LEAVE_BY_RANGE,
-          reason: values.inputReason,
+          reason: values.reasonInput,
           status: statusRequest.SEND,
           created_at: currentTime.current,
         }
@@ -138,7 +160,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           leave_all_day: !!values.checkboxLeaveAllDay.length
             ? typeRequest.LEAVE_ALL_DAY
             : typeRequest.LEAVE_BY_RANGE,
-          reason: values.inputReason,
+          reason: values.reasonInput,
           update_at: currentTime.current,
         }
         await dispatch(
@@ -149,7 +171,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
         await dispatch(deleteRequests(request.id))
         break
       default:
-        throw new Error('CO loi roi dmm')
+        throw new Error('An error occurred')
     }
   }
   return (
@@ -173,7 +195,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               <Row>
                 <Col flex="150px">Register for date: </Col>
                 <Col flex="auto">
-                  {dateTime.formatTimestampToDate(row.work_date)}
+                  {dateTime.formatTimestampToDate(row?.work_date)}
                 </Col>
               </Row>
               <Row>
@@ -239,16 +261,22 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                           defaultValue:
                             Object.keys(request).length !== 0
                               ? [
-                                  moment(request.leave_start, format),
-                                  moment(request.leave_end, format),
+                                  moment(
+                                    request?.leave_start,
+                                    dateTime.formatTimeType,
+                                  ),
+                                  moment(
+                                    request?.leave_end,
+                                    dateTime.formatTimeType,
+                                  ),
                                 ]
                               : [
-                                  moment('08:00', format),
-                                  moment('17:00', format),
+                                  moment('08:00', dateTime.formatTimeType),
+                                  moment('17:00', dateTime.formatTimeType),
                                 ],
                         }}
                         onChange={handleOnChange}
-                        format={format}
+                        format={dateTime.formatTimeType}
                         style={{
                           width: '201px',
                           marginRight: '10px',
@@ -278,7 +306,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                 <Col flex="150px">Reason</Col>
                 <Col flex="100%">
                   <Controller
-                    name="inputReason"
+                    name="reasonInput"
                     control={control}
                     render={({ field }) => (
                       <>
@@ -292,6 +320,11 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                           }
                           {...field}
                         />
+                        {errors.reasonInput && (
+                          <span className={styles.errorField}>
+                            {errors.reasonInput?.message}
+                          </span>
+                        )}
                       </>
                     )}
                   />
@@ -329,5 +362,11 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 LeaveModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseLeave: PropTypes.func,
+  // row: PropTypes.shape({
+  //   requests: PropTypes.array,
+  //   work_date: PropTypes.string,
+  //   check_in: PropTypes.string,
+  //   check_out: PropTypes.string,
+  // }),
 }
 export default LeaveModal
