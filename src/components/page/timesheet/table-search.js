@@ -4,6 +4,7 @@ import 'antd/dist/antd.css'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import { Button, Space } from 'antd'
 
 function TableTimeSheet() {
   const [loading, setLoading] = useState(false)
@@ -32,64 +33,75 @@ function TableTimeSheet() {
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Check in',
       dataIndex: 'checkin',
       render: (date) => moment(date).format('DD/MM/YYYY'),
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Check out',
       dataIndex: 'checkout',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Late',
       dataIndex: 'late',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Early',
       dataIndex: 'early',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'In Office',
       dataIndex: 'inoffice',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Ot',
       dataIndex: 'ot',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Work time',
       dataIndex: 'worktime',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Lack',
       dataIndex: 'lack',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Comp',
       dataIndex: 'comp',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Pleave',
       dataIndex: 'pleave',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'U leave',
       dataIndex: 'uleave',
     },
     {
       key: '3',
-      title: 'Uabc',
+      title: 'Note',
       dataIndex: 'note',
+    },
+    {
+      key: '11',
+      title: 'Action',
+      render: (_, actions) => (
+        <Space size="middle">
+          <Button>Forget</Button>
+          <Button>Late/Early</Button>
+          <Button>Leave</Button>
+        </Space>
+      ),
     },
   ]
   return (
