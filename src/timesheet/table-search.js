@@ -1,3 +1,4 @@
+import React from 'react'
 import { Table } from 'antd'
 import 'antd/dist/antd.css'
 import { useEffect, useState } from 'react'
@@ -6,6 +7,7 @@ import moment from 'moment'
 
 function TableTimeSheet() {
   const [loading, setLoading] = useState(false)
+  console.log(loading)
   const [dataTable, setDataTable] = useState([])
   useEffect(() => {
     setLoading(true)
