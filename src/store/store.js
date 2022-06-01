@@ -14,3 +14,5 @@ reducerRegister.setChangeListener((reducers) => {
     }),
   )
 })
+
+export default store

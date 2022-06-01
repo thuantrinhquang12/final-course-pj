@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './index.module.scss'
 import Cat from './CrazyCat.jpg'
+import ChangePassword from '../../../page/ChangePassword/ChangePassword'
 
 const UserList = () => {
   return (
@@ -18,7 +19,7 @@ const UserList = () => {
         </div>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-key"></i>
-          <h3>Change Password</h3>
+          <ChangePassword />
         </div>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-arrow-right-from-bracket"></i>
