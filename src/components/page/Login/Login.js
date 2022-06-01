@@ -2,7 +2,6 @@ import React from 'react'
 import { Form, Input, Button } from 'antd'
 import 'antd/dist/antd.min.css'
 import styles from './Login.module.scss'
-import popupNotice from '../../common/popupNotice/popupNotice'
 import { typePopup } from '../../index'
 import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +17,7 @@ const Login = () => {
     console.log(values)
     // call APi xong trả dataTest + truy cập vào trang Home
     const dataTest = {
-      role: 'admin',
+      role: 'manager',
       tokenAccess: 'This is Token Access',
     }
     try {
@@ -27,10 +26,14 @@ const Login = () => {
       )
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, dataTest.tokenAccess)
       localStorage.setItem(LOCAL_STORAGE.ROLE, dataTest.role)
-      popupNotice(typePopup.SUCCESS_MESSAGE, 'Success', 'Login Successful')
+      typePopup.popupNotice(
+        typePopup.SUCCESS_MESSAGE,
+        'Success',
+        'Login Successful',
+      )
       navigate('/', { replace: true })
     } catch (e) {
-      popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Login Failed')
+      typePopup.popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Login Failed')
     }
   }
 

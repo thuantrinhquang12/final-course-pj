@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { post } from '../../../service/requestApi'
-import ReducerRegister from '../../../utils/ReducerRegister'
+import ReducerRegister from '../../../../store/ReducerRegister'
 
 export const login = createAsyncThunk('user/login', async (data) => {
   const res = await post(data)

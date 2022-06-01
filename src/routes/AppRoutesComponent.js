@@ -2,11 +2,11 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Login from '../components/page/Login/Login'
 import PrivateRoute from './PrivateRoute'
-import Manager from '../components/page/Home/Manager'
-import UserHome from '../components/page/Home/UserHome'
-import Unauthorized from '../components/page/Home/Unauthorized'
-import Admin from '../components/page/Home/Admin'
-import ErrorPage from '../components/page/Home/ErrorPage'
+import Manager from '../components/page/Manager/Manager'
+import Home from '../components/page/Home/index/index'
+import Unauthorized from '../components/page/Unauthorized/Unauthorized'
+import Admin from '../components/page/Admin/Admin'
+import ErrorPage from '../components/page/ErrorPage/ErrorPage'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
@@ -42,7 +42,7 @@ const AppRoutesComponent = () => {
 
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-          <Route path="/" element={<UserHome />} />
+          <Route path="/" element={<Home />} />
         </Route>
 
         {/* Manager routes */}

@@ -1,0 +1,23 @@
+.listNotice {
+  width: 100%;
+  padding: 20px 50px;
+  .titleNotice {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .itemPage {
+    display: flex;
+    justify-content: flex-end;
+
+    span {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .itemPage {
+    justify-content: flex-start !important;
+  }
+}

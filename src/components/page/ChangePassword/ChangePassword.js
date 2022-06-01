@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
 import 'antd/dist/antd.min.css'
-import popupNotice from '../../common/popupNotice/popupNotice'
 import { typePopup } from '../../index'
 import style from './ChangePassword.module.scss'
 
@@ -14,14 +13,18 @@ const ChangePassword = () => {
     try {
       if (true) {
         setIsModalVisible(false)
-        popupNotice(
+        typePopup.popupNotice(
           typePopup.SUCCESS_MESSAGE,
           'Success',
           'Change Password Successful',
         )
       }
     } catch (e) {
-      popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Change Password Failed')
+      typePopup.popupNotice(
+        typePopup.ERROR_MESSAGE,
+        'Failed',
+        'Change Password Failed',
+      )
     }
   }
 
@@ -35,9 +38,7 @@ const ChangePassword = () => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Change Password
-      </Button>
+      <h3 onClick={showModal}>Change Password</h3>
       <Modal
         title="Change Password"
         visible={isModalVisible}

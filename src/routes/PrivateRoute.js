@@ -14,11 +14,9 @@ const PrivateRoute = ({ allowedRoles }) => {
   let auth = []
   if (role === 'user') {
     auth = [1]
-  }
-  if (role === 'manager') {
+  } else if (role === 'manager') {
     auth = [1, 2]
-  }
-  if (role === 'admin') {
+  } else if (role === 'admin') {
     auth = [1, 3]
   } else {
     auth = []
