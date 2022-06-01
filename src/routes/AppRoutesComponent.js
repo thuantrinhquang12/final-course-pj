@@ -30,8 +30,6 @@ const AppRoutesComponent = () => {
     dispatch(loginAccess({ role: data.role }))
   }
 
-  console.log('app route')
-
   return (
     <>
       <Routes>

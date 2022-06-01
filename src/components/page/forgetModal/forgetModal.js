@@ -23,16 +23,17 @@ import {
 } from './requestSlice'
 import {
   Dialog,
-  typeRequest,
-  statusRequest,
-  getDateTime,
   dateTime,
+  statusRequest,
+  typeRequest,
+  handleDateTime,
+  handleField,
 } from '../../index'
 import styles from './forgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
-  const currentTime = useRef(getDateTime.getCurrentTime())
+  const currentTime = useRef(handleDateTime.getCurrentTime())
   const dispatch = useDispatch()
 
   const schema = yup.object().shape({
@@ -53,17 +54,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     resolver: yupResolver(schema),
   })
 
-  const { request, status, message } = useSelector((state) => state.requests)
-  console.log(message)
-
-  useEffect(() => {
-    if (Object.keys(request).length !== 0) {
-      setValue('checkInTime', dateTime.momentType(request.check_in))
-      setValue('checkOutTime', dateTime.momentType(request.check_out))
-      setValue('specialReason', !!request.error_count ? [0, 1] : [])
-      setValue('reasonInput', request.reason)
-    }
-  }, [request])
+  const { request, status } = useSelector((state) => state.requests)
 
   useEffect(() => {
     if (row.requests.length !== 0) {
@@ -76,6 +67,15 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (Object.keys(request).length !== 0) {
+      setValue('checkInTime', dateTime.momentType(request.check_in))
+      setValue('checkOutTime', dateTime.momentType(request.check_out))
+      setValue('specialReason', !!request.error_count ? [0, 1] : [])
+      setValue('reasonInput', request.reason)
+    }
+  }, [request])
+
   const onSubmit = async (values, e) => {
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
@@ -85,8 +85,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
           request_for_date: dateTime.formatDate(row.work_date),
-          error_count: +!!values.specialReason,
-          reason: values.reason,
+          error_count: +((values.specialReason || []).length !== 0),
+          reason: values.reasonInput,
           status: statusRequest.SEND,
           created_at: currentTime.current,
         }
@@ -95,10 +95,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
         break
       case 'UPDATE':
         const updateRequest = {
-          check_in: dateTime.formatTime(values.check_in),
-          check_out: dateTime.formatTime(values.check_out),
-          error_count: +!!values.special_reason,
-          reason: values.reason,
+          check_in: dateTime.formatTime(values.checkInTime),
+          check_out: dateTime.formatTime(values.checkOutTime),
+          error_count: +((values.specialReason || []).length !== 0),
+          reason: values.reasonInput,
           update_at: currentTime.current,
         }
         await dispatch(
@@ -152,12 +152,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     render={({ field }) => (
                       <>
                         <TimePicker
-                          disabled={
-                            request.status === statusRequest.CONFIRMED ||
-                            request.status === statusRequest.APPROVED
-                              ? true
-                              : false
-                          }
+                          disabled={handleField.disableField(request.status)}
                           format={dateTime.formatTimeType}
                           style={{
                             width: '100px',
@@ -166,7 +161,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                           }}
                           {...field}
                         />
-                        {errors.checkOutTime && (
+                        {errors.checkInTime && (
                           <span className={styles.errorField}>
                             {errors.checkInTime?.message}
                           </span>
@@ -189,12 +184,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     render={({ field }) => (
                       <>
                         <TimePicker
-                          disabled={
-                            request.status === statusRequest.CONFIRMED ||
-                            request.status === statusRequest.APPROVED
-                              ? true
-                              : false
-                          }
+                          disabled={handleField.disableField(request.status)}
                           format={dateTime.formatTimeType}
                           style={{ width: '100px', marginRight: '10px' }}
                           {...field}
@@ -213,7 +203,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">Specical reason </Col>
+                <Col flex="150px">Special reason </Col>
                 <Col flex="auto">
                   <Controller
                     name="specialReason"
@@ -221,12 +211,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     render={({ field }) => (
                       <>
                         <Checkbox.Group
-                          disabled={
-                            request.status === statusRequest.CONFIRMED ||
-                            request.status === statusRequest.APPROVED
-                              ? true
-                              : false
-                          }
+                          disabled={handleField.disableField(request.status)}
                           {...field}
                         >
                           <Row style={{ marginBottom: 0 }}>
@@ -258,12 +243,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                         <>
                           <Input.TextArea
                             rows={4}
-                            disabled={
-                              request.status === statusRequest.CONFIRMED ||
-                              request.status === statusRequest.APPROVED
-                                ? true
-                                : false
-                            }
+                            disabled={handleField.disableField(request.status)}
                             {...field}
                           />
                           {errors.reasonInput && (
@@ -285,8 +265,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     </Button>
                   )}
                   {requestExists &&
-                    request.status !== statusRequest.CONFIRMED &&
-                    statusRequest.APPROVED && (
+                    request.status !== statusRequest.APPROVED &&
+                    request.status !== statusRequest.CONFIRMED && (
                       <>
                         <Button name="update" htmlType="submit">
                           Update

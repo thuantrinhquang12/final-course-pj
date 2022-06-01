@@ -10,7 +10,6 @@ const PrivateRoute = ({ allowedRoles }) => {
 
   const role = useSelector((state) => state.userInfo?.currentUser?.role)
 
-  console.log(role)
   let auth = []
   if (role === 'user') {
     auth = [1]
