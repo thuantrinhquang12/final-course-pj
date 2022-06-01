@@ -17,3 +17,7 @@ export const formatDate = (value) => {
 export const formatTimestampToDate = (value) => {
   return moment.unix(value).format(formatDateType)
 }
+
+export const momentType = (value) => {
+  return moment(value, formatTimeType)
+}
