@@ -1,0 +1,5 @@
+export const LOCAL_STORAGE = {
+  ACCESS_TOKEN: 'ACCESS_TOKEN',
+  REFRESH_TOKEN: 'REFRESH_TOKEN',
+  ROLE: 'role',
+}
