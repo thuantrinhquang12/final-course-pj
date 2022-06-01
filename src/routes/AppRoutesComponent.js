@@ -10,7 +10,7 @@ import ErrorPage from '../components/page/ErrorPage/ErrorPage'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
-
+import Worksheet from '../components/page'
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
 
@@ -43,6 +43,7 @@ const AppRoutesComponent = () => {
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
           <Route path="/" element={<Home />} />
+          <Route path="/timesheet" element={<Worksheet />} />
         </Route>
 
         {/* Manager routes */}
