@@ -2,8 +2,15 @@ import React from 'react'
 import styles from './index.module.scss'
 import Cat from './CrazyCat.jpg'
 import ChangePassword from '../../../page/ChangePassword/ChangePassword'
+import { useNavigate } from 'react-router-dom'
 
 const UserList = () => {
+  const navigate = useNavigate()
+  const OnClick = () => {
+    localStorage.removeItem('role')
+    localStorage.removeItem('ACCESS_TOKEN')
+    navigate('/login', { replace: true })
+  }
   return (
     <div className={styles.UserList}>
       <div className={styles.UserHeader}>
@@ -21,7 +28,7 @@ const UserList = () => {
           <i className="fa-solid fa-key"></i>
           <ChangePassword />
         </div>
-        <div className={styles.UserGroup}>
+        <div className={styles.UserGroup} onClick={OnClick}>
           <i className="fa-solid fa-arrow-right-from-bracket"></i>
           <h3>Logout</h3>
         </div>

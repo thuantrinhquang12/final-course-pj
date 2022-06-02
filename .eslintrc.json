@@ -18,12 +18,9 @@
     "semi": ["error", "never"],
     "indent": "off",
     "require-jsdoc": "off",
-    "operator-linebreak": [
-      "error",
-      "after",
-      { "overrides": { "?": "before", ":": "before" } }
-    ],
-    "linebreak-style": 0
+    "linebreak-style": "off",
+    "operator-linebreak": "off",
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {

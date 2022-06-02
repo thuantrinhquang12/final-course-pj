@@ -1,0 +1,14 @@
+.ant-modal {
+  .ant-row {
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 767px) {
+  .ant-modal {
+    max-width: calc(100% - 16px) !important;
+    margin: auto !important;
+    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+      margin-left: 0;
+    }
+  }
+}

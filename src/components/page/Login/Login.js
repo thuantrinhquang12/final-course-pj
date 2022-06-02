@@ -17,7 +17,7 @@ const Login = () => {
     console.log(values)
     // call APi xong trả dataTest + truy cập vào trang Home
     const dataTest = {
-      role: 'manager',
+      role: 'admin',
       tokenAccess: 'This is Token Access',
     }
     try {
