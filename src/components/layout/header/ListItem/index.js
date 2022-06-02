@@ -15,7 +15,11 @@ const Index = () => {
           </Link>
         </Col>
         <Col xs={24} md={8} xl={8} className={styles.column}>
+<<<<<<< HEAD
           <Link to="timesheet" className={styles.formGroup}>
+=======
+          <Link to="/timesheet" className={styles.formGroup}>
+>>>>>>> 85080299695036c4f106a961ad3d6725917cfe39
             <i className="fa-solid fa-business-time"></i>
             <h3>TIMESHEET</h3>
           </Link>
