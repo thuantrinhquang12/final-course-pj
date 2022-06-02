@@ -3,23 +3,20 @@ import React, { useEffect, useState } from 'react'
 import { get } from '../service/requestApi'
 import ItemTimeSheet from './itemTimeSheet'
 const Worksheet = () => {
-  const [timesheet, setTimesheet] = useState([])
+  const [timeSheet, setTimeSheet] = useState([])
 
   const getTimeSheet = async () => {
     const res = await get(`users/1/timesheet`)
-    setTimesheet(res)
+    setTimeSheet(res)
   }
   useEffect(() => {
     getTimeSheet()
   }, [])
 
-  // const handleClose = () => {
-  //   setIsOpen(false)
-  // }
   return (
     <>
-      {timesheet.length !== 0 &&
-        timesheet.map((item) => {
+      {(timeSheet.length || []) !== 0 &&
+        timeSheet.map((item) => {
           return <ItemTimeSheet key={item.id} row={item}></ItemTimeSheet>
         })}
     </>

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
@@ -29,16 +28,17 @@ import {
   dateTime,
   statusRequest,
   typeRequest,
-  getDateTime,
+  handleDateTime,
+  handleField,
 } from '../../index'
 import styles from './leaveModal.module.scss'
 
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
-  const [leaveStart, setLeaveStart] = useState('08:00')
-  const [leaveEnd, setLeaveEnd] = useState('17:00')
+  const [leaveStart, setLeaveStart] = useState()
+  const [leaveEnd, setLeaveEnd] = useState()
   const [timeCount, setTimeCount] = useState()
-  const currentTime = useRef(getDateTime.getCurrentTime())
+  const currentTime = useRef(handleDateTime.getCurrentTime())
   const dispatch = useDispatch()
 
   const schema = yup.object().shape({
@@ -46,8 +46,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       .string()
       .required('Please enter reason')
       .max(100, 'Please enter not too 100 characters'),
-    checkInTime: yup.date().nullable().required('Please enter check-in'),
-    checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
   const {
     handleSubmit,
@@ -58,8 +56,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     resolver: yupResolver(schema),
   })
 
-  const { request, status, message } = useSelector((state) => state.requests)
-  console.log(message)
+  const { request, status } = useSelector((state) => state.requests)
 
   useEffect(() => {
     if (row.requests.length !== 0) {
@@ -118,12 +115,8 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     setLeaveEnd(leaveEnd)
   }
 
-  const handleCloseModal = () => {
-    handleCloseLeave()
-    dispatch(getRequests(-1))
-  }
-
   const onSubmit = async (values, e) => {
+    console.log(values)
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -173,6 +166,10 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       default:
         throw new Error('An error occurred')
     }
+  }
+  const handleCloseModal = () => {
+    handleCloseLeave()
+    dispatch(getRequests(-1))
   }
   return (
     <Dialog
@@ -229,7 +226,10 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     control={control}
                     render={({ field }) => (
                       <>
-                        <Checkbox.Group {...field}>
+                        <Checkbox.Group
+                          disabled={handleField.disableField(request.status)}
+                          {...field}
+                        >
                           <Checkbox value={typeRequest.LEAVE_ALL_DAY}>
                             Leave All Day
                           </Checkbox>
@@ -251,12 +251,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                   <div>
                     <Col flex="auto">
                       <TimePicker.RangePicker
-                        disabled={
-                          request.status === statusRequest.CONFIRMED ||
-                          request.status === statusRequest.APPROVED
-                            ? true
-                            : false
-                        }
+                        disabled={handleField.disableField(request.status)}
                         showTime={{
                           defaultValue:
                             Object.keys(request).length !== 0
@@ -270,10 +265,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                                     dateTime.formatTimeType,
                                   ),
                                 ]
-                              : [
-                                  moment('08:00', dateTime.formatTimeType),
-                                  moment('17:00', dateTime.formatTimeType),
-                                ],
+                              : [],
                         }}
                         onChange={handleOnChange}
                         format={dateTime.formatTimeType}
@@ -289,9 +281,13 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     <Controller
                       name="radioPaid"
                       control={control}
+                      defaultValue={'paid'}
                       render={({ field }) => (
                         <>
-                          <Radio.Group {...field}>
+                          <Radio.Group
+                            disabled={handleField.disableField(request.status)}
+                            {...field}
+                          >
                             <Radio value={'paid'}>Paid</Radio>
                             <Radio value={'unpaid'}>Unpaid</Radio>
                           </Radio.Group>
@@ -299,7 +295,17 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                       )}
                     />
                   </div>
-                  <div>| TimeCount: {timeCount}</div>
+                  <div>
+                    | TimeCount:
+                    <span
+                      style={handleDateTime.compareTime(
+                        timeCount,
+                        row.lack_time,
+                      )}
+                    >
+                      {timeCount}
+                    </span>
+                  </div>
                 </div>
               </Row>
               <Row>
@@ -312,12 +318,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                       <>
                         <Input.TextArea
                           rows={4}
-                          disabled={
-                            request.status === statusRequest.CONFIRMED ||
-                            request.status === statusRequest.APPROVED
-                              ? true
-                              : false
-                          }
+                          disabled={handleField.disableField(request.status)}
                           {...field}
                         />
                         {errors.reasonInput && (

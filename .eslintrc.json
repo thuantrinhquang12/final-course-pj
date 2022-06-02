@@ -19,7 +19,8 @@
     "indent": "off",
     "require-jsdoc": "off",
     "linebreak-style": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
