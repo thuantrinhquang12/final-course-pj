@@ -4,17 +4,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  TimePicker,
-  Input,
-  Divider,
-  Button,
-  Checkbox,
-  Row,
-  Space,
-  Col,
-  Skeleton,
-} from 'antd'
+import { TimePicker, Input, Checkbox, Row, Col, Skeleton } from 'antd'
 import {
   getRequests,
   postRequests,
@@ -22,12 +12,24 @@ import {
   deleteRequests,
 } from './requestSlice'
 import {
+<<<<<<< HEAD
   Dialog,
   dateTime,
   statusRequest,
   typeRequest,
   handleDateTime,
   handleField,
+=======
+  DialogRequest,
+  dateTime,
+  typeStatusRequest,
+  typeRequest,
+  handleDateTime,
+  handleField,
+  buttonForm,
+  tryCatch,
+  messageRequest,
+>>>>>>> b4095e29d9551734ea081ca64b357726bcf55e80
 } from '../../index'
 import styles from './forgetModal.module.scss'
 
@@ -51,6 +53,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     formState: { errors },
     setValue,
   } = useForm({
+    defaultValues: {
+      checkInTime: dateTime.momentType('08:00'),
+      checkOutTime: dateTime.momentType('17:00'),
+    },
+
     resolver: yupResolver(schema),
   })
 
@@ -71,12 +78,17 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     if (Object.keys(request).length !== 0) {
       setValue('checkInTime', dateTime.momentType(request.check_in))
       setValue('checkOutTime', dateTime.momentType(request.check_out))
+<<<<<<< HEAD
       setValue('specialReason', !!request.error_count ? [0, 1] : [])
+=======
+      setValue('specialReason', request.special_reason)
+>>>>>>> b4095e29d9551734ea081ca64b357726bcf55e80
       setValue('reasonInput', request.reason)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
+    console.log()
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -86,27 +98,46 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           check_out: dateTime.formatTime(values.checkOutTime),
           request_for_date: dateTime.formatDate(row.work_date),
           error_count: +((values.specialReason || []).length !== 0),
+<<<<<<< HEAD
           reason: values.reasonInput,
           status: statusRequest.SEND,
+=======
+          special_reason: values.specialReason || [],
+          reason: values.reasonInput,
+          status: typeStatusRequest.SEND,
+>>>>>>> b4095e29d9551734ea081ca64b357726bcf55e80
           created_at: currentTime.current,
         }
-        setRequestExists(true)
-        await dispatch(postRequests(newRequest))
+        await tryCatch.handleTryCatch(
+          dispatch(postRequests(newRequest)),
+          messageRequest.CREATE,
+          handleCloseModal,
+        )
         break
       case 'UPDATE':
         const updateRequest = {
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
           error_count: +((values.specialReason || []).length !== 0),
+<<<<<<< HEAD
+=======
+          special_reason: values.specialReason || [],
+>>>>>>> b4095e29d9551734ea081ca64b357726bcf55e80
           reason: values.reasonInput,
           update_at: currentTime.current,
         }
-        await dispatch(
-          putRequests({ id: request.id, requestData: updateRequest }),
+        await tryCatch.handleTryCatch(
+          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          messageRequest.UPDATE,
+          handleCloseModal,
         )
         break
       case 'DELETE':
-        await dispatch(deleteRequests(request.id))
+        await tryCatch.handleTryCatch(
+          dispatch(deleteRequests(request.id)),
+          messageRequest.DELETE,
+          handleCloseModal,
+        )
         break
       default:
         throw new Error('An error occurred')
@@ -119,35 +150,42 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   }
 
   return (
-    <Dialog
+    <DialogRequest
       isOpen={isOpen}
       handleModal={handleCloseModal}
       title="Register Forget Check-in/Check-out"
+      listButton={buttonForm.formRequestButton}
+      statusRequest={request.status}
+      requestExists={requestExists}
+      statusGetRequest={status}
     >
       <>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
             <Skeleton paragraph={{ rows: 10 }}></Skeleton>
           ) : (
             <>
-              <Row>
-                <>
-                  <Col flex="150px">Registration: </Col>
-                  <Col flex="auto">
-                    {request?.create_at || currentTime.current}
-                  </Col>
-                </>
-              </Row>
+              {requestExists && (
+                <Row>
+                  <>
+                    <Col flex="150px">Registration date: </Col>
+                    <Col flex="auto">{request?.create_at}</Col>
+                  </>
+                </Row>
+              )}
               <Row>
                 <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">{dateTime.formatDate(row.work_date)}</Col>
+                <Col flex="auto">
+                  {dateTime.formatTimestampToDate(row.work_date)}
+                </Col>
               </Row>
               <Row>
-                <Col flex="150px">Check-in:(*): </Col>
+                <Col flex="150px">
+                  Check-in: <span className={styles.requiredField}>(*)</span>
+                </Col>
                 <Col flex="auto">
                   <Controller
                     name="checkInTime"
-                    defaultValue={dateTime.momentType('08:00')}
                     control={control}
                     render={({ field }) => (
                       <>
@@ -175,11 +213,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">Check-out:(*): </Col>
+                <Col flex="150px">
+                  Check-out: <span className={styles.requiredField}>(*)</span>
+                </Col>
                 <Col flex="auto">
                   <Controller
                     name="checkOutTime"
-                    defaultValue={dateTime.momentType('17:00')}
                     control={control}
                     render={({ field }) => (
                       <>
@@ -203,7 +242,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
+<<<<<<< HEAD
                 <Col flex="150px">Special reason </Col>
+=======
+                <Col flex="150px">Special reason: </Col>
+>>>>>>> b4095e29d9551734ea081ca64b357726bcf55e80
                 <Col flex="auto">
                   <Controller
                     name="specialReason"
@@ -215,10 +258,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                           {...field}
                         >
                           <Row style={{ marginBottom: 0 }}>
-                            <Checkbox value={1}>
+                            <Checkbox value={0}>
                               Check-in not counted as error
                             </Checkbox>
-                            <Checkbox value={0}>
+                            <Checkbox value={1}>
                               Check-out not counted as error
                             </Checkbox>
                           </Row>
@@ -229,7 +272,9 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">Reason</Col>
+                <Col flex="150px" style={{ marginBottom: '10px' }}>
+                  Reason: <span className={styles.requiredField}>(*)</span>
+                </Col>
                 <Col flex="100%">
                   {status === 'loading' ? (
                     <Skeleton active size="small" block={true}>
@@ -257,6 +302,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   )}
                 </Col>
               </Row>
+<<<<<<< HEAD
               <Divider>
                 <Space>
                   {!requestExists && (
@@ -279,11 +325,13 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   <Button onClick={handleCloseModal}>Cancel</Button>
                 </Space>
               </Divider>
+=======
+>>>>>>> b4095e29d9551734ea081ca64b357726bcf55e80
             </>
           )}
         </form>
       </>
-    </Dialog>
+    </DialogRequest>
   )
 }
 ForgetModal.propTypes = {
