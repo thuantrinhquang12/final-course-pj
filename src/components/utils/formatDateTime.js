@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 export const formatDateTimeType = 'YYYY-MM-DD H:mm:s'
-export const formatTimeType = 'H:mm'
+export const formatTimeType = 'HH:mm'
 export const formatDateType = 'YYYY-MM-DD'
 
 export const formatDateTime = (value) => {
