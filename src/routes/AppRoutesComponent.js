@@ -42,10 +42,10 @@ const AppRoutesComponent = () => {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<ErrorPage />} />
         <Route path="Member" element={<Unauthorized />} />
+        <Route path="/" element={<Home />} />
 
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-          <Route path="/" element={<Home />} />
           <Route path="/timesheet" element={<Worksheet />} />
         </Route>
 
