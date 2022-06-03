@@ -7,6 +7,14 @@ export const login = createAsyncThunk('user/login', async (data) => {
   return res
 })
 
+export const testThunk = createAsyncThunk(
+  'tableReducer/fetchDataCovid',
+
+  async () => {
+    console.log('TEsst')
+  },
+)
+
 const userSlice = createSlice({
   name: 'userInfo',
 

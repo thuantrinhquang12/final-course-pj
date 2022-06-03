@@ -3,6 +3,11 @@ import moment from 'moment'
 export const formatDateTimeType = 'YYYY-MM-DD H:mm:s'
 export const formatTimeType = 'H:mm'
 export const formatDateType = 'YYYY-MM-DD'
+export const formatDateTypeDate = 'DD/MM/YYYY'
+
+export const formatDateTimes = (value) => {
+  return moment(value).format(formatDateTypeDate)
+}
 
 export const formatDateTime = (value) => {
   return moment(value).format(formatDateTimeType)
