@@ -3,14 +3,28 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 
 const Dialog = ({ children, isOpen, title, handleModal }) => {
+  const confirm = () => {
+    Modal.confirm({
+      title: 'Đóng Mô Đan',
+      content: 'Bạn đã chắc chắn là 100% muốn đóng chưa ? Đừng hối hận nhé',
+      okText: 'Rồi',
+      cancelText: 'Mai rồi',
+
+      onOk() {
+        handleModal()
+      },
+      onCancel() {},
+    })
+  }
+
   if (!isOpen) return null
   return (
     <>
       <Modal
         title={title}
-        visible={isOpen}
-        onCancel={handleModal}
+        onCancel={confirm}
         footer={null}
+        visible={isOpen}
         width={1000}
       >
         {children}
