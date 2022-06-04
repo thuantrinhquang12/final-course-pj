@@ -4,7 +4,7 @@ import { Table } from 'antd'
 import { Row, Col } from 'antd'
 import styles from './index.module.scss'
 import { typePopup } from '../../../index'
-import { Scrollbars } from 'react-custom-scrollbars'
+
 const Index = () => {
   const [page, setPage] = useState(10)
   const Department = 'HRD'
@@ -167,42 +167,40 @@ const Index = () => {
 
   return (
     <>
-      <Scrollbars style={{ width: '100%', height: '100%' }}>
-        <div className={styles.listNotice} style={{ width: '100%' }}>
-          <Row style={{ height: '100%' }}>
-            <Col xs={24} md={12} xl={12}>
-              <div className={styles.titleNotice}>
-                <h1>Official Notice</h1>
-              </div>
-            </Col>
-            <Col xs={24} md={12} xl={12}>
-              <div className={styles.itemPage}>
-                <h3>
-                  Item per page:
-                  <span
-                    style={handleStylePage(10)}
-                    onClick={() => setPage((prev) => 10)}
-                  >
-                    10,
-                  </span>
-                  <span
-                    style={handleStylePage(20)}
-                    onClick={() => setPage((prev) => 20)}
-                  >
-                    20,
-                  </span>
-                  <span
-                    style={handleStylePage(50)}
-                    onClick={() => setPage((prev) => 50)}
-                  >
-                    50.
-                  </span>
-                </h3>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </Scrollbars>
+      <div className={styles.listNotice} style={{ width: '100%' }}>
+        <Row style={{ height: '100%' }}>
+          <Col xs={24} md={12} xl={12}>
+            <div className={styles.titleNotice}>
+              <h1>Official Notice</h1>
+            </div>
+          </Col>
+          <Col xs={24} md={12} xl={12}>
+            <div className={styles.itemPage}>
+              <h3>
+                Item per page:
+                <span
+                  style={handleStylePage(10)}
+                  onClick={() => setPage((prev) => 10)}
+                >
+                  10,
+                </span>
+                <span
+                  style={handleStylePage(20)}
+                  onClick={() => setPage((prev) => 20)}
+                >
+                  20,
+                </span>
+                <span
+                  style={handleStylePage(50)}
+                  onClick={() => setPage((prev) => 50)}
+                >
+                  50.
+                </span>
+              </h3>
+            </div>
+          </Col>
+        </Row>
+      </div>
       <Table
         pagination={{ pageSize: page }}
         columns={columns}
