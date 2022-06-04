@@ -7,6 +7,7 @@ import { typePopup } from '../../../index'
 
 const Index = () => {
   const [page, setPage] = useState(10)
+
   const Department = 'HRD'
 
   const dataSource = [
@@ -72,6 +73,72 @@ const Index = () => {
       attchment: 'link Official Notice',
       detail: 'View',
     },
+    {
+      key: '7',
+      no: '7',
+      subject: 'Chính sách bảo hiểm 2022',
+      author: 'Nguyễn Thị Hương',
+      toDepartment: 'All',
+      publishedDate: '2022/09/29',
+      attchment: 'link Official Notice',
+      detail: 'View',
+      fixed: 'left',
+    },
+    {
+      key: '9',
+      no: '9',
+      subject: 'Chính sách bảo hiểm 2022',
+      author: 'Nguyễn Thị Hương',
+      toDepartment: 'All',
+      publishedDate: '2022/09/29',
+      attchment: 'link Official Notice',
+      detail: 'View',
+      fixed: 'left',
+    },
+    {
+      key: '10',
+      no: '10',
+      subject: 'Chính sách bảo hiểm 2022',
+      author: 'Nguyễn Thị Hương',
+      toDepartment: 'All',
+      publishedDate: '2022/09/29',
+      attchment: 'link Official Notice',
+      detail: 'View',
+      fixed: 'left',
+    },
+    {
+      key: '8',
+      no: '8',
+      subject: 'Chính sách bảo hiểm 2022',
+      author: 'Nguyễn Thị Hương',
+      toDepartment: 'All',
+      publishedDate: '2022/09/29',
+      attchment: 'link Official Notice',
+      detail: 'View',
+      fixed: 'left',
+    },
+    {
+      key: '11',
+      no: '11',
+      subject: 'Chính sách bảo hiểm 2022',
+      author: 'Nguyễn Thị Hương',
+      toDepartment: 'All',
+      publishedDate: '2022/09/29',
+      attchment: 'link Official Notice',
+      detail: 'View',
+      fixed: 'left',
+    },
+    {
+      key: '12',
+      no: '12',
+      subject: 'Chính sách bảo hiểm 2022',
+      author: 'Nguyễn Thị Hương',
+      toDepartment: 'All',
+      publishedDate: '2022/09/29',
+      attchment: 'link Official Notice',
+      detail: 'View',
+      fixed: 'left',
+    },
   ]
 
   const columns = [
@@ -79,6 +146,61 @@ const Index = () => {
       title: 'No',
       dataIndex: 'no',
       key: 'no',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
     },
     {
       title: 'Subject',
@@ -200,15 +322,12 @@ const Index = () => {
             </div>
           </Col>
         </Row>
+        <Table
+          pagination={{ pageSize: page }}
+          columns={columns}
+          dataSource={dataSource}
+        />
       </div>
-      <Table
-        pagination={{ pageSize: page }}
-        columns={columns}
-        dataSource={dataSource}
-        scroll={{
-          x: 1000,
-        }}
-      />
     </>
   )
 }
