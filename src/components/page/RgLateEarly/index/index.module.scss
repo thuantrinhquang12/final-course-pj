@@ -1,0 +1,14 @@
+.formGroup {
+  display: flex;
+  margin: 10px 0;
+  flex-wrap: wrap;
+  .requiredField {
+    color: red;
+  }
+}
+
+@media (max-width: 768px) {
+  .formChild {
+    margin-top: 10px;
+  }
+}

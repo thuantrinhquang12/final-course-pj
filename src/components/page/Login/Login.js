@@ -8,13 +8,10 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 // import { login, loginAccess } from './Slice/sliceLogin'
 import { loginAccess } from './Slice/sliceLogin'
-import { testThunk } from './Slice/sliceLogin'
 
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  dispatch(testThunk())
 
   const onFinish = async (values) => {
     console.log(values)
