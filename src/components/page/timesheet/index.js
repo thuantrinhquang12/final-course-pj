@@ -7,7 +7,7 @@ import { Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
-import TableTimeSheet from './table-search'
+import RowTimesheet from './row-timesheet'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
