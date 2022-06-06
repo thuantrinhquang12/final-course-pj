@@ -3,7 +3,6 @@ import React from 'react'
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import Header from '../components/layout/header/index/index'
 
 const PrivateRoute = ({ allowedRoles }) => {
   const location = useLocation()
@@ -11,11 +10,11 @@ const PrivateRoute = ({ allowedRoles }) => {
   const role = useSelector((state) => state.userInfo?.currentUser?.role)
 
   let auth = []
-  if (role === 'user') {
+  if (role === 'Member') {
     auth = [1]
-  } else if (role === 'manager') {
+  } else if (role === 'Manager') {
     auth = [1, 2]
-  } else if (role === 'admin') {
+  } else if (role === 'Admin') {
     auth = [1, 3]
   } else {
     auth = []
@@ -24,9 +23,7 @@ const PrivateRoute = ({ allowedRoles }) => {
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
 
   return auth?.find((role) => allowedRoles?.includes(role)) ? (
-    <Header>
-      <Outlet />
-    </Header>
+    <Outlet />
   ) : !tokenAccess ? (
     <Navigate to="/login" state={{ from: location }} replace />
   ) : (

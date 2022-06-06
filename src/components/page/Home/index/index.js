@@ -129,7 +129,6 @@ const Index = () => {
         return (
           <p
             onClick={() => {
-              console.log(typePopup)
               if (
                 item.toDepartment === 'All' ||
                 Department === item.toDepartment
