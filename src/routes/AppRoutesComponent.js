@@ -11,6 +11,7 @@ import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
 import Worksheet from '../components/page'
+import UserEditForm from '../components/page/EditProfileModal/UserEditForm'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -46,6 +47,7 @@ const AppRoutesComponent = () => {
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
           <Route path="/" element={<Home />} />
+          <Route path="/edit" element={<UserEditForm />} />
           <Route path="/timesheet" element={<Worksheet />} />
         </Route>
 

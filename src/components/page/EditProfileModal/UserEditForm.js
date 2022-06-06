@@ -112,9 +112,23 @@ const UserEditForm = () => {
                     </Form.Item>
                     <Form.Item
                       label="Identity Number:"
-                      required="true"
                       labelAlign="left"
                       name="identity_number"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your Identity Number!',
+                        },
+                        {
+                          type: 'number',
+                          message:
+                            'Characters or special symbols are not allowed',
+                        },
+                        {
+                          max: 12,
+                          message: 'This field must be maximum 12 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -128,9 +142,18 @@ const UserEditForm = () => {
                     </Form.Item>
                     <Form.Item
                       label="Place of issue Identity: "
-                      required="true"
                       labelAlign="left"
                       name="place_of_issue"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your Place of issue Identity!',
+                        },
+                        {
+                          max: 50,
+                          message: 'This field must be maximum 50 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -138,6 +161,12 @@ const UserEditForm = () => {
                       label="Passport Number: "
                       labelAlign="left"
                       name="passport_number"
+                      rules={[
+                        {
+                          max: 20,
+                          message: 'This field must be maximum 20 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -150,9 +179,18 @@ const UserEditForm = () => {
                     </Form.Item>
                     <Form.Item
                       label="Nationality: "
-                      required="true"
                       labelAlign="left"
                       name="nationality"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your Place of issue Identity!',
+                        },
+                        {
+                          max: 50,
+                          message: 'This field must be maximum 50 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -173,7 +211,17 @@ const UserEditForm = () => {
                     >
                       <Input />
                     </Form.Item>
-                    <Form.Item label="Skype: " labelAlign="left" name="skype">
+                    <Form.Item
+                      label="Skype: "
+                      labelAlign="left"
+                      name="skype"
+                      rules={[
+                        {
+                          max: 30,
+                          message: 'This field must be maximum 30 characters.',
+                        },
+                      ]}
+                    >
                       <Input />
                     </Form.Item>
                     <Form.Item
@@ -185,17 +233,35 @@ const UserEditForm = () => {
                     </Form.Item>
                     <Form.Item
                       label="Bank Name: "
-                      required="true"
                       labelAlign="left"
                       name="bank_name"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your Bank Name!',
+                        },
+                        {
+                          max: 70,
+                          message: 'This field must be maximum 70 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Bank Account: "
-                      required="true"
                       labelAlign="left"
                       name="bank_account"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your Bank Account!',
+                        },
+                        {
+                          max: 20,
+                          message: 'This field must be maximum 20 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -215,6 +281,12 @@ const UserEditForm = () => {
                       label="Academic Level: "
                       labelAlign="left"
                       name="academic_level"
+                      rules={[
+                        {
+                          max: 50,
+                          message: 'This field must be maximum 50 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -223,23 +295,41 @@ const UserEditForm = () => {
 
                 <Form.Item
                   label="Permanent Address: "
-                  required="true"
                   labelAlign="left"
                   name="permanent_address"
                   labelCol={{
                     span: 6,
                   }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your Permanent Address!',
+                    },
+                    {
+                      max: 255,
+                      message: 'This field must be maximum 255 characters.',
+                    },
+                  ]}
                 >
                   <Input className={styles.addressInput} />
                 </Form.Item>
                 <Form.Item
                   label="Temporary Address: "
-                  required="true"
                   labelAlign="left"
                   name="temporary_address"
                   labelCol={{
                     span: 6,
                   }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your Temporary Address!',
+                    },
+                    {
+                      max: 255,
+                      message: 'This field must be maximum 255 characters.',
+                    },
+                  ]}
                 >
                   <Input className={styles.addressInput} />
                 </Form.Item>
@@ -252,6 +342,12 @@ const UserEditForm = () => {
                       label="Tax Identification: "
                       labelAlign="left"
                       name="tax_identification"
+                      rules={[
+                        {
+                          max: 20,
+                          message: 'This field must be maximum 20 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -266,6 +362,12 @@ const UserEditForm = () => {
                       label="Healthcare Provider: "
                       labelAlign="left"
                       name="healthcare_provider"
+                      rules={[
+                        {
+                          max: 30,
+                          message: 'This field must be maximum 30 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -273,6 +375,12 @@ const UserEditForm = () => {
                       label="Tax Identification: "
                       labelAlign="left"
                       name="tax_identification_full"
+                      rules={[
+                        {
+                          max: 20,
+                          message: 'This field must be maximum 20 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -280,25 +388,55 @@ const UserEditForm = () => {
                   <div className={styles.infoRightCol}>
                     <Form.Item
                       label="Emergency Contact Name: "
-                      required="true"
                       labelAlign="left"
                       name="emergency_contact_name"
+                      rules={[
+                        {
+                          required: true,
+                          message:
+                            'Please input your Emergency Contact Relationship!',
+                        },
+                        {
+                          max: 70,
+                          message: 'This field must be maximum 70 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Emergency Contact Relationship: "
-                      required="true"
                       labelAlign="left"
                       name="emergency_contact_relationship"
+                      rules={[
+                        {
+                          required: true,
+                          message:
+                            'Please input your Emergency Contact Relationship!',
+                        },
+                        {
+                          max: 50,
+                          message: 'This field must be maximum 50 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item
                       label="Emergency Contact Number: "
-                      required="true"
                       labelAlign="left"
                       name="emergency_contact_number"
+                      rules={[
+                        {
+                          required: true,
+                          message:
+                            'Please input your Emergency Contact Relationship!',
+                        },
+                        {
+                          max: 20,
+                          message: 'This field must be maximum 20 characters.',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
