@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
 import Worksheet from '../components/page'
 import Header from '../components/layout/header/index/index'
-import RegisterOT from '../components/page/RegisterOT/RegisterOT'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -23,7 +22,6 @@ const AppRoutesComponent = () => {
   }
 
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
-
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   if (tokenAccess && !data) {
@@ -45,7 +43,6 @@ const AppRoutesComponent = () => {
         <Route path="*" element={<ErrorPage />} />
 
         <Route element={<Header />}>
-          <Route path="/ot" element={<RegisterOT />} />
           {/* public routes with layout */}
           <Route path="Member" element={<Unauthorized />} />
           <Route path="/timesheet" element={<Worksheet />} />

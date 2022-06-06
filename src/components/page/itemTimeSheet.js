@@ -71,6 +71,14 @@ const ItemTimeSheet = ({ row }) => {
       >
         Leave
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('ot')
+        }}
+      >
+        OT
+      </button>
       {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={isOpen.isOpenForget}
@@ -93,7 +101,7 @@ const ItemTimeSheet = ({ row }) => {
         <RegisterOT
           isOpen={isOpen.isOpenOT}
           row={row}
-          handleCloseLeave={() => {
+          handleCloseOT={() => {
             setIsOpen((isOpen.isOpenOT = false))
           }}
         ></RegisterOT>
