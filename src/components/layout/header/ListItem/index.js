@@ -3,8 +3,10 @@ import styles from './index.module.scss'
 import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Index = () => {
+  const data = useSelector((state) => state.userInfo?.currentUser?.role)
   return (
     <div className={styles.ListItem}>
       <Row style={{ width: '100%', height: '100%' }}>
@@ -15,17 +17,13 @@ const Index = () => {
           </Link>
         </Col>
         <Col xs={24} md={8} xl={8} className={styles.column}>
-<<<<<<< HEAD
-          <Link to="timesheet" className={styles.formGroup}>
-=======
           <Link to="/timesheet" className={styles.formGroup}>
->>>>>>> 85080299695036c4f106a961ad3d6725917cfe39
             <i className="fa-solid fa-business-time"></i>
             <h3>TIMESHEET</h3>
           </Link>
         </Col>
         <Col xs={24} md={8} xl={8} className={styles.column}>
-          <Link to="admin" className={styles.formGroup}>
+          <Link to={data} className={styles.formGroup}>
             <i className="fa-solid fa-bars-progress"></i>
             <h3>MANAGER</h3>
           </Link>

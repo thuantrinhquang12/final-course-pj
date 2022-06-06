@@ -25,7 +25,7 @@ const ItemTimeSheet = ({ row }) => {
         })
         break
       default:
-        throw new Error('dm co loi roi')
+        throw new Error('An error occurred')
     }
   }
   return (
