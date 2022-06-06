@@ -2,6 +2,7 @@ import React from 'react'
 import styles from './index.module.scss'
 import Cat from './CrazyCat.jpg'
 import ChangePassword from '../../../page/ChangePassword/ChangePassword'
+import UserEditForm from '../../../page/EditProfileModal/UserEditForm'
 
 const UserList = () => {
   return (
@@ -15,7 +16,7 @@ const UserList = () => {
       <div className={styles.UserBody}>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-hammer"></i>
-          <h3>Edit Profile</h3>
+          <UserEditForm />
         </div>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-key"></i>
