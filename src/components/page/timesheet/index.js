@@ -7,31 +7,40 @@ import { Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
-import TableTimeSheet from './table-search'
+import RowTimesheet from './row-timesheet'
 import axios from 'axios'
+console.log('aaaaa')
 
 const { RangePicker } = DatePicker
 const { Option } = Select
 const { Title, Text } = Typography
 const dateFormat = 'DD/MM/YYYY'
-export default function SearchField(props) {
+export default function SearchField() {
+  const [DataTimesheet, setDataTimesheet] = useState([])
   const [choose, setChoose] = useState(1)
-  const [dataTable, setDataTable] = useState([])
+  const [valueForm, setValueForm] = useState()
+  const getTimeSheet = async () => {
+    const res = await axios(
+      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+    )
+    return setDataTimesheet(res.data)
+    console.log(DataTimesheet)
+  }
+  console.log(DataTimesheet)
+  useEffect(() => {
+    getTimeSheet()
+  }, [])
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
+    setValueForm(values)
+    console.log(valueForm)
   }
   const [form] = Form.useForm()
   const onChangeChoose = (e) => {
     setChoose(e.target.value)
     console.log(choose)
   }
-  useEffect(() => {
-    axios
-      .get('https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet')
-      .then((res) => {
-        setDataTable(res.data)
-      })
-  }, [])
+
   return (
     <>
       <div className="search-field">
@@ -104,7 +113,12 @@ export default function SearchField(props) {
             <Button size="large">Reset</Button>
           </div>
         </Form>
-        <TableTimeSheet row={dataTable}></TableTimeSheet>
+        <>
+          {(DataTimesheet || []).length !== 0 &&
+            DataTimesheet.map((item) => {
+              return <RowTimesheet key={item.key} row={item}></RowTimesheet>
+            })}
+        </>
       </div>
     </>
   )

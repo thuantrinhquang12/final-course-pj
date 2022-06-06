@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
-import ForgetModal from './forgetModal/forgetModal'
-import LeaveModal from './leaveModal/leaveModal'
+import LeaveModal from '../leaveModal/leaveModal'
+import ForgetModal from '../forgetModal/forgetModal'
 
 const RowTimesheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
@@ -36,9 +36,10 @@ const RowTimesheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>{moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
-      <div>{moment(row.check_in).format('hh:mm:ss a')}</div>
-      <div>{moment(row.check_out).format('hh:mm:ss a')}</div>
+      <div>{row.key}</div>
+      <div>{moment(row.date).format('DD/MM/YYYY')}</div>
+      <div>{row.check_out}</div>
+      <div>{row.check_in}</div>
       <div>{row.late}</div>
       <div>{row.early}</div>
       <div>{row.work_time}</div>
