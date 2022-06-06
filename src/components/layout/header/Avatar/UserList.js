@@ -3,6 +3,7 @@ import styles from './index.module.scss'
 import Cat from './CrazyCat.jpg'
 import ChangePassword from '../../../page/ChangePassword/ChangePassword'
 import UserEditForm from '../../../page/EditProfileModal/UserEditForm'
+import Logout from '../../../page/Logout/Logout'
 
 const UserList = () => {
   return (
@@ -24,7 +25,7 @@ const UserList = () => {
         </div>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-arrow-right-from-bracket"></i>
-          <h3>Logout</h3>
+          <Logout />
         </div>
       </div>
     </div>

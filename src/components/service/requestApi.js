@@ -1,15 +1,23 @@
-import axios from 'axios'
 import { LOCAL_STORAGE } from '../constant/localStorage'
-
-const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+import axios from 'axios'
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_ENDPOINT,
-  headers: {
-    Authorization: 'Bearer ' + tokenAccess,
-  },
   timeout: 5000,
 })
+
+instance.interceptors.request.use(
+  (configs) => {
+    const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+    if (tokenAccess) {
+      configs.headers['Authorization'] = `Bearer ${tokenAccess}`
+    }
+    return configs
+  },
+  (error) => {
+    Promise.reject(error)
+  },
+)
 
 const get = async (url, params = {}) => {
   try {

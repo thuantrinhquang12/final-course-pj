@@ -6,6 +6,7 @@ import style from './ChangePassword.module.scss'
 
 const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [form] = Form.useForm()
 
   const onFinish = async (values) => {
     // call API
@@ -34,27 +35,30 @@ const ChangePassword = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false)
+    form.resetFields()
   }
 
   return (
     <>
       <h3 onClick={showModal}>Change Password</h3>
       <Modal
-        title="Change Password"
+        title={<p style={{ color: 'blue' }}>Change Password</p>}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[]}
       >
         <Form
+          form={form}
           name="basic"
+          labelAlign="left"
           labelCol={{
-            span: 8,
+            span: 7,
           }}
           wrapperCol={{
-            span: 14,
+            span: 15,
           }}
           initialValues={{
-            email: '@vnext.com',
+            email: 'tuanda@vnext.com',
           }}
           onFinish={onFinish}
           autoComplete="off"
@@ -73,7 +77,20 @@ const ChangePassword = () => {
               },
             ]}
           >
-            <Input />
+            <Input disabled={true} />
+          </Form.Item>
+
+          <Form.Item
+            label="Old password"
+            name="oldPassword"
+            rules={[
+              {
+                required: true,
+                message: 'Required to enter password!!',
+              },
+            ]}
+          >
+            <Input.Password />
           </Form.Item>
 
           <Form.Item
@@ -83,6 +100,10 @@ const ChangePassword = () => {
               {
                 required: true,
                 message: 'Required to enter password!!',
+              },
+              {
+                min: 6,
+                message: 'Min length 6!!',
               },
             ]}
           >
