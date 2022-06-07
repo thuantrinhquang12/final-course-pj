@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Button, Space, Form, DatePicker } from 'antd'
 import { Typography } from 'antd'
@@ -16,7 +16,16 @@ const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
   const [valueForm, setValueForm] = useState()
-
+  const [dataTable, setDataTable] = useState()
+  const getTimeSheet = async () => {
+    const res = await axios(
+      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+    )
+    return setDataTable(res.data)
+  }
+  useEffect(() => {
+    getTimeSheet()
+  }, [])
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
     setValueForm(values)
@@ -101,7 +110,7 @@ export default function SearchField() {
           </div>
         </Form>
         <>
-          <Timesheet></Timesheet>
+          <Timesheet props={dataTable}></Timesheet>
         </>
       </div>
     </>

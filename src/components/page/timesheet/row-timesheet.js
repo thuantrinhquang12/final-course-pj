@@ -25,7 +25,58 @@ const RowTimesheet = ({ row }) => {
         })
         break
       default:
+<<<<<<< HEAD
         throw new Error('err')
+=======
+        throw new Error('An error occurred')
+    }
+  }
+  const [isHoliday, setHoliday] = useState(false)
+  const [late, setLate] = useState(false)
+  const [early, setEarly] = useState(false)
+  const [timeOT, setTimeOT] = useState(false)
+  const [workTime, setWorkTime] = useState(false)
+  const [lack, setLack] = useState(false)
+  useEffect(() => {
+    if (row.is_holiday === 1) {
+      setHoliday(true)
+    }
+    if (row.late !== '00:00' && !row.note?.includes('Leave:Approved')) {
+      setLate(true)
+    }
+    if (row.early !== '00:00' && !row.note?.includes('Late/Early:Approved')) {
+      setEarly(true)
+    }
+    if (row.ot_time !== '00:00' && !row.note?.includes('OT:Approved')) {
+      setTimeOT(true)
+    }
+    if (
+      +row?.work_time?.replace(':', '') < 800 &&
+      !row.note?.includes('Leave:Approved') &&
+      !row.note?.includes('Forget:Approved') &&
+      !row.note?.includes('Late/Early:Approved')
+    ) {
+      setWorkTime(true)
+    }
+    if (
+      row.lack !== '00:00' &&
+      !row.note?.includes('Leave:Approved') &&
+      !row.note?.includes('Forget:Approved') &&
+      !row.note?.includes('Late/Early:Approved')
+    ) {
+      setLack(1)
+    }
+    if (
+      row.lack !== '00:00' &&
+      (row.note?.includes('Leave:Approved') ||
+        row.note?.includes('Forget:Approved') ||
+        row.note?.includes('Late/Early:Approved'))
+    ) {
+      setLack(2)
+    }
+  }, [])
+        throw new Error('dm co loi roi')
+>>>>>>> develop
     }
   }
   return (

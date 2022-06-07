@@ -34,7 +34,6 @@ const requestsSlice = createSlice({
   name: 'requests',
   initialState: {
     request: {},
-    message: null,
     status: null,
   },
   extraReducers: {
@@ -44,19 +43,27 @@ const requestsSlice = createSlice({
     [getRequests.fulfilled]: (state, action) => {
       state.status = 'success'
       state.request = action.payload
-      state.message = null
     },
     [getRequests.rejected]: (state) => {
       state.status = 'failed'
     },
+    [postRequests.pending]: (state, action) => {
+      state.status = 'loadingRegister'
+    },
     [postRequests.fulfilled]: (state, action) => {
-      state.message = 'Create request successfully'
+      state.status = 'successRegister'
+    },
+    [putRequests.pending]: (state, action) => {
+      state.status = 'loadingUpdate'
     },
     [putRequests.fulfilled]: (state, action) => {
-      state.message = 'Edit request successfully'
+      state.status = 'successUpdate'
+    },
+    [deleteRequests.pending]: (state, action) => {
+      state.message = 'loadingDelete'
     },
     [deleteRequests.fulfilled]: (state, action) => {
-      state.message = 'Delete request successfully'
+      state.status = 'successDelete'
     },
   },
 })

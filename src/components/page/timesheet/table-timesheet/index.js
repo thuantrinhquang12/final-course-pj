@@ -5,11 +5,21 @@ import axios from 'axios'
 import ForgetModal from '../../forgetModal/forgetModal'
 import LeaveModal from '../../leaveModal/leaveModal'
 
-export default function Timesheet() {
+export default function Timesheet(props) {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
   })
+  const [dataTable, setDataTable] = useState()
+  const getTimeSheet = async () => {
+    const res = await axios(
+      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+    )
+    return setDataTable(res.data)
+  }
+  useEffect(() => {
+    getTimeSheet()
+  }, [])
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
@@ -29,17 +39,7 @@ export default function Timesheet() {
         throw new Error('err')
     }
   }
-  const [dataTable, setDataTable] = useState()
-  const getTimeSheet = async () => {
-    const res = await axios(
-      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
-    )
-    return setDataTable(res.data)
-  }
-  useEffect(() => {
-    getTimeSheet()
-  }, [])
-  console.log('check', dataTable)
+
   const columns = [
     {
       title: 'No',
@@ -124,8 +124,8 @@ export default function Timesheet() {
           >
             Forget
           </Button>
-          <Button>Late</Button>
-          <Button>Early</Button>
+          <Button>Late/Early</Button>
+
           <Button
             onClick={() => {
               handleClickModal('leave')
@@ -143,7 +143,7 @@ export default function Timesheet() {
       {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={isOpen.isOpenForget}
-          row={dataTable}
+          row={props}
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
@@ -152,7 +152,7 @@ export default function Timesheet() {
       {isOpen.isOpenLeave && (
         <LeaveModal
           isOpen={isOpen.isOpenLeave}
-          row={dataTable}
+          row={props}
           handleCloseLeave={() => {
             setIsOpen((isOpen.isOpenLeave = false))
           }}

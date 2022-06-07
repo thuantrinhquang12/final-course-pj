@@ -14,7 +14,6 @@ import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
-
   const ROLES = {
     User: 1,
     Manager: 2,
@@ -22,13 +21,17 @@ const AppRoutesComponent = () => {
   }
 
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   if (tokenAccess && !data) {
-    const data = {
+    const datatype = {
+      tokenAccess: localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN),
       role: localStorage.getItem(LOCAL_STORAGE.ROLE),
     }
-    dispatch(loginAccess({ role: data.role }))
+    dispatch(
+      loginAccess({ role: datatype.role, tokenAccess: datatype.tokenAccess }),
+    )
   }
 
   return (
@@ -39,11 +42,11 @@ const AppRoutesComponent = () => {
         <Route path="/timesheet" element={<SearchField />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<ErrorPage />} />
+        <Route path="Member" element={<Unauthorized />} />
+        <Route path="/" element={<Home />} />
 
         {/* User routes */}
-        <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-          <Route path="/" element={<Home />} />
-        </Route>
+        <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}></Route>
 
         {/* Manager routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}>

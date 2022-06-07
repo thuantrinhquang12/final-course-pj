@@ -206,7 +206,8 @@ const Index = () => {
         columns={columns}
         dataSource={dataSource}
         scroll={{
-          x: 1000,
+          x: 1500,
+          y: 500,
         }}
       />
     </>
