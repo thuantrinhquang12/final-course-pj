@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import ReducerRegister from '../../../../store/ReducerRegister'
+import reducerRegister from '../../../../store/reducerRegister'
 
 const userSlice = createSlice({
   name: 'userInfo',
@@ -17,4 +17,4 @@ const userSlice = createSlice({
 })
 
 export const { loginAccess } = userSlice.actions
-ReducerRegister.register(userSlice.name, userSlice.reducer)
+reducerRegister.register(userSlice.name, userSlice.reducer)

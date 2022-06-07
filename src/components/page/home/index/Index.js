@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import 'antd/dist/antd.min.css'
 import { Table } from 'antd'
 import { Row, Col } from 'antd'
-import styles from './index.module.scss'
+import styles from './Index.module.scss'
 import { typePopup } from '../../../index'
 
 const Index = () => {

@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from 'react'
 import { get } from '../service/requestApi'
-// import { useSelector } from 'react-redux'
-import ItemTimeSheet from './itemTimeSheet'
+import ItemTimeSheet from './ItemTimeSheet'
+
 const Worksheet = () => {
   const [timeSheet, setTimeSheet] = useState([])
 
@@ -17,7 +17,7 @@ const Worksheet = () => {
 
   return (
     <>
-      {(timeSheet.length || []) !== 0 &&
+      {(timeSheet || []).length !== 0 &&
         timeSheet.map((item) => {
           return <ItemTimeSheet key={item.id} row={item}></ItemTimeSheet>
         })}

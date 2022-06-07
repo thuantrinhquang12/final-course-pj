@@ -6,8 +6,8 @@ import styles from './Login.module.scss'
 import { typePopup } from '../../index'
 import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
-import { loginAccess } from './Slice/sliceLogin'
-import { login } from '../../service/auth-service'
+import { loginAccess } from './slice/sliceLogin'
+import { login } from '../../service/authService'
 
 const Login = () => {
   const navigate = useNavigate()
