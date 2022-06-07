@@ -3,9 +3,8 @@ import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useState } from 'react'
 import styles from './UserEditForm.module.scss'
+import defaultImage from './avatar-default.png'
 
-const defaultImage =
-  'https://futurevision.vn/wp-content/themes/bose/images/avatar-default.png'
 const UserAvatar = () => {
   const [file, setFile] = useState(null)
 
@@ -17,12 +16,7 @@ const UserAvatar = () => {
   }
   return (
     <>
-      <Input
-        type="file"
-        onChange={handleChange}
-        id="upload"
-        style={{ display: 'none' }}
-      />
+      <Input type="file" onChange={handleChange} style={{ display: 'none' }} />
       <label htmlFor="upload">
         <div className={styles.avatarList}>
           <div className={styles.avatarContainer}>

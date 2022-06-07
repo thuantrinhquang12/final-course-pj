@@ -17,18 +17,16 @@ const UserDescription = () => {
 
   return (
     <Descriptions column={1}>
-      <>
-        <Descriptions.Item label="Member Code">
-          {profileInfo.member_code}
-        </Descriptions.Item>
-        <Descriptions.Item label="Email">{profileInfo.email}</Descriptions.Item>
-        <Descriptions.Item label="Name">
-          {profileInfo.first_name}
-        </Descriptions.Item>
-        <Descriptions.Item label="Phone Number">
-          {profileInfo.phone_number}
-        </Descriptions.Item>
-      </>
+      <Descriptions.Item label="Member Code">
+        {profileInfo.member_code}
+      </Descriptions.Item>
+      <Descriptions.Item label="Email">{profileInfo.email}</Descriptions.Item>
+      <Descriptions.Item label="Name">
+        {profileInfo.first_name}
+      </Descriptions.Item>
+      <Descriptions.Item label="Phone Number">
+        {profileInfo.phone_number}
+      </Descriptions.Item>
     </Descriptions>
   )
 }

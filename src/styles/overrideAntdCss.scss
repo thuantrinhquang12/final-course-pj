@@ -6,7 +6,8 @@
     position: absolute;
     right: 0%;
     margin-bottom: 7px;
-    margin-right: -12px !important;
+    margin-right: -14px !important;
+    content: '(*)' !important;
   }
 }
 @media (max-width: 767px) {

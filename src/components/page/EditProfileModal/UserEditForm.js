@@ -2,12 +2,15 @@ import { Form, Input, DatePicker, Select, Button, Modal } from 'antd'
 import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useEffect, useState } from 'react'
+import moment from 'moment'
 import axios from 'axios'
+
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
 
 const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
+const dateFormat = 'DD-MM-YYYY'
 
 const UserEditForm = () => {
   const [componentSize, setComponentSize] = useState('default')
@@ -16,16 +19,15 @@ const UserEditForm = () => {
   }
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
+
   useEffect(() => {
     axios.get(API + 'user_info/1').then((res) => {
       setProfileInfo(res.data)
     })
   }, [])
 
-  const onSubmit = (values) => {
-    axios.put(API + 'user_info/1', values).then((res) => {
-      console.log(res.data)
-    })
+  const onSubmit = async (values) => {
+    axios.put(API + 'user_info/1', values)
   }
 
   return (
@@ -68,6 +70,7 @@ const UserEditForm = () => {
               emergency_contact_relationship:
                 profileInfo.emergency_contact_relationship,
               emergency_contact_number: profileInfo.emergency_contact_number,
+              start_date: moment(profileInfo.start_date),
             }}
             onValuesChange={onFormLayoutChange}
             onFinish={onSubmit}
@@ -99,7 +102,6 @@ const UserEditForm = () => {
                       <Select>
                         <Select.Option value="Male">Male</Select.Option>
                         <Select.Option value="Female">Female</Select.Option>
-                        <Select.Option value="Other">Other</Select.Option>
                       </Select>
                     </Form.Item>
                     <Form.Item
@@ -108,7 +110,7 @@ const UserEditForm = () => {
                       labelAlign="left"
                       name="birth_date"
                     >
-                      <DatePicker format="DD-MM-YYYY" />
+                      <DatePicker format={dateFormat} />
                     </Form.Item>
                     <Form.Item
                       label="Identity Number:"
@@ -120,9 +122,8 @@ const UserEditForm = () => {
                           message: 'Please input your Identity Number!',
                         },
                         {
-                          type: 'number',
-                          message:
-                            'Characters or special symbols are not allowed',
+                          pattern: new RegExp(/^[0-9]+$/),
+                          message: 'Only numbers are allowed',
                         },
                         {
                           max: 12,
@@ -138,7 +139,7 @@ const UserEditForm = () => {
                       labelAlign="left"
                       name="date_of_issue"
                     >
-                      <DatePicker format="DD-MM-YYYY" />
+                      <DatePicker format={dateFormat} />
                     </Form.Item>
                     <Form.Item
                       label="Place of issue Identity: "
@@ -175,7 +176,7 @@ const UserEditForm = () => {
                       labelAlign="left"
                       name="passport_expiration"
                     >
-                      <DatePicker format="DD-MM-YYYY" />
+                      <DatePicker format={dateFormat} />
                     </Form.Item>
                     <Form.Item
                       label="Nationality: "
@@ -208,6 +209,12 @@ const UserEditForm = () => {
                       required="true"
                       labelAlign="left"
                       name="other_email"
+                      rules={[
+                        {
+                          type: 'email',
+                          message: 'The input is not valid E-mail!',
+                        },
+                      ]}
                     >
                       <Input />
                     </Form.Item>
@@ -298,7 +305,12 @@ const UserEditForm = () => {
                   labelAlign="left"
                   name="permanent_address"
                   labelCol={{
-                    span: 6,
+                    sm: {
+                      span: 13,
+                    },
+                    lg: {
+                      span: 6,
+                    },
                   }}
                   rules={[
                     {
@@ -318,7 +330,12 @@ const UserEditForm = () => {
                   labelAlign="left"
                   name="temporary_address"
                   labelCol={{
-                    span: 6,
+                    sm: {
+                      span: 13,
+                    },
+                    lg: {
+                      span: 6,
+                    },
                   }}
                   rules={[
                     {
@@ -445,7 +462,7 @@ const UserEditForm = () => {
                       labelAlign="left"
                       name="start_date"
                     >
-                      <DatePicker format="DD-MM-YYYY" />
+                      <DatePicker format={dateFormat} disabled={true} />
                     </Form.Item>
                   </div>
                 </div>
