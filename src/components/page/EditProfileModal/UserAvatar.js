@@ -29,7 +29,6 @@ const UserAvatar = () => {
           </div>
           <Avatar
             shape="square"
-            id="avatar"
             className={styles.smallAvatar}
             src={file ?? defaultImage}
           />
