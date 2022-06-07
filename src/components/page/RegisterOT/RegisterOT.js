@@ -45,6 +45,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       .string()
       .required('Please enter reason')
       .max(100, 'Please enter not too 100 characters'),
+    timeRequestOT: yup.date().nullable().required('Please enter timeRequestOT'),
   })
   const {
     handleSubmit,
@@ -143,9 +144,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
             <>
               <Row>
                 <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">
-                  {dateTime.formatTimestampToDate(row?.work_date)}
-                </Col>
+                <Col flex="auto">{dateTime.formatDate(row?.work_date)}</Col>
               </Row>
               <Row>
                 <div className={styles.groupCol}>
@@ -188,6 +187,11 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                     {errorTimeOT && (
                       <span className={styles.errorField}>
                         OT time must be less Actual Overtime
+                      </span>
+                    )}
+                    {errors.timeRequestOT && (
+                      <span className={styles.errorField}>
+                        {errors.timeRequestOT?.message}
                       </span>
                     )}
                   </Col>
