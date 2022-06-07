@@ -1,7 +1,45 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, Space, Button } from 'antd'
 import 'antd/dist/antd.css'
-export default function Timesheet(props) {
+import axios from 'axios'
+import ForgetModal from '../../forgetModal/forgetModal'
+import LeaveModal from '../../leaveModal/leaveModal'
+
+export default function Timesheet() {
+  const [isOpen, setIsOpen] = useState({
+    isOpenForget: false,
+    isOpenLeave: false,
+  })
+  const handleClickModal = (type) => {
+    const modalType = type.toUpperCase()
+    switch (modalType) {
+      case 'FORGET':
+        setIsOpen({
+          ...isOpen,
+          isOpenForget: !isOpen.isOpenForget,
+        })
+        break
+      case 'LEAVE':
+        setIsOpen({
+          ...isOpen,
+          isOpenLeave: !isOpen.isOpenLeave,
+        })
+        break
+      default:
+        throw new Error('err')
+    }
+  }
+  const [dataTable, setDataTable] = useState()
+  const getTimeSheet = async () => {
+    const res = await axios(
+      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+    )
+    return setDataTable(res.data)
+  }
+  useEffect(() => {
+    getTimeSheet()
+  }, [])
+  console.log('check', dataTable)
   const columns = [
     {
       title: 'No',
@@ -79,17 +117,47 @@ export default function Timesheet(props) {
       key: 'action',
       render: () => (
         <Space>
-          <Button>Forget</Button>
+          <Button
+            onClick={() => {
+              handleClickModal('forget')
+            }}
+          >
+            Forget
+          </Button>
           <Button>Late</Button>
           <Button>Early</Button>
-          <Button>Leave</Button>
+          <Button
+            onClick={() => {
+              handleClickModal('leave')
+            }}
+          >
+            Leave
+          </Button>
         </Space>
       ),
     },
   ]
   return (
     <>
-      <Table columns={columns} dataSource={props}></Table>
+      <Table columns={columns} dataSource={dataTable}></Table>
+      {isOpen.isOpenForget && (
+        <ForgetModal
+          isOpen={isOpen.isOpenForget}
+          row={dataTable}
+          handleCloseForget={() => {
+            setIsOpen((isOpen.isOpenForget = false))
+          }}
+        ></ForgetModal>
+      )}
+      {isOpen.isOpenLeave && (
+        <LeaveModal
+          isOpen={isOpen.isOpenLeave}
+          row={dataTable}
+          handleCloseLeave={() => {
+            setIsOpen((isOpen.isOpenLeave = false))
+          }}
+        ></LeaveModal>
+      )}
     </>
   )
 }
