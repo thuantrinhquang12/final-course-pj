@@ -11,9 +11,9 @@ import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
 import Worksheet from '../components/page'
+
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
-
   const ROLES = {
     User: 1,
     Manager: 2,
@@ -21,13 +21,17 @@ const AppRoutesComponent = () => {
   }
 
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   if (tokenAccess && !data) {
-    const data = {
+    const datatype = {
+      tokenAccess: localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN),
       role: localStorage.getItem(LOCAL_STORAGE.ROLE),
     }
-    dispatch(loginAccess({ role: data.role }))
+    dispatch(
+      loginAccess({ role: datatype.role, tokenAccess: datatype.tokenAccess }),
+    )
   }
 
   return (
@@ -37,6 +41,7 @@ const AppRoutesComponent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<ErrorPage />} />
+        <Route path="Member" element={<Unauthorized />} />
 
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>

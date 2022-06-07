@@ -4,6 +4,8 @@ import styles from './index.module.scss'
 import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
 import Cat from './CrazyCat.jpg'
+import { Link } from 'react-router-dom'
+import ChangePassword from '../../../page/ChangePassword/ChangePassword'
 
 const UserListBar = ({ open, onClick }) => {
   const refChildren = useRef(null)
@@ -54,28 +56,28 @@ const UserListBar = ({ open, onClick }) => {
               ></i>
             </div>
             <div className={styles.NavBody}>
-              <a href="#" className={styles.formGroup}>
+              <Link to="/" className={styles.formGroup}>
                 <h3>HOME</h3>
                 <i className="fa-solid fa-house-chimney"></i>
-              </a>
-              <a href="#" className={styles.formGroup}>
+              </Link>
+              <Link to="timesheet" className={styles.formGroup}>
                 <h3>TIMESHEET</h3>
                 <i className="fa-solid fa-business-time"></i>
-              </a>
-              <a href="#" className={styles.formGroup}>
+              </Link>
+              <Link to="admin" className={styles.formGroup}>
                 <h3>MANAGER</h3>
                 <i className="fa-solid fa-bars-progress"></i>
-              </a>
+              </Link>
             </div>
             <div className={styles.NavBody}>
-              <a href="#" className={styles.formGroup}>
+              <div className={styles.formGroup}>
                 <h3>Edit Profile</h3>
                 <i className="fa-solid fa-hammer"></i>
-              </a>
-              <a href="#" className={styles.formGroup}>
-                <h3>Change Password</h3>
+              </div>
+              <div className={styles.formGroup}>
+                <ChangePassword />
                 <i className="fa-solid fa-key"></i>
-              </a>
+              </div>
               <a href="#" className={styles.formGroup}>
                 <h3>LogOut</h3>
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>

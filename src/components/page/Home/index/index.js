@@ -207,6 +207,7 @@ const Index = () => {
         dataSource={dataSource}
         scroll={{
           x: 1000,
+          y: 300,
         }}
       />
     </>
