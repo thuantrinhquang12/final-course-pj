@@ -15,9 +15,14 @@ export const formatDate = (value) => {
 }
 
 export const formatTimestampToDate = (value) => {
-  return moment.unix(value).format(formatDateType)
+  return moment.unix(value).format(formatTimeType)
 }
 
 export const momentType = (value) => {
   return moment(value, formatTimeType)
+}
+export const timeToDecimal = (t) => {
+  const arr = t.split(':')
+  const dec = parseInt((arr[1] / 6) * 10, 10)
+  return parseFloat(parseInt(arr[0], 10) + '.' + (dec < 10 ? '0' : '') + dec)
 }

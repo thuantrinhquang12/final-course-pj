@@ -11,7 +11,6 @@ const ItemTimeSheet = ({ row }) => {
     isOpenLeave: false,
     isOpenOT: false,
   })
-  console.log(row)
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {

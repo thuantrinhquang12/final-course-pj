@@ -24,12 +24,21 @@ import {
   messageRequest,
 } from '../../index'
 
-import styles from '../leaveModal/leaveModal.module.scss'
+import styles from './RegisterOT.module.scss'
 
-const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
+const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [requestExists, setRequestExists] = useState(false)
+  const [errorTimeOT, setErrorTimeOT] = useState(false)
   const currentTime = useRef(handleDateTime.getCurrentTime())
   const dispatch = useDispatch()
+
+  const dateIn = new Date(row.checkin_original).getTime()
+  const dateOut = new Date(row.checkout_original).getTime()
+  const DateOT = (dateOut - dateIn) / (1000 * 3600)
+  // Actual Overtime
+  const actualOvertime = new Date(DateOT * 60 * 60 * 1000)
+    .toISOString()
+    .slice(11, 16)
 
   const schema = yup.object().shape({
     reasonInput: yup
@@ -63,11 +72,17 @@ const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('reasonInput', request.reason)
-      setValue('reasonInput', request.reason)
+      setValue('timeRequestOT', request.timeRequestOT)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
+    if (
+      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) < DateOT
+    ) {
+      setErrorTimeOT(true)
+      return null
+    }
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -77,6 +92,7 @@ const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
           created_at: currentTime.current,
+          requestOT: values.timeRequestOT,
         }
 
         await tryCatch.handleTryCatch(
@@ -164,21 +180,21 @@ const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
                             }}
                             {...field}
                           />
-                          {errors.checkInTime && (
-                            <span className={styles.errorField}>
-                              {errors.checkInTime?.message}
-                            </span>
-                          )}
                         </>
                       )}
                     />
                   </Col>
+                  <Col flex="100%">
+                    {errorTimeOT && (
+                      <span className={styles.errorField}>
+                        OT time must be less Actual Overtime
+                      </span>
+                    )}
+                  </Col>
                 </div>
                 <div className={styles.groupCol}>
                   <Col flex="150px">Actual Overtime: </Col>
-                  <Col flex="auto">
-                    {row?.checkout_original - row?.checkin_original}
-                  </Col>
+                  <Col flex="auto">{actualOvertime}</Col>
                 </div>
               </Row>
               <Row>
@@ -186,10 +202,10 @@ const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
                   <h3>NOTE:</h3>
                 </Col>
                 <Col flex="100%">
-                  <p>
-                    Thời gian bắt đầu được tính OT là sau 01:00 sau giờ kết thúc
-                    làm việc chính thức
-                  </p>
+                  <span>
+                    - Thời gian bắt đầu được tính OT là sau 01:00 sau giờ kết
+                    thúc làm việc chính thức
+                  </span>
                 </Col>
                 <Col flex="100%">
                   <p>
@@ -215,7 +231,7 @@ const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
                     control={control}
                     render={({ field }) => (
                       <>
-                        <Input.TextAreas
+                        <Input.TextArea
                           rows={4}
                           disabled={handleField.disableField(request.status)}
                           {...field}
@@ -238,14 +254,8 @@ const LeaveModal = ({ isOpen, row, handleCloseOT }) => {
   )
 }
 
-LeaveModal.propTypes = {
+RegisterOT.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseOT: PropTypes.func,
-  // row: PropTypes.shape({
-  //   requests: PropTypes.array,
-  //   work_date: PropTypes.string,
-  //   check_in: PropTypes.string,
-  //   check_out: PropTypes.string,
-  // }),
 }
-export default LeaveModal
+export default RegisterOT
