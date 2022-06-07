@@ -48,7 +48,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       checkInTime: dateTime.momentType('08:00'),
       checkOutTime: dateTime.momentType('17:00'),
     },
-
     resolver: yupResolver(schema),
   })
 
@@ -75,7 +74,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   }, [request])
 
   const onSubmit = async (values, e) => {
-    console.log()
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -83,7 +81,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_type: typeRequest.REQUEST_FORGET,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          request_for_date: dateTime.formatDate(row.work_date),
+          request_for_date: row.work_date,
           error_count: +((values.specialReason || []).length !== 0),
           special_reason: values.specialReason || [],
           reason: values.reasonInput,
@@ -148,15 +146,15 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 <Row>
                   <>
                     <Col flex="150px">Registration date: </Col>
-                    <Col flex="auto">{request?.create_at}</Col>
+                    <Col flex="auto">
+                      {dateTime.formatDateTime(request?.create_at)}
+                    </Col>
                   </>
                 </Row>
               )}
               <Row>
                 <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">
-                  {dateTime.formatTimestampToDate(row.work_date)}
-                </Col>
+                <Col flex="auto">{row.work_date}</Col>
               </Row>
               <Row>
                 <Col flex="150px">
@@ -187,7 +185,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.check_in)})
+                    ({dateTime.formatTime(row.checkin_original)})
                   </span>
                 </Col>
               </Row>
@@ -216,7 +214,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.check_out)})
+                    ({dateTime.formatTime(row.checkout_original)})
                   </span>
                 </Col>
               </Row>
@@ -287,11 +285,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 ForgetModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseForget: PropTypes.func,
-  // row: PropTypes.shape({
-  //   requests: PropTypes.array,
-  //   work_date: PropTypes.string,
-  //   check_in: PropTypes.string,
-  //   check_out: PropTypes.string,
-  // }),
+  row: PropTypes.object,
 }
 export default ForgetModal

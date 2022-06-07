@@ -328,6 +328,15 @@ const Index = () => {
           dataSource={dataSource}
         />
       </div>
+      <Table
+        pagination={{ pageSize: page }}
+        columns={columns}
+        dataSource={dataSource}
+        scroll={{
+          x: 1000,
+          y: 300,
+        }}
+      />
     </>
   )
 }

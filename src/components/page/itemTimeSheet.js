@@ -1,8 +1,6 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/forgetModal'
-import LeaveModal from './leaveModal/leaveModal'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
@@ -18,12 +16,6 @@ const ItemTimeSheet = ({ row }) => {
           isOpenForget: !isOpen.isOpenForget,
         })
         break
-      case 'LEAVE':
-        setIsOpen({
-          ...isOpen,
-          isOpenLeave: !isOpen.isOpenLeave,
-        })
-        break
       default:
         throw new Error('An error occurred')
     }
@@ -36,13 +28,13 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>{moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
-      <div>{moment(row.check_in).format('hh:mm:ss a')}</div>
-      <div>{moment(row.check_out).format('hh:mm:ss a')}</div>
-      <div>{row.late}</div>
-      <div>{row.early}</div>
-      <div>{row.work_time}</div>
-      <div>{row.in_office}</div>
+      <div>Wd: {row.work_date}</div>
+      <div>Ci:{moment(row.check_in).format('HH:mm')}</div>
+      <div>Co:{moment(row.check_out).format('HH:mm')}</div>
+      <div>Late: {row.late}</div>
+      <div>Early: {row.early}</div>
+      <div>Wt: {row.work_time}</div>
+      <div>In office: {row.in_office}</div>
       <button
         type="button"
         onClick={() => {
@@ -50,14 +42,6 @@ const ItemTimeSheet = ({ row }) => {
         }}
       >
         Forget
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          handleClickModal('leave')
-        }}
-      >
-        Leave
       </button>
       {isOpen.isOpenForget && (
         <ForgetModal
@@ -67,15 +51,6 @@ const ItemTimeSheet = ({ row }) => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
         ></ForgetModal>
-      )}
-      {isOpen.isOpenLeave && (
-        <LeaveModal
-          isOpen={isOpen.isOpenLeave}
-          row={row}
-          handleCloseLeave={() => {
-            setIsOpen((isOpen.isOpenLeave = false))
-          }}
-        ></LeaveModal>
       )}
     </div>
   )

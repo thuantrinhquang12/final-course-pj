@@ -16,10 +16,6 @@ export const formatTime = (value) => {
   return moment(value).format(formatTimeType)
 }
 
-export const formatStringToTime = (value) => {
-  return moment(value, formatTimeType).format(formatTimeType)
-}
-
 export const momentType = (value) => {
   return moment(value, formatTimeType)
 }
