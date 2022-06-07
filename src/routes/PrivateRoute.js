@@ -11,11 +11,11 @@ const PrivateRoute = ({ allowedRoles }) => {
   const role = useSelector((state) => state.userInfo?.currentUser?.role)
 
   let auth = []
-  if (role === 'user') {
+  if (role === 'Member') {
     auth = [1]
-  } else if (role === 'manager') {
+  } else if (role === 'Manager') {
     auth = [1, 2]
-  } else if (role === 'admin') {
+  } else if (role === 'Admin') {
     auth = [1, 3]
   } else {
     auth = []
