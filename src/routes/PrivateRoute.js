@@ -3,7 +3,7 @@ import React from 'react'
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import Header from '../components/layout/header/index/index'
+import Header from '../components/layout/header/index/Index'
 
 const PrivateRoute = ({ allowedRoles }) => {
   const location = useLocation()

@@ -2,13 +2,43 @@
   .ant-row {
     margin-bottom: 20px;
   }
+  .ant-picker-input {
+    input {
+      font-weight: 500;
+    }
+  }
+  .ant-modal-header {
+    border-bottom: 1px solid #7d7d7d;
+    background-color: #1890ff;
+    .ant-modal-title {
+      font-size: 20px;
+    }
+  }
+  .ant-modal-body {
+    .ant-checkbox-inner {
+      border: 1px solid #7d7d7d;
+    }
+    .ant-picker {
+      border: 1px solid #7d7d7d;
+    }
+    .ant-input {
+      border: 1px solid #7d7d7d;
+    }
+    .ant-radio-inner {
+      border: 1px solid #7d7d7d;
+    }
+  }
+  .ant-radio-group-outline {
+    margin: 0 10px;
+  }
+  .ant-modal-footer {
+    border-top: none;
+  }
 }
-@media (max-width: 767px) {
+@media (max-width: 638px) {
   .ant-modal {
-    max-width: calc(100% - 16px) !important;
-    margin: auto !important;
-    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
-      margin-left: 0;
+    .ant-radio-group-outline {
+      margin: 10px 0;
     }
   }
 }

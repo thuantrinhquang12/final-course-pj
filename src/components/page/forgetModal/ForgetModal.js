@@ -6,12 +6,6 @@ import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { TimePicker, Input, Checkbox, Row, Col, Skeleton } from 'antd'
 import {
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from './requestSlice'
-import {
   DialogRequest,
   dateTime,
   typeStatusRequest,
@@ -21,8 +15,9 @@ import {
   buttonForm,
   tryCatch,
   messageRequest,
+  requestSlice,
 } from '../../index'
-import styles from './forgetModal.module.scss'
+import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -58,7 +53,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       for (const request of row.requests) {
         if (request.request_type === typeRequest.REQUEST_FORGET) {
           setRequestExists(true)
-          dispatch(getRequests(request.request_id))
+          dispatch(requestSlice.getRequests(request.request_id))
         }
       }
     }
@@ -89,7 +84,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(postRequests(newRequest)),
+          dispatch(requestSlice.postRequests(newRequest)),
           messageRequest.CREATE,
           handleCloseModal,
         )
@@ -104,14 +99,19 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          dispatch(
+            requestSlice.putRequests({
+              id: request.id,
+              requestData: updateRequest,
+            }),
+          ),
           messageRequest.UPDATE,
           handleCloseModal,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(deleteRequests(request.id)),
+          dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseModal,
         )
@@ -123,7 +123,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   const handleCloseModal = () => {
     handleCloseForget()
-    dispatch(getRequests(-1))
+    dispatch(requestSlice.getRequests(-1))
   }
 
   return (
@@ -139,17 +139,15 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       <>
         <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
-            <Skeleton paragraph={{ rows: 10 }}></Skeleton>
+            <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
               {requestExists && (
                 <Row>
-                  <>
-                    <Col flex="150px">Registration date: </Col>
-                    <Col flex="auto">
-                      {dateTime.formatDateTime(request?.create_at)}
-                    </Col>
-                  </>
+                  <Col flex="150px">Registration date: </Col>
+                  <Col flex="auto">
+                    {dateTime.formatDateTime(request?.create_at)}
+                  </Col>
                 </Row>
               )}
               <Row>
@@ -225,21 +223,19 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     name="specialReason"
                     control={control}
                     render={({ field }) => (
-                      <>
-                        <Checkbox.Group
-                          disabled={handleField.disableField(request.status)}
-                          {...field}
-                        >
-                          <Row style={{ marginBottom: 0 }}>
-                            <Checkbox value={0}>
-                              Check-in not counted as error
-                            </Checkbox>
-                            <Checkbox value={1}>
-                              Check-out not counted as error
-                            </Checkbox>
-                          </Row>
-                        </Checkbox.Group>
-                      </>
+                      <Checkbox.Group
+                        disabled={handleField.disableField(request.status)}
+                        {...field}
+                      >
+                        <Row style={{ marginBottom: 0 }}>
+                          <Checkbox value={0}>
+                            Check-in not counted as error
+                          </Checkbox>
+                          <Checkbox value={1}>
+                            Check-out not counted as error
+                          </Checkbox>
+                        </Row>
+                      </Checkbox.Group>
                     )}
                   />
                 </Col>
@@ -249,30 +245,24 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
                 <Col flex="100%">
-                  {status === 'loading' ? (
-                    <Skeleton active size="small" block={true}>
-                      <Input.TextArea></Input.TextArea>
-                    </Skeleton>
-                  ) : (
-                    <Controller
-                      name="reasonInput"
-                      control={control}
-                      render={({ field }) => (
-                        <>
-                          <Input.TextArea
-                            rows={4}
-                            disabled={handleField.disableField(request.status)}
-                            {...field}
-                          />
-                          {errors.reasonInput && (
-                            <span className={styles.errorField}>
-                              {errors.reasonInput?.message}
-                            </span>
-                          )}
-                        </>
-                      )}
-                    />
-                  )}
+                  <Controller
+                    name="reasonInput"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input.TextArea
+                          autoSize={{ minRows: 5, maxRows: 5 }}
+                          disabled={handleField.disableField(request.status)}
+                          {...field}
+                        />
+                        {errors.reasonInput && (
+                          <span className={styles.errorField}>
+                            {errors.reasonInput?.message}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
                 </Col>
               </Row>
             </>
@@ -282,9 +272,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     </DialogRequest>
   )
 }
+
 ForgetModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseForget: PropTypes.func,
   row: PropTypes.object,
 }
+
 export default ForgetModal

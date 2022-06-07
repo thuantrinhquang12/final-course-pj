@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import ForgetModal from './forgetModal/forgetModal'
+import ForgetModal from './forgetModal/ForgetModal'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
   })
+
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
@@ -20,6 +21,7 @@ const ItemTimeSheet = ({ row }) => {
         throw new Error('An error occurred')
     }
   }
+
   return (
     <div
       style={{
@@ -50,7 +52,7 @@ const ItemTimeSheet = ({ row }) => {
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
-        ></ForgetModal>
+        />
       )}
     </div>
   )

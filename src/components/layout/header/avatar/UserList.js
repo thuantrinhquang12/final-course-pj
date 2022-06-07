@@ -1,8 +1,8 @@
 import React from 'react'
-import styles from './index.module.scss'
-import Cat from './CrazyCat.jpg'
-import ChangePassword from '../../../page/ChangePassword/ChangePassword'
-import Logout from '../../../page/Logout/Logout'
+import styles from './Index.module.scss'
+import Cat from './crazyCat.jpg'
+import ChangePassword from '../../../page/changePassword/ChangePassword'
+import Logout from '../../../page/logout/Logout'
 
 const UserList = () => {
   return (

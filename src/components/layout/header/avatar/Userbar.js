@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import styles from './index.module.scss'
+import styles from './Index.module.scss'
 import UserListBar from './UserListBar'
 
 const Userbar = () => {

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import styles from './index.module.scss'
+import styles from './Index.module.scss'
 import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
-import Cat from './CrazyCat.jpg'
+import Cat from './crazyCat.jpg'
 import { Link } from 'react-router-dom'
-import ChangePassword from '../../../page/ChangePassword/ChangePassword'
+import ChangePassword from '../../../page/changePassword/ChangePassword'
 
 const UserListBar = ({ open, onClick }) => {
   const refChildren = useRef(null)
