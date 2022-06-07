@@ -11,9 +11,9 @@ const handleTime = (startTime, endTime) => {
         (hours * 60 - minutes).toString().length > 1
           ? Math.abs(hours * 60 - minutes)
           : `0${hours * 60 - minutes}`
-      return minutes.toString().length > 1
-        ? `0${hours}:${minute}`
-        : `${hours}:${minute}`
+      return hours.toString().length > 1
+        ? `${hours}:${minute}`
+        : `0${hours}:${minute}`
     } else {
       return minutes.toString().length > 1
         ? `0${hours}:${minutes}`
@@ -22,6 +22,36 @@ const handleTime = (startTime, endTime) => {
   } else {
     return null
   }
+}
+
+export const handlePlusTime = (start, end) => {
+  const arr = [end ? end : '00:00', start ? start : '00:00']
+  const result = arr.reduce((current, next) => {
+    const hours = next.split(':')
+    return current + Number(hours[0]) * 60 + Number(hours[1])
+  }, 0)
+
+  const hour = Math.floor(result / 60)
+
+  if (hour >= 1) {
+    return {
+      hours: hour,
+      minutes: result - hour * 60,
+    }
+  } else {
+    return {
+      hours: hour,
+      minutes: result,
+    }
+  }
+}
+
+export const handleFormat = (times) => {
+  const hours =
+    times.hours.toString().length > 1 ? times.hours : `0${times.hours}`
+  const minutes =
+    times.minutes.toString().length > 1 ? times.minutes : `0${times.minutes}`
+  return `${hours}:${minutes}`
 }
 
 export default handleTime
