@@ -25,7 +25,7 @@ const RowTimesheet = ({ row }) => {
         })
         break
       default:
-        throw new Error('dm co loi roi')
+        throw new Error('err')
     }
   }
   return (
