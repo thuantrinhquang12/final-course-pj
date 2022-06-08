@@ -16,6 +16,16 @@
   }
 }
 
+.tableHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.whiteColor {
+  color: white;
+}
+
 @media (max-width: 768px) {
   .itemPage {
     justify-content: flex-start !important;
