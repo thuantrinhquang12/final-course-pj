@@ -85,7 +85,7 @@ const ItemTimeSheet = ({ row }) => {
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
-        ></ForgetModal>
+        />
       )}
       {isOpen.isOpenLeave && (
         <LeaveModal
@@ -94,7 +94,7 @@ const ItemTimeSheet = ({ row }) => {
           handleCloseLeave={() => {
             setIsOpen((isOpen.isOpenLeave = false))
           }}
-        ></LeaveModal>
+        />
       )}
       {isOpen.isOpenOT && (
         <RegisterOT
@@ -103,7 +103,7 @@ const ItemTimeSheet = ({ row }) => {
           handleCloseOT={() => {
             setIsOpen((isOpen.isOpenOT = false))
           }}
-        ></RegisterOT>
+        />
       )}
     </div>
   )
