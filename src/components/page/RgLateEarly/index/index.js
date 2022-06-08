@@ -26,16 +26,15 @@ import {
 } from '../../../index'
 
 const Index = ({ handleCloseLateEarly, isOpen, row }) => {
-  const date = '2022-02-12'
   const [requestExists, setRequestExists] = useState(false)
-  const [errDate, setErrDate] = useState(false)
   const { request, status } = useSelector((state) => state.requests)
   const currentTime = useRef(handleDateTime.getCurrentTime())
   const lateTime = handleTime('08:00', row.late)
   const earlyTime = handleTime(row.early, '17:00')
+  const overTime = '01:00'
   const timeRequest = handleFormat(handlePlusTime(lateTime, earlyTime))
-
   const dispatch = useDispatch()
+
   useEffect(() => {
     if (row.requests.length !== 0) {
       for (const request of row.requests) {
@@ -76,58 +75,50 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   }, [request])
   const onSubmit = async (values, e) => {
     console.log('check', values, e)
-    const chooseDate = new Date(values.checkDateTime)
-    const currentDate = new Date()
-    if (chooseDate.getTime() < currentDate.getTime()) {
-      setErrDate(false)
-      const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
-      switch (buttonSubmit) {
-        case 'REGISTER':
-          const newRequest = {
-            request_type: typeRequest.REQUEST_LATE_EARLY,
-            check_in: dateTime.formatTime(values.checkInTime),
-            check_out: dateTime.formatTime(values.checkOutTime),
-            request_for_date: dateTime.formatDate(row.work_date),
-            reason: values.reasonInput,
-            status: typeStatusRequest.SEND,
-            created_at: currentTime.current,
-          }
-          await tryCatch.handleTryCatch(
-            dispatch(postRequests(newRequest)),
-            messageRequest.CREATE,
-            handleCloseLateEarly,
-          )
-          break
-        case 'UPDATE':
-          const updateRequest = {
-            check_in: dateTime.formatTime(values.checkInTime),
-            check_out: dateTime.formatTime(values.checkOutTime),
-            reason: values.reasonInput,
-            update_at: currentTime.current,
-          }
-          await tryCatch.handleTryCatch(
-            dispatch(
-              putRequests({ id: request.id, requestData: updateRequest }),
-            ),
-            messageRequest.UPDATE,
-            handleCloseLateEarly,
-          )
-          break
-        case 'DELETE':
-          await tryCatch.handleTryCatch(
-            dispatch(deleteRequests(request.id)),
-            messageRequest.DELETE,
-            handleCloseLateEarly,
-          )
-          break
-        default:
-          throw new Error('An error occurred')
-      }
-    } else {
-      setErrDate(true)
-      return null
+    const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
+    switch (buttonSubmit) {
+      case 'REGISTER':
+        const newRequest = {
+          request_type: typeRequest.REQUEST_LATE_EARLY,
+          check_in: dateTime.formatTime(values.checkInTime),
+          check_out: dateTime.formatTime(values.checkOutTime),
+          request_for_date: dateTime.formatDate(row.work_date),
+          reason: values.reasonInput,
+          status: typeStatusRequest.SEND,
+          created_at: currentTime.current,
+        }
+        await tryCatch.handleTryCatch(
+          dispatch(postRequests(newRequest)),
+          messageRequest.CREATE,
+          handleCloseLateEarly,
+        )
+        break
+      case 'UPDATE':
+        const updateRequest = {
+          check_in: dateTime.formatTime(values.checkInTime),
+          check_out: dateTime.formatTime(values.checkOutTime),
+          reason: values.reasonInput,
+          update_at: currentTime.current,
+        }
+        await tryCatch.handleTryCatch(
+          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          messageRequest.UPDATE,
+          handleCloseLateEarly,
+        )
+        break
+      case 'DELETE':
+        await tryCatch.handleTryCatch(
+          dispatch(deleteRequests(request.id)),
+          messageRequest.DELETE,
+          handleCloseLateEarly,
+        )
+        break
+      default:
+        throw new Error('An error occurred')
     }
   }
+
+  // console.log('row', row)
 
   return (
     <>
@@ -167,7 +158,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                         <h3>Register for date:</h3>
                       </Col>
                       <Col xs={20} md={20} xl={20}>
-                        <h3>{date}</h3>
+                        <h3>{row.work_date}</h3>
                       </Col>
                     </div>
                   </Col>
@@ -235,15 +226,16 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                               <>
                                 <Space direction="vertical" size={12}>
                                   <DatePicker
+                                    disabledDate={(current) =>
+                                      current.isAfter(moment())
+                                    }
                                     format={dateTime.formatDateTypeYear}
-                                    onChange={field.onChange}
-                                    {...field}
+                                    onChange={(e) => {
+                                      console.log(e)
+                                      return field.onChange(e)
+                                    }}
+                                    defaultValue={moment().subtract(1, 'days')}
                                   />
-                                  {errDate && (
-                                    <span className={styles.requiredField}>
-                                      Time is not valid
-                                    </span>
-                                  )}
                                   {errors.checkDateTime && (
                                     <span className={styles.requiredField}>
                                       {errors.checkDateTime?.message}
@@ -272,7 +264,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                             <h3>Overtime:</h3>
                           </Col>
                           <Col xs={12} md={14} xl={16}>
-                            <h3>00:16</h3>
+                            <h3>{overTime}</h3>
                           </Col>
                         </Col>
                         <Col
@@ -285,7 +277,14 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                             <h3>Time request:</h3>
                           </Col>
                           <Col xs={12} md={10} xl={13}>
-                            <h3>{timeRequest}</h3>
+                            <h3
+                              style={handleDateTime.compareTime(
+                                overTime,
+                                timeRequest,
+                              )}
+                            >
+                              {timeRequest}
+                            </h3>
                           </Col>
                         </Col>
                       </Col>
@@ -294,13 +293,13 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
 
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
-                      <Col xs={4} md={4} xl={4} style={{ display: 'flex' }}>
+                      <Col xs={6} md={6} xl={4} style={{ display: 'flex' }}>
                         <h3>
                           Reason:{' '}
                           <span className={styles.requiredField}>(*)</span>
                         </h3>
                       </Col>
-                      <Col xs={20} md={20} xl={20}>
+                      <Col xs={18} md={18} xl={20}>
                         <Controller
                           name="reasonInput"
                           control={control}

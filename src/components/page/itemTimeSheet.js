@@ -100,7 +100,7 @@ const ItemTimeSheet = ({ row }) => {
         handleCloseLateEarly={() => {
           setIsOpen((isOpen.isOpenLateEarly = false))
         }}
-      ></LateEarly>
+      />
     </div>
   )
 }
