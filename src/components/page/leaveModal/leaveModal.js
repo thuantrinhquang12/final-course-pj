@@ -188,7 +188,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   return (
     <DialogRequest
-      isOpen={isOpen}
+      isOpen={ispen}
       handleModal={handleCloseModal}
       title="Register Leave"
       listButton={buttonForm.formRequestButton}
