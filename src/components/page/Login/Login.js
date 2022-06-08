@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Input, Button } from 'antd'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import 'antd/dist/antd.min.css'
 import { useDispatch } from 'react-redux'
 import styles from './Login.module.scss'
@@ -17,12 +18,12 @@ const Login = () => {
       const res = await login(values)
       dispatch(
         loginAccess({
-          role: res.data.role,
+          role: res.data.roles[0].title,
           tokenAccess: res.access_token,
         }),
       )
-      await localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
-      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.role)
+      localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
+      localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
       typePopup.popupNotice(
         typePopup.SUCCESS_MESSAGE,
         'Success',
@@ -43,12 +44,10 @@ const Login = () => {
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
-          <h2 style={{ textAlign: 'center' }}>Login to your account</h2>
-          <label className={styles.Label}>Email: </label>
+          <h1 style={{ textAlign: 'center' }}>Login to your account</h1>
           <Form.Item
             name="email"
             className={styles.InputField}
-            labelAlign="left"
             rules={[
               {
                 required: true,
@@ -60,13 +59,14 @@ const Login = () => {
               },
             ]}
           >
-            <Input className={styles.Input} placeholder="Email" />
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Username"
+            />
           </Form.Item>
 
-          <label className={styles.Label}>Password : </label>
           <Form.Item
             name="password"
-            labelAlign="left"
             rules={[
               {
                 required: true,
@@ -74,7 +74,10 @@ const Login = () => {
               },
             ]}
           >
-            <Input.Password className={styles.Input} placeholder="Password" />
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="Password"
+            />
           </Form.Item>
 
           <Form.Item className={styles.ItemSignin}>
