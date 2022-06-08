@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import LeaveModal from './leaveModal/LeaveModal'
+import LateEarly from './RgLateEarly/index/index'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
+    isOpenLateEarly: false,
   })
 
   const handleClickModal = (type) => {
@@ -15,6 +17,12 @@ const ItemTimeSheet = ({ row }) => {
         setIsOpen({
           ...isOpen,
           isOpenLeave: !isOpen.isOpenLeave,
+        })
+        break
+      case 'LATE_EARLY':
+        setIsOpen({
+          ...isOpen,
+          isOpenLateEarly: !isOpen.isOpenLeave,
         })
         break
       default:
@@ -45,6 +53,14 @@ const ItemTimeSheet = ({ row }) => {
       >
         Leave
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('late_early')
+        }}
+      >
+        Late_Early
+      </button>
       {isOpen.isOpenLeave && (
         <LeaveModal
           isOpen={isOpen.isOpenLeave}
@@ -54,6 +70,14 @@ const ItemTimeSheet = ({ row }) => {
           }}
         />
       )}
+
+      <LateEarly
+        isOpen={isOpen.isOpenLateEarly}
+        row={row}
+        handleCloseLateEarly={() => {
+          setIsOpen((isOpen.isOpenLateEarly = false))
+        }}
+      />
     </div>
   )
 }
