@@ -21,7 +21,6 @@ const AppRoutesComponent = () => {
   }
 
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
-
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   if (tokenAccess && !data) {
@@ -37,7 +36,7 @@ const AppRoutesComponent = () => {
   return (
     <>
       <Routes>
-        {/* public routes */}
+        {/* public routes no layout */}
         <Route path="/login" element={<Login />} />
         <Route path="/timesheet" element={<SearchField />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
@@ -47,6 +46,11 @@ const AppRoutesComponent = () => {
 
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}></Route>
+
+        {/* User routes */}
+        <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
+          <Route path="/" element={<Home />} />
+        </Route>
 
         {/* Manager routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}>

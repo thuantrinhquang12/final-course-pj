@@ -182,6 +182,7 @@ export default function Timesheet() {
 
           total: 30,
         }}
+        sx={{ align: 'center' }}
       ></Table>
 
       {isOpen.isOpenLeave && (

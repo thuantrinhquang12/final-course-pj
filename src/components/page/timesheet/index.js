@@ -35,7 +35,8 @@ export default function SearchField() {
   return (
     <>
       <div className="search-field">
-        <Space size={50} direction="vertical">
+        <fieldset>
+          <legend>My Time Sheet</legend>
           <Form
             form={form}
             layout="horizontal"
@@ -106,10 +107,11 @@ export default function SearchField() {
               </Button>
             </div>
           </Form>
-          <>
-            <Timesheet></Timesheet>
-          </>
-        </Space>
+        </fieldset>
+
+        <>
+          <Timesheet></Timesheet>
+        </>
       </div>
     </>
   )

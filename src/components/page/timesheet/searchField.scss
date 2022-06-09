@@ -2,7 +2,7 @@
   align-content: center;
   width: 100%;
   border: 2px solid #444444;
-  height: 400px;
+  height: 350px;
   padding: 10px;
 }
 .ant-form {
@@ -17,14 +17,14 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top: 20px;
-  padding: 50px;
+  padding: 20px;
 }
 .selected_sort {
   display: flex;
   flex-direction: row;
-  flex-grow: 3;
+  flex-grow: 2;
   width: 100px;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .selected_choose {
   flex-grow: 1;
@@ -39,4 +39,15 @@
   button {
     margin-left: 50px;
   }
+}
+fieldset {
+  margin-bottom: 50px;
+  border: 1px solid black;
+  legend {
+    width: 150px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+  }
+  padding: 50px;
 }
