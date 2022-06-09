@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import ReducerRegistry from '../../../store/ReducerRegister'
+import reducerRegistry from '../../../store/reducerRegister'
 import { get, post, put, del } from '../../service/requestApi'
 
 export const getRequests = createAsyncThunk(
@@ -11,12 +11,14 @@ export const getRequests = createAsyncThunk(
     return await get(`requests/${id}`)
   },
 )
+
 export const postRequests = createAsyncThunk(
   'requests/postRequests',
   async (data) => {
     return await post('requests', data)
   },
 )
+
 export const putRequests = createAsyncThunk(
   'requests/putRequests',
   async (data) => {
@@ -24,12 +26,14 @@ export const putRequests = createAsyncThunk(
     return await put(`requests/${id}`, requestData)
   },
 )
+
 export const deleteRequests = createAsyncThunk(
   'requests/deleteRequests',
   async (id) => {
     return await del(`requests/${id}`)
   },
 )
+
 const requestsSlice = createSlice({
   name: 'requests',
   initialState: {
@@ -47,24 +51,25 @@ const requestsSlice = createSlice({
     [getRequests.rejected]: (state) => {
       state.status = 'failed'
     },
-    [postRequests.pending]: (state, action) => {
+    [postRequests.pending]: (state) => {
       state.status = 'loadingRegister'
     },
-    [postRequests.fulfilled]: (state, action) => {
+    [postRequests.fulfilled]: (state) => {
       state.status = 'successRegister'
     },
-    [putRequests.pending]: (state, action) => {
+    [putRequests.pending]: (state) => {
       state.status = 'loadingUpdate'
     },
-    [putRequests.fulfilled]: (state, action) => {
+    [putRequests.fulfilled]: (state) => {
       state.status = 'successUpdate'
     },
-    [deleteRequests.pending]: (state, action) => {
+    [deleteRequests.pending]: (state) => {
       state.message = 'loadingDelete'
     },
-    [deleteRequests.fulfilled]: (state, action) => {
+    [deleteRequests.fulfilled]: (state) => {
       state.status = 'successDelete'
     },
   },
 })
-ReducerRegistry.register(requestsSlice.name, requestsSlice.reducer)
+
+reducerRegistry.register(requestsSlice.name, requestsSlice.reducer)

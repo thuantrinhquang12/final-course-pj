@@ -6,13 +6,6 @@ import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Row, Col, Skeleton, TimePicker } from 'antd'
 import {
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from '../leaveModal/requestSlice'
-typeStatusRequest
-import {
   DialogRequest,
   dateTime,
   typeStatusRequest,
@@ -22,6 +15,7 @@ import {
   buttonForm,
   tryCatch,
   messageRequest,
+  requestSlice,
 } from '../../index'
 
 import styles from './RegisterOT.module.scss'
@@ -63,7 +57,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       for (const request of row.requests) {
         if (request.request_type === typeRequest.REQUEST_OT) {
           setRequestExists(true)
-          dispatch(getRequests(request.request_id))
+          dispatch(requestSlice.getRequests(request.request_id))
           break
         }
       }
@@ -97,7 +91,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
         }
 
         await tryCatch.handleTryCatch(
-          dispatch(postRequests(newRequest)),
+          dispatch(requestSlice.postRequests(newRequest)),
           messageRequest.CREATE,
           handleCloseOT,
         )
@@ -109,14 +103,19 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          dispatch(
+            requestSlice.putRequests({
+              id: request.id,
+              requestData: updateRequest,
+            }),
+          ),
           messageRequest.UPDATE,
           handleCloseOT,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(deleteRequests(request.id)),
+          dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseOT,
         )

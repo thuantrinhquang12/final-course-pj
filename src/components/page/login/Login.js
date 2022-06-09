@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Form, Input, Button } from 'antd'
-import 'antd/dist/antd.min.css'
 import { useDispatch } from 'react-redux'
 import styles from './Login.module.scss'
 import { typePopup } from '../../index'
 import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
-import { loginAccess } from './Slice/sliceLogin'
-import { login } from '../../service/auth-service'
+import { loginAccess } from './slice/sliceLogin'
+import { login } from '../../service/authService'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
