@@ -6,6 +6,7 @@ import axios from 'axios'
 import ForgetModal from '../../forgetModal/forgetModal'
 import LeaveModal from '../../leaveModal/leaveModal'
 import moment from 'moment'
+
 const { Text } = Typography
 
 export default function Timesheet() {
@@ -20,7 +21,6 @@ export default function Timesheet() {
     )
     return setDataTable(res.data)
   }
-  console.log(dataTable)
   useEffect(() => {
     getTimeSheet()
   }, [])
@@ -183,7 +183,7 @@ export default function Timesheet() {
           total: 30,
         }}
         sx={{ align: 'center' }}
-      ></Table>
+      />
 
       {isOpen.isOpenLeave && (
         <LeaveModal

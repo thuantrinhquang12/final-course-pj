@@ -16,7 +16,6 @@ const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
   const [valueForm, setValueForm] = useState()
-  const [defaultValues, setdefaultValue] = useState()
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
     setValueForm(values)
@@ -25,7 +24,6 @@ export default function SearchField() {
   const handleReset = () => {
     setdefaultValue(1), form.resetFields()
   }
-  console.log(defaultValues)
   const [form] = Form.useForm()
   const onChangeChoose = (e) => {
     setChoose(e.target.value)
