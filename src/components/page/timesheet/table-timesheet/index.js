@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Space, Button } from 'antd'
-import 'antd/dist/antd.css'
+import { Table, Space, Button, Typography } from 'antd'
+import 'antd/dist/antd.min.css'
+import './table-timesheet.scss'
 import axios from 'axios'
 import ForgetModal from '../../forgetModal/forgetModal'
 import LeaveModal from '../../leaveModal/leaveModal'
+import moment from 'moment'
+const { Text } = Typography
 
-export default function Timesheet(props) {
+export default function Timesheet() {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
@@ -17,6 +20,7 @@ export default function Timesheet(props) {
     )
     return setDataTable(res.data)
   }
+  console.log(dataTable)
   useEffect(() => {
     getTimeSheet()
   }, [])
@@ -50,31 +54,49 @@ export default function Timesheet(props) {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
+      render: (date) => {
+        return <Text>{moment(date).format('DD/MM/YYYY')} </Text>
+      },
     },
     {
       title: 'Check in',
-      dataIndex: 'check_in',
-      key: 'check_in',
+      dataIndex: 'checkin_original',
+      key: 'checkin_original',
     },
     {
       title: 'Check out',
-      dataIndex: 'check_out',
-      key: 'check_out',
+      dataIndex: 'checkout_original',
+      key: 'checkout_original',
     },
     {
       title: 'Late',
       dataIndex: 'late',
       key: 'late',
+      render: (late) => {
+        if (late === '') {
+          return ''
+        } else return <Text type="danger">{late}</Text>
+      },
     },
     {
       title: 'Early',
       dataIndex: 'early',
       key: 'early',
+      render: (early) => {
+        if (early === '') {
+          return ''
+        } else return <Text type="danger">{early}</Text>
+      },
     },
     {
       title: 'In office',
       dataIndex: 'in_office',
       key: 'in_office',
+      render: (inoffice) => {
+        if (inoffice < 50) {
+          return <Text type="danger">{inoffice}</Text>
+        } else return <Text type="default">{inoffice}</Text>
+      },
     },
     {
       title: 'Ot',
@@ -85,6 +107,11 @@ export default function Timesheet(props) {
       title: 'Work time',
       dataIndex: 'work_time',
       key: 'work_time',
+      render: (workTime) => {
+        if (workTime < 50) {
+          return <Text type="danger">{workTime}</Text>
+        } else return <Text type="default">{workTime}</Text>
+      },
     },
     {
       title: 'lack',
@@ -93,18 +120,18 @@ export default function Timesheet(props) {
     },
     {
       title: 'Comp',
-      dataIndex: 'comp',
+      dataIndex: 'compensation',
       key: 'comp',
     },
     {
       title: 'Pleave',
-      dataIndex: 'p_leave',
-      key: 'p_leave',
+      dataIndex: 'paid_leave',
+      key: 'paid_leave',
     },
     {
       title: 'Uleave',
-      dataIndex: 'u_leave',
-      key: 'u_leave',
+      dataIndex: 'unpaid_leave',
+      key: 'unpaid_leave',
     },
     {
       title: 'Note',
@@ -113,7 +140,6 @@ export default function Timesheet(props) {
     },
     {
       title: 'Action',
-
       key: 'action',
       render: () => (
         <Space>
@@ -124,6 +150,15 @@ export default function Timesheet(props) {
           >
             Forget
           </Button>
+          {isOpen.isOpenForget && (
+            <ForgetModal
+              isOpen={isOpen.isOpenForget}
+              row={dataTable}
+              handleCloseForget={() => {
+                setIsOpen((isOpen.isOpenForget = false))
+              }}
+            ></ForgetModal>
+          )}
           <Button>Late/Early</Button>
 
           <Button
@@ -139,20 +174,20 @@ export default function Timesheet(props) {
   ]
   return (
     <>
-      <Table columns={columns} dataSource={dataTable}></Table>
-      {isOpen.isOpenForget && (
-        <ForgetModal
-          isOpen={isOpen.isOpenForget}
-          row={props}
-          handleCloseForget={() => {
-            setIsOpen((isOpen.isOpenForget = false))
-          }}
-        ></ForgetModal>
-      )}
+      <Table
+        columns={columns}
+        dataSource={dataTable}
+        pagination={{
+          defaultCurrent: 1,
+
+          total: 30,
+        }}
+      ></Table>
+
       {isOpen.isOpenLeave && (
         <LeaveModal
           isOpen={isOpen.isOpenLeave}
-          row={props}
+          row={dataTable}
           handleCloseLeave={() => {
             setIsOpen((isOpen.isOpenLeave = false))
           }}

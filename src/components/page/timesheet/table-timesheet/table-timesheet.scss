@@ -1,0 +1,23 @@
+table {
+  border: 1px solid #000000;
+  thead {
+    align-items: center;
+    align-content: center;
+    tr {
+      align-items: center;
+      background-color: #01c3ff;
+      th {
+        border: 1px solid #000000;
+      }
+    }
+  }
+  tbody {
+    border: 1px solid #000000;
+    tr {
+      border: 1px solid #000000;
+      td {
+        border: 1px solid #000000;
+      }
+    }
+  }
+}
