@@ -28,6 +28,7 @@ const get = async (url, params = {}) => {
     console.log(error)
   }
 }
+
 const post = async (url, data = {}) => {
   try {
     const response = await instance.post(url, data)
@@ -36,6 +37,7 @@ const post = async (url, data = {}) => {
     console.log(error)
   }
 }
+
 const put = async (url, data = {}) => {
   try {
     const response = await instance.put(url, data)
@@ -44,14 +46,7 @@ const put = async (url, data = {}) => {
     console.log(error)
   }
 }
-const patch = async (url, data = {}) => {
-  try {
-    const response = await instance.patch(url, data)
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
-}
+
 const del = async (url, data = {}) => {
   try {
     const response = await instance.delete(url, data)
@@ -61,4 +56,4 @@ const del = async (url, data = {}) => {
   }
 }
 
-export { get, post, put, patch, del }
+export { get, post, put, del }

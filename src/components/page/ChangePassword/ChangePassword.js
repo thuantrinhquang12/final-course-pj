@@ -3,7 +3,7 @@ import { Form, Input, Modal, Button } from 'antd'
 import 'antd/dist/antd.min.css'
 import { typePopup } from '../../index'
 import style from './ChangePassword.scss'
-import { patch } from '../../service/requestApi'
+import { put } from '../../service/requestApi'
 
 const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -15,7 +15,7 @@ const ChangePassword = () => {
       new_password: newPass,
       new_password_confirmation: passConfirm,
     } = values
-    const res = await patch('/change-password', {
+    const res = await put('/change-password', {
       old_password: oldPassword,
       new_password: newPass,
       new_password_confirmation: passConfirm,
