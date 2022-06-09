@@ -1,4 +1,4 @@
-import { Descriptions } from 'antd'
+import { Descriptions, Row, Col } from 'antd'
 import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
@@ -16,17 +16,35 @@ const UserDescription = () => {
   }, [])
 
   return (
-    <Descriptions column={1}>
-      <Descriptions.Item label="Member Code">
-        {profileInfo.member_code}
-      </Descriptions.Item>
-      <Descriptions.Item label="Email">{profileInfo.email}</Descriptions.Item>
-      <Descriptions.Item label="Name">
-        {profileInfo.first_name}
-      </Descriptions.Item>
-      <Descriptions.Item label="Phone Number">
-        {profileInfo.phone_number}
-      </Descriptions.Item>
+    <Descriptions>
+      <Row>
+        <Col span={24}>
+          <Row style={{ marginBottom: '20px' }}>
+            <Col span={6}>Member Code:</Col>
+            <Col span={12}>
+              <Descriptions.Item>{profileInfo.member_code}</Descriptions.Item>
+            </Col>
+          </Row>
+          <Row style={{ marginBottom: '20px' }}>
+            <Col span={6}>Email:</Col>
+            <Col span={12}>
+              <Descriptions.Item>{profileInfo.email}</Descriptions.Item>
+            </Col>
+          </Row>
+          <Row style={{ marginBottom: '20px' }}>
+            <Col span={6}>Name:</Col>
+            <Col span={12}>
+              <Descriptions.Item>{profileInfo.first_name}</Descriptions.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={6}>Phone Number:</Col>
+            <Col span={12}>
+              <Descriptions.Item>{profileInfo.phone_number}</Descriptions.Item>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </Descriptions>
   )
 }
