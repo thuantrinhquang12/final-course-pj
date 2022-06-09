@@ -8,15 +8,6 @@ import { useForm, Controller } from 'react-hook-form'
 import handleTime, { handlePlusTime, handleFormat } from './handleTime'
 import moment from 'moment'
 import {
-<<<<<<< HEAD:src/components/page/RgLateEarly/index/index.js
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from '../../../common/sliceReducer/requestSlice'
-import {
-=======
->>>>>>> develop:src/components/page/lateEarlyModal/index/Index.js
   DialogRequest,
   dateTime,
   typeStatusRequest,
@@ -78,7 +69,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
     }
   }, [request])
   const onSubmit = async (values, e) => {
-    console.log('check', values, e)
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -126,8 +116,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
         throw new Error('An error occurred')
     }
   }
-
-  // console.log('row', row)
 
   return (
     <>
@@ -240,7 +228,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                     }
                                     format={dateTime.formatDateTypeYear}
                                     onChange={(e) => {
-                                      console.log(e)
                                       return field.onChange(e)
                                     }}
                                     defaultValue={moment().subtract(1, 'days')}

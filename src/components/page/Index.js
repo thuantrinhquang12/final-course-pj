@@ -2,10 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { get } from '../service/requestApi'
 import ItemTimeSheet from './ItemTimeSheet'
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 const Worksheet = () => {
   const [timeSheet, setTimeSheet] = useState([])
 

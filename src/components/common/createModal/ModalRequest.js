@@ -17,9 +17,16 @@ const Dialog = ({
     Modal.confirm({
       title: 'CLOSE MODAL',
       content: 'Are you sure ?',
-      cancelText: 'Cancel',
-      okText: 'Ok',
-      onOk() {
+      okText: 'Cancel',
+      cancelText: 'OK',
+      okButtonProps: {
+        type: 'default',
+      },
+      cancelButtonProps: {
+        style: { padding: '0 28px' },
+        type: 'primary',
+      },
+      onCancel() {
         handleModal()
       },
     })

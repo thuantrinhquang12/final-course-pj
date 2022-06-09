@@ -11,9 +11,7 @@ const ErrorPage = () => {
         email: 'test100@gmail.com',
         password: '123456',
       },
-    }).then((respon) => {
-      console.log('response: ', respon)
-    })
+    }).then((respon) => {})
   }
 
   getData()

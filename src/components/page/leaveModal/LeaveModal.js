@@ -178,6 +178,8 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
         .millisecond(millisecond)
         .format(dateTime.formatTimeType)
       setTimeCount(timeCount)
+    } else {
+      setTimeCount('')
     }
   }
 
@@ -377,7 +379,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                                 row.lack_time,
                               )}
                             >
-                              {timeCount}
+                              {!leaveAllDayCheck && <span> {timeCount}</span>}
                             </span>
                           </div>
                         </>

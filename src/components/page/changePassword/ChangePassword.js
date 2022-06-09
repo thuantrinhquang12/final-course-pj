@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
-import 'antd/dist/antd.min.css'
 import { typePopup } from '../../index'
 import style from './ChangePassword.module.scss'
 
@@ -10,7 +9,6 @@ const ChangePassword = () => {
 
   const onFinish = async (values) => {
     // call API
-    console.log(values)
     try {
       if (true) {
         setIsModalVisible(false)
