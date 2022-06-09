@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import 'antd/dist/antd.min.css'
-import styles from './Index.module.scss'
 import { Table, Row, Col } from 'antd'
-import './index.scss'
 import { dateTime } from '../../../index'
+import styles from './Index.module.scss'
+import './Index.scss'
 
 const Index = () => {
   const [page, setPage] = useState(10)

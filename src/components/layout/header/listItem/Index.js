@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from './Index.module.scss'
-import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'

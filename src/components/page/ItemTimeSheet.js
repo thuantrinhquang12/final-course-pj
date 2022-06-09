@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import moment from 'moment'
+import ForgetModal from './forgetModal/ForgetModal'
 import LeaveModal from './leaveModal/LeaveModal'
-import LateEarly from './RgLateEarly/index/index'
+import RegisterOT from './registerOT/RegisterOT'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
-    isOpenLateEarly: false,
+    isOpenOT: false,
   })
 
   const handleClickModal = (type) => {
@@ -19,10 +20,10 @@ const ItemTimeSheet = ({ row }) => {
           isOpenLeave: !isOpen.isOpenLeave,
         })
         break
-      case 'LATE_EARLY':
+      case 'OT':
         setIsOpen({
           ...isOpen,
-          isOpenLateEarly: !isOpen.isOpenLeave,
+          isOpenOT: !isOpen.isOpenOT,
         })
         break
       default:
@@ -56,11 +57,20 @@ const ItemTimeSheet = ({ row }) => {
       <button
         type="button"
         onClick={() => {
-          handleClickModal('late_early')
+          handleClickModal('ot')
         }}
       >
-        Late_Early
+        OT
       </button>
+      {isOpen.isOpenForget && (
+        <ForgetModal
+          isOpen={isOpen.isOpenForget}
+          row={row}
+          handleCloseForget={() => {
+            setIsOpen((isOpen.isOpenForget = false))
+          }}
+        />
+      )}
       {isOpen.isOpenLeave && (
         <LeaveModal
           isOpen={isOpen.isOpenLeave}
@@ -70,14 +80,15 @@ const ItemTimeSheet = ({ row }) => {
           }}
         />
       )}
-
-      <LateEarly
-        isOpen={isOpen.isOpenLateEarly}
-        row={row}
-        handleCloseLateEarly={() => {
-          setIsOpen((isOpen.isOpenLateEarly = false))
-        }}
-      />
+      {isOpen.isOpenOT && (
+        <RegisterOT
+          isOpen={isOpen.isOpenOT}
+          row={row}
+          handleCloseOT={() => {
+            setIsOpen((isOpen.isOpenOT = false))
+          }}
+        />
+      )}
     </div>
   )
 }

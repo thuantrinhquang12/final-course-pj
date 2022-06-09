@@ -8,12 +8,15 @@ import { useForm, Controller } from 'react-hook-form'
 import handleTime, { handlePlusTime, handleFormat } from './handleTime'
 import moment from 'moment'
 import {
+<<<<<<< HEAD:src/components/page/RgLateEarly/index/index.js
   getRequests,
   postRequests,
   putRequests,
   deleteRequests,
 } from '../../../common/sliceReducer/requestSlice'
 import {
+=======
+>>>>>>> develop:src/components/page/lateEarlyModal/index/Index.js
   DialogRequest,
   dateTime,
   typeStatusRequest,
@@ -23,6 +26,7 @@ import {
   buttonForm,
   tryCatch,
   messageRequest,
+  requestSlice,
 } from '../../../index'
 
 const Index = ({ handleCloseLateEarly, isOpen, row }) => {
@@ -40,7 +44,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       for (const request of row.requests) {
         if (request.request_type === typeRequest.REQUEST_LATE_EARLY) {
           setRequestExists(true)
-          dispatch(getRequests(request.request_id))
+          dispatch(requestSlice.getRequests(request.request_id))
           break
         }
       }
@@ -88,7 +92,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
           created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(postRequests(newRequest)),
+          dispatch(requestSlice.postRequests(newRequest)),
           messageRequest.CREATE,
           handleCloseLateEarly,
         )
@@ -101,14 +105,19 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
           update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          dispatch(
+            requestSlice.putRequests({
+              id: request.id,
+              requestData: updateRequest,
+            }),
+          ),
           messageRequest.UPDATE,
           handleCloseLateEarly,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(deleteRequests(request.id)),
+          dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseLateEarly,
         )
