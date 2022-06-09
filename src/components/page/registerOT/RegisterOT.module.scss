@@ -1,0 +1,11 @@
+.groupCol {
+  display: flex;
+  flex-basis: 40%;
+  flex-wrap: wrap;
+}
+.errorField {
+  color: red;
+}
+.requiredField {
+  color: red;
+}

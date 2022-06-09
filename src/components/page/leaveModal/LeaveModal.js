@@ -7,13 +7,6 @@ import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { TimePicker, Input, Checkbox, Radio, Row, Col, Skeleton } from 'antd'
 import {
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from './requestSlice'
-typeStatusRequest
-import {
   DialogRequest,
   dateTime,
   typeStatusRequest,
@@ -23,9 +16,10 @@ import {
   buttonForm,
   tryCatch,
   messageRequest,
+  requestSlice,
 } from '../../index'
 
-import styles from './leaveModal.module.scss'
+import styles from './LeaveModal.module.scss'
 
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -64,7 +58,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           request.request_type === typeRequest.REQUEST_LEAVE_UNPAID
         ) {
           setRequestExists(true)
-          dispatch(getRequests(request.request_id))
+          dispatch(requestSlice.getRequests(request.request_id))
           break
         }
       }
@@ -137,7 +131,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
         }
 
         await tryCatch.handleTryCatch(
-          dispatch(postRequests(newRequest)),
+          dispatch(requestSlice.postRequests(newRequest)),
           messageRequest.CREATE,
           handleCloseModal,
         )
@@ -160,14 +154,19 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          dispatch(
+            requestSlice.putRequests({
+              id: request.id,
+              requestData: updateRequest,
+            }),
+          ),
           messageRequest.UPDATE,
           handleCloseModal,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(deleteRequests(request.id)),
+          dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseModal,
         )
@@ -183,7 +182,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   const handleCloseModal = () => {
     handleCloseLeave()
-    dispatch(getRequests(-1))
+    dispatch(requestSlice.getRequests(-1))
   }
 
   return (
