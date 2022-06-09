@@ -11,6 +11,7 @@ import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
 import Worksheet from '../components/page'
+import { NotFound } from '../components'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -42,6 +43,7 @@ const AppRoutesComponent = () => {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<ErrorPage />} />
         <Route path="Member" element={<Unauthorized />} />
+        <Route path="/un" element={<NotFound />} />
 
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>

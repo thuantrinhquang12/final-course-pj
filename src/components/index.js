@@ -1,5 +1,7 @@
 export { default as Dialog } from './common/createModal/modal'
 export { default as DialogRequest } from './common/createModal/modalRequest'
+export { default as NotFound } from './page/ErrorPage/notFoundPage/NotFound'
+export { default as AuthorError } from './page/ErrorPage/authorPage/AuthorError'
 export * as typePopup from '../components/common/popupNotice/popupNotice'
 export * as typeRequest from './constant/typeRequest'
 export * as typeStatusRequest from './constant/statusRequest'
