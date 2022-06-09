@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/forgetModal'
 import LeaveModal from './leaveModal/leaveModal'
-import LateEarly from './RgLateEarly/index/index'
+import RegisterOT from './RegisterOT/RegisterOT'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
-    isOpenLateEarly: false,
+    isOpenOT: false,
   })
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
@@ -26,10 +26,10 @@ const ItemTimeSheet = ({ row }) => {
           isOpenLeave: !isOpen.isOpenLeave,
         })
         break
-      case 'LATE_EARLY':
+      case 'OT':
         setIsOpen({
           ...isOpen,
-          isOpenLateEarly: !isOpen.isOpenLeave,
+          isOpenOT: !isOpen.isOpenOT,
         })
         break
       default:
@@ -44,13 +44,16 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>{moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
-      <div>{moment(row.check_in).format('hh:mm:ss a')}</div>
-      <div>{moment(row.check_out).format('hh:mm:ss a')}</div>
-      <div>{row.late}</div>
-      <div>{row.early}</div>
-      <div>{row.work_time}</div>
-      <div>{row.in_office}</div>
+      <div>Date: {moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
+      <div>Checkin: {moment(row.check_in).format('hh:mm:ss a')}</div>
+      <div>Check out: {moment(row.check_out).format('hh:mm:ss a')}</div>
+      <div>Late: {row.late}</div>
+      <div>Early: {row.early}</div>
+      <div>In office: {row.in_office}</div>
+      <div>OT: {row.ot}</div>
+      <div>Work time: {row.work_time}</div>
+      <div>Lack: {row.lack_time}</div>
+      <div>Pleave: {row.pleave}</div>
       <button
         type="button"
         onClick={() => {
@@ -70,10 +73,10 @@ const ItemTimeSheet = ({ row }) => {
       <button
         type="button"
         onClick={() => {
-          handleClickModal('late_early')
+          handleClickModal('ot')
         }}
       >
-        Late_Early
+        OT
       </button>
       {isOpen.isOpenForget && (
         <ForgetModal
@@ -82,7 +85,7 @@ const ItemTimeSheet = ({ row }) => {
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
-        ></ForgetModal>
+        />
       )}
       {isOpen.isOpenLeave && (
         <LeaveModal
@@ -91,16 +94,17 @@ const ItemTimeSheet = ({ row }) => {
           handleCloseLeave={() => {
             setIsOpen((isOpen.isOpenLeave = false))
           }}
-        ></LeaveModal>
+        />
       )}
-
-      <LateEarly
-        isOpen={isOpen.isOpenLateEarly}
-        row={row}
-        handleCloseLateEarly={() => {
-          setIsOpen((isOpen.isOpenLateEarly = false))
-        }}
-      />
+      {isOpen.isOpenOT && (
+        <RegisterOT
+          isOpen={isOpen.isOpenOT}
+          row={row}
+          handleCloseOT={() => {
+            setIsOpen((isOpen.isOpenOT = false))
+          }}
+        />
+      )}
     </div>
   )
 }
