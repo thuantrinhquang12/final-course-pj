@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useState } from 'react'
 import { get } from '../service/requestApi'
-// import { useSelector } from 'react-redux'
-import ItemTimeSheet from './itemTimeSheet'
+import ItemTimeSheet from './ItemTimeSheet'
 const Worksheet = () => {
   const [timeSheet, setTimeSheet] = useState([])
 

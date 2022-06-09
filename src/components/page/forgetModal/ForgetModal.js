@@ -6,12 +6,6 @@ import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { TimePicker, Input, Checkbox, Row, Col, Skeleton } from 'antd'
 import {
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from './requestSlice'
-import {
   DialogRequest,
   dateTime,
   typeStatusRequest,
@@ -21,8 +15,9 @@ import {
   buttonForm,
   tryCatch,
   messageRequest,
+  requestSlice,
 } from '../../index'
-import styles from './forgetModal.module.scss'
+import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -59,7 +54,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       for (const request of row.requests) {
         if (request.request_type === typeRequest.REQUEST_FORGET) {
           setRequestExists(true)
-          dispatch(getRequests(request.request_id))
+          dispatch(requestSlice.getRequests(request.request_id))
         }
       }
     }
@@ -91,7 +86,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(postRequests(newRequest)),
+          dispatch(requestSlice.postRequests(newRequest)),
           messageRequest.CREATE,
           handleCloseModal,
         )
@@ -106,14 +101,19 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          dispatch(
+            requestSlice.putRequests({
+              id: request.id,
+              requestData: updateRequest,
+            }),
+          ),
           messageRequest.UPDATE,
           handleCloseModal,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(deleteRequests(request.id)),
+          dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseModal,
         )
@@ -125,7 +125,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   const handleCloseModal = () => {
     handleCloseForget()
-    dispatch(getRequests(-1))
+    dispatch(requestSlice.getRequests(-1))
   }
 
   return (
