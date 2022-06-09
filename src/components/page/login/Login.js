@@ -53,8 +53,7 @@ const Login = () => {
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
-          <h2 style={{ textAlign: 'center' }}>Login to your account</h2>
-          <label className={styles.Label}>Email: </label>
+          <h1 style={{ textAlign: 'center' }}>LOGIN</h1>
           <Form.Item
             name="email"
             className={styles.InputField}
@@ -73,7 +72,6 @@ const Login = () => {
             <Input className={styles.Input} placeholder="Email" />
           </Form.Item>
 
-          <label className={styles.Label}>Password : </label>
           <Form.Item
             name="password"
             labelAlign="left"
