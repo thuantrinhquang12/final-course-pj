@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import 'antd/dist/antd.min.css'
-import { Table, Row, Col } from 'antd'
+import { Row, Col } from 'antd'
 import styles from './Index.module.scss'
 import './Index.scss'
-import { dateTime } from '../../../index'
+import { dateTime, CMTable } from '../../../index'
 
 const Index = () => {
   const [page, setPage] = useState(10)
@@ -120,11 +120,6 @@ const Index = () => {
       ),
       dataIndex: 'publishedDate',
       key: 'publishedDate',
-      sorter: (a, b) => {
-        const prevDate = new Date(a.publishedDate)
-        const NowDate = new Date(b.publishedDate)
-        return prevDate.getTime() - NowDate.getTime()
-      },
       render: (payload) => {
         const DATE = dateTime.formatDateTimes(new Date(payload))
         return <p className={styles.tableHeader}>{DATE}</p>
@@ -212,15 +207,23 @@ const Index = () => {
           </Col>
         </Row>
       </div>
-      <Table
+      <CMTable
+        // pagination={{ pageSize: page }}
         className="tableNotice"
-        pagination={{ pageSize: page }}
+        data={dataSource}
+        remove={['toDepartment']}
         columns={columns}
-        dataSource={dataSource}
+        sorter={{ no: 'number', author: 'string', publishedDate: 'date' }}
         scroll={{
           x: 1000,
           y: 300,
         }}
+        // styleHead={{
+        //   no: { position: 'tb_end', className: 'okko' },
+        //   author: { position: 'tb_center', className: 'okko' },
+        // }}
+        // styleBody={{ no: { position: 'tb_center', className: 'okko' } }}
+        // pagination={{ pageSize: 20, total: 800 }}
       />
     </>
   )

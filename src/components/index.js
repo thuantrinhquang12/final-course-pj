@@ -1,5 +1,7 @@
 export { default as Dialog } from './common/createModal/Modal'
 export { default as DialogRequest } from './common/createModal/ModalRequest'
+export { default as CMTable } from './common/table/Table'
+export { default as ScrollBarCustom } from './common/customScrollbars/ScrollBar'
 export * as typePopup from '../components/common/popupNotice/popupNotice'
 export * as typeRequest from './constant/typeRequest'
 export * as typeStatusRequest from './constant/statusRequest'
