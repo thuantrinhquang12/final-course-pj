@@ -44,7 +44,7 @@ const AppRoutesComponent = () => {
 
         <Route element={<Header />}>
           {/* public routes with layout */}
-          <Route path="Member" element={<Unauthorized />} />
+          <Route path="/member" element={<Unauthorized />} />
           <Route path="/timesheet" element={<Worksheet />} />
 
           {/* User routes */}
