@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Scrollbars } from 'react-custom-scrollbars'
-import styles from './scrollBar.module.scss'
+import styles from './ScrollBar.module.scss'
 
 const ScrollBarCommon = ({
   maxContainerHeight,
@@ -62,7 +62,7 @@ const ScrollBarCommon = ({
       renderThumbHorizontal={thumbHorizontal}
       autoHide={true}
       autoHeight={true}
-      autoHeightMax={500}
+      autoHeightMax={maxContainerHeight}
       autoHeightMin={minContainerHeight}
       hideTracksWhenNotNeeded={true}
       autoHideTimeout={1000}
