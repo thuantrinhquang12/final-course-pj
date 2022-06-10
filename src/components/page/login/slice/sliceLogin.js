@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import ReducerRegister from '../../../../store/reducerRegister'
+import ReducerRegister from '../../../../store/ReducerRegister'
 
 const userSlice = createSlice({
   name: 'userInfo',

@@ -4,7 +4,7 @@ import React from 'react'
 import { useState } from 'react'
 
 import styles from './UserEditForm.module.scss'
-import defaultImage from './avatar-default.png'
+import defaultImage from './avatarDefault.png'
 
 const UserAvatar = () => {
   const [avatarFile, setAvatarFile] = useState(null)

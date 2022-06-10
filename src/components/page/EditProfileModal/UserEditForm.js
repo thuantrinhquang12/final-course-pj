@@ -9,7 +9,7 @@ import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
 import './index.scss'
-import Dialog from '../../common/createModal/modal'
+import Dialog from '../../common/createModal/Modal'
 
 const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
 const dateFormat = 'DD-MM-YYYY'
