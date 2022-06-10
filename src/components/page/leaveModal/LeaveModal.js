@@ -24,7 +24,7 @@ import {
   tryCatch,
   messageRequest,
   requestSlice,
-} from '../Index'
+} from '../../index'
 
 import styles from './LeaveModal.module.scss'
 
