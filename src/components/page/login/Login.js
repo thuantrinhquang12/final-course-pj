@@ -7,6 +7,7 @@ import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
 import { loginAccess } from './slice/sliceLogin'
 import { login } from '../../service/authService'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
@@ -19,7 +20,7 @@ const Login = () => {
       setLoading(false)
       await dispatch(
         loginAccess({
-          role: res.data.role,
+          role: res.data.roles[0].title,
           tokenAccess: res.access_token,
         }),
       )
@@ -57,7 +58,6 @@ const Login = () => {
           <Form.Item
             name="email"
             className={styles.InputField}
-            labelAlign="left"
             rules={[
               {
                 required: true,
@@ -69,12 +69,14 @@ const Login = () => {
               },
             ]}
           >
-            <Input className={styles.Input} placeholder="Email" />
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Username"
+            />
           </Form.Item>
 
           <Form.Item
             name="password"
-            labelAlign="left"
             rules={[
               {
                 required: true,
@@ -82,7 +84,10 @@ const Login = () => {
               },
             ]}
           >
-            <Input.Password className={styles.Input} placeholder="Password" />
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="Password"
+            />
           </Form.Item>
 
           <Form.Item className={styles.ItemSignin}>
