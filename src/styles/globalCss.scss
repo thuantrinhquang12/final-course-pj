@@ -9,7 +9,11 @@ body {
   a:hover {
     cursor: pointer;
   }
+<<<<<<< HEAD
   overflow: scroll;
+=======
+  overflow: hidden;
+>>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0
 }
 code {
   font-family: 'Jost', sans-serif;
@@ -18,10 +22,18 @@ code {
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
+<<<<<<< HEAD
+=======
+  height: 7px;
+>>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.5);
+<<<<<<< HEAD
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+=======
+  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+>>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0
 }

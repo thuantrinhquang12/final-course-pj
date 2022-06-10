@@ -38,14 +38,17 @@ const AppRoutesComponent = () => {
       <Routes>
         {/* public routes no layout */}
         <Route path="/login" element={<Login />} />
-        <Route path="/timesheet" element={<SearchField />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<ErrorPage />} />
         <Route path="Member" element={<Unauthorized />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/timesheet" element={<SearchField />} />
 
         {/* User routes */}
-        <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}></Route>
+        <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/timesheet" element={<SearchField />} />
+        </Route>
 
         {/* User routes */}
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
