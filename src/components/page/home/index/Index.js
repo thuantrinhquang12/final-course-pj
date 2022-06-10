@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import 'antd/dist/antd.min.css'
 import { Table, Row, Col } from 'antd'
 <<<<<<< HEAD:src/components/page/Home/index/index.js
 import styles from './index.module.scss'
