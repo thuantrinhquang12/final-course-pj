@@ -70,7 +70,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   }, [request])
 
   const onSubmit = async (values, e) => {
-    console.log()
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
