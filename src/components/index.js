@@ -1,5 +1,5 @@
 export { default as Dialog } from './common/createModal/Modal'
-export { default as DialogRequest } from './common/createModal/tmodalRequest'
+export { default as DialogRequest } from './common/createModal/ModalRequest'
 export * as typePopup from '../components/common/popupNotice/popupNotice'
 export * as typeRequest from './constant/typeRequest'
 export * as typeStatusRequest from './constant/statusRequest'
