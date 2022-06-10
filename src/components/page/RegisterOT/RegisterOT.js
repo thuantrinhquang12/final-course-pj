@@ -6,13 +6,6 @@ import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Input, Row, Col, Skeleton, TimePicker } from 'antd'
 import {
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from '../leaveModal/requestSlice'
-typeStatusRequest
-import {
   DialogRequest,
   dateTime,
   typeStatusRequest,

@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
+import 'antd/dist/antd.min.css'
 import { Table, Row, Col } from 'antd'
-<<<<<<< HEAD:src/components/page/Home/index/index.js
-import styles from './index.module.scss'
-import './index.scss'
-=======
 import styles from './Index.module.scss'
-import './Index.scss'
->>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0:src/components/page/home/index/Index.js
+import './index.scss'
 import { dateTime } from '../../../index'
 
 const Index = () => {
@@ -222,13 +218,8 @@ const Index = () => {
         columns={columns}
         dataSource={dataSource}
         scroll={{
-<<<<<<< HEAD:src/components/page/Home/index/index.js
           x: 1500,
           y: 500,
-=======
-          x: 1000,
-          y: 300,
->>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0:src/components/page/home/index/Index.js
         }}
       />
     </>

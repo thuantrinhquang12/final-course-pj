@@ -51,11 +51,7 @@ const requestsSlice = createSlice({
     [getRequests.rejected]: (state) => {
       state.status = 'failed'
     },
-<<<<<<< HEAD:src/components/page/leaveModal/requestSlice.js
     [postRequests.pending]: (state, action) => {
-=======
-    [postRequests.pending]: (state) => {
->>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0:src/components/common/sliceReducer/requestSlice.js
       state.status = 'loadingRegister'
     },
     [postRequests.fulfilled]: (state) => {

@@ -1,15 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
-<<<<<<< HEAD:src/components/page/itemTimeSheet.js
-import ForgetModal from './forgetModal/forgetModal'
-import LeaveModal from './leaveModal/leaveModal'
-import RegisterOT from './RegisterOT/RegisterOT'
-=======
 import ForgetModal from './forgetModal/ForgetModal'
 import LeaveModal from './leaveModal/LeaveModal'
-import RegisterOT from './registerOT/RegisterOT'
->>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0:src/components/page/ItemTimeSheet.js
+import RegisterOT from './RegisterOT/RegisterOT'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({

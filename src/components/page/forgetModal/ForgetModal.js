@@ -10,7 +10,7 @@ import {
   postRequests,
   putRequests,
   deleteRequests,
-} from './requestSlice'
+} from '../../common/sliceReducer/requestSlice'
 import {
   DialogRequest,
   dateTime,

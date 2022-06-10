@@ -6,16 +6,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { TimePicker, Input, Checkbox, Radio, Row, Col, Skeleton } from 'antd'
-<<<<<<< HEAD:src/components/page/leaveModal/leaveModal.js
 import {
   getRequests,
   postRequests,
   putRequests,
   deleteRequests,
-} from './requestSlice'
+} from '../../common/sliceReducer/requestSlice'
 typeStatusRequest
-=======
->>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0:src/components/page/leaveModal/LeaveModal.js
 import {
   DialogRequest,
   dateTime,
@@ -27,13 +24,9 @@ import {
   tryCatch,
   messageRequest,
   requestSlice,
-} from '../../index'
+} from '../Index'
 
-<<<<<<< HEAD:src/components/page/leaveModal/leaveModal.js
-import styles from './leaveModal.module.scss'
-=======
 import styles from './LeaveModal.module.scss'
->>>>>>> 81bd95dd502fea952c2df6143579f686bf94eac0:src/components/page/leaveModal/LeaveModal.js
 
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
