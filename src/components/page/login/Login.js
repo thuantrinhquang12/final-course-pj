@@ -7,6 +7,7 @@ import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
 import { loginAccess } from './slice/sliceLogin'
 import { login } from '../../service/authService'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
