@@ -6,7 +6,7 @@ import Manager from '../components/page/manager/Manager'
 import Home from '../components/page/home/index/Index'
 import Unauthorized from '../components/page/unauthorized/Unauthorized'
 import Admin from '../components/page/admin/Admin'
-import ErrorPage from '../components/page/errorPage/ErrorPage'
+import { AuthorError, NotFound } from '../components'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
@@ -39,8 +39,8 @@ const AppRoutesComponent = () => {
       <Routes>
         {/* public routes no layout */}
         <Route path="/login" element={<Login />} />
-        <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="/unauthorized" element={<AuthorError />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<Header />}>
           {/* public routes with layout */}
