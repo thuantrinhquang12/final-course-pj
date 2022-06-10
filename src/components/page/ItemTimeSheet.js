@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/ForgetModal'
+import LeaveModal from './leaveModal/LeaveModal'
+import RegisterOT from './registerOT/RegisterOT'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
+    isOpenOT: false,
   })
 
   const handleClickModal = (type) => {
@@ -15,6 +18,18 @@ const ItemTimeSheet = ({ row }) => {
         setIsOpen({
           ...isOpen,
           isOpenForget: !isOpen.isOpenForget,
+        })
+        break
+      case 'LEAVE':
+        setIsOpen({
+          ...isOpen,
+          isOpenLeave: !isOpen.isOpenLeave,
+        })
+        break
+      case 'OT':
+        setIsOpen({
+          ...isOpen,
+          isOpenOT: !isOpen.isOpenOT,
         })
         break
       default:
@@ -45,12 +60,46 @@ const ItemTimeSheet = ({ row }) => {
       >
         Forget
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('leave')
+        }}
+      >
+        Leave
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('ot')
+        }}
+      >
+        OT
+      </button>
       {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={isOpen.isOpenForget}
           row={row}
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
+          }}
+        />
+      )}
+      {isOpen.isOpenLeave && (
+        <LeaveModal
+          isOpen={isOpen.isOpenLeave}
+          row={row}
+          handleCloseLeave={() => {
+            setIsOpen((isOpen.isOpenLeave = false))
+          }}
+        />
+      )}
+      {isOpen.isOpenOT && (
+        <RegisterOT
+          isOpen={isOpen.isOpenOT}
+          row={row}
+          handleCloseOT={() => {
+            setIsOpen((isOpen.isOpenOT = false))
           }}
         />
       )}

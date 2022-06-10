@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
-import 'antd/dist/antd.min.css'
-import { Table } from 'antd'
-import { Row, Col } from 'antd'
+import { Table, Row, Col } from 'antd'
 import styles from './Index.module.scss'
-import { typePopup } from '../../../index'
+import './Index.scss'
+import { dateTime } from '../../../index'
 
 const Index = () => {
   const [page, setPage] = useState(10)
-
-  const Department = 'HRD'
 
   const dataSource = [
     {
@@ -143,82 +140,49 @@ const Index = () => {
 
   const columns = [
     {
-      title: 'No',
+      title: <p className={styles.whiteColor}>No</p>,
       dataIndex: 'no',
       key: 'no',
+      render: (payload) => {
+        return <p>{payload}</p>
+      },
     },
     {
-      title: 'Subject',
+      title: <p className={styles.whiteColor}>Subject</p>,
       dataIndex: 'subject',
       key: 'subject',
+      render: (payload) => {
+        return <p>{payload}</p>
+      },
     },
     {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Subject',
-      dataIndex: 'subject',
-      key: 'subject',
-    },
-    {
-      title: 'Author',
+      title: (
+        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>Author</p>
+      ),
       dataIndex: 'author',
       key: 'author',
+      render: (payload) => {
+        return <p className={styles.tableHeader}>{payload}</p>
+      },
     },
     {
-      title: 'To Department',
+      title: (
+        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
+          Department
+        </p>
+      ),
       dataIndex: 'toDepartment',
       key: 'toDepartment',
+      render: (payload) => {
+        return <p className={styles.tableHeader}>{payload}</p>
+      },
     },
     {
-      title: 'publishedDate',
+      title: (
+        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
+          Published Date
+        </p>
+      ),
       dataIndex: 'publishedDate',
       key: 'publishedDate',
       sorter: (a, b) => {
@@ -226,9 +190,17 @@ const Index = () => {
         const NowDate = new Date(b.publishedDate)
         return prevDate.getTime() - NowDate.getTime()
       },
+      render: (payload) => {
+        const DATE = dateTime.formatDateTimes(new Date(payload))
+        return <p className={styles.tableHeader}>{DATE}</p>
+      },
     },
     {
-      title: 'Attachment',
+      title: (
+        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
+          Attachment
+        </p>
+      ),
       dataIndex: 'attchment',
       key: 'attchment',
       render: (payload) => {
@@ -244,36 +216,18 @@ const Index = () => {
       },
     },
     {
-      title: 'Detail',
+      title: <p className={styles.whiteColor}>Detail</p>,
       dataIndex: 'detail',
       key: 'detail',
-      render: (payload, item) => {
+      render: (payload) => {
         return (
-          <p
-            onClick={() => {
-              console.log(typePopup)
-              if (
-                item.toDepartment === 'All' ||
-                Department === item.toDepartment
-              ) {
-                typePopup.popupNotice(
-                  typePopup.SUCCESS_MESSAGE,
-                  'Thành công',
-                  'Quí lắm ms cho đọc nha!',
-                  1,
-                )
-              } else {
-                typePopup.popupNotice(
-                  typePopup.ERROR_MESSAGE,
-                  'Thát bại',
-                  'Xin lõi, bạn méo có quyền đọc thông báo này!',
-                  1,
-                )
-              }
-            }}
+          <a
+            href="https://github.com/thanhliem26/SearchUserGitHub/blob/main/src/components/pages/UserSearch/UserList/UserInfo.js"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {payload}
-          </p>
+          </a>
         )
       },
     },
@@ -329,6 +283,7 @@ const Index = () => {
         />
       </div>
       <Table
+        className="tableNotice"
         pagination={{ pageSize: page }}
         columns={columns}
         dataSource={dataSource}

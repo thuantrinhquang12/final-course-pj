@@ -1,19 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url('antd/dist/antd.min.css');
 
 body {
   margin: 0 auto;
-  font-family: 'Jost', sans-serif;
+  font-family: 'Lato', sans-serif;
   background: #f1f4f5 !important;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   a:hover {
     cursor: pointer;
   }
   overflow: hidden;
 }
 code {
-  font-family: 'Jost', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 ::-webkit-scrollbar {
