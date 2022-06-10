@@ -17,10 +17,11 @@ const Login = () => {
     try {
       setLoading(true)
       const res = await login(values)
+      console.log(res)
       setLoading(false)
       await dispatch(
         loginAccess({
-          role: res.data.role,
+          role: res.data.roles.title,
           tokenAccess: res.access_token,
         }),
       )

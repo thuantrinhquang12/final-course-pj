@@ -1,29 +1,29 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Space, Button, Typography } from 'antd'
+import { Table, Space, Button, Typography, Modal } from 'antd'
 import 'antd/dist/antd.min.css'
 import './table-timesheet.scss'
 import axios from 'axios'
 import ForgetModal from '../../forgetModal/forgetModal'
 import LeaveModal from '../../leaveModal/leaveModal'
 import moment from 'moment'
-
+import ModalLogTimesheet from '../modalLogtimesheet/ModalLogTimesheet'
 const { Text } = Typography
 
-export default function Timesheet() {
+export default function Timesheet({ row }) {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
   })
-  const [dataTable, setDataTable] = useState()
+  const [visible, setVisible] = useState(false)
+  const [dataTable, setDataTable] = useState([])
   const getTimeSheet = async () => {
-    const res = await axios(
-      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
-    )
-    return setDataTable(res.data)
+    const res = await axios(`http://127.0.0.1:8000/api/worksheet`)
+    setDataTable(res.data)
   }
   useEffect(() => {
     getTimeSheet()
   }, [])
+
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
@@ -55,7 +55,11 @@ export default function Timesheet() {
       dataIndex: 'date',
       key: 'date',
       render: (date) => {
-        return <Text>{moment(date).format('DD/MM/YYYY')} </Text>
+        return (
+          <Text onClick={() => setVisible(true)}>
+            {moment(date).format('DD/MM/YYYY , ddd')}{' '}
+          </Text>
+        )
       },
     },
     {
@@ -114,13 +118,13 @@ export default function Timesheet() {
       },
     },
     {
-      title: 'lack',
+      title: 'Lack',
       dataIndex: 'lack',
       key: 'lack',
     },
     {
       title: 'Comp',
-      dataIndex: 'compensation',
+      dataIndex: 'comp',
       key: 'comp',
     },
     {
@@ -150,15 +154,7 @@ export default function Timesheet() {
           >
             Forget
           </Button>
-          {isOpen.isOpenForget && (
-            <ForgetModal
-              isOpen={isOpen.isOpenForget}
-              row={dataTable}
-              handleCloseForget={() => {
-                setIsOpen((isOpen.isOpenForget = false))
-              }}
-            ></ForgetModal>
-          )}
+
           <Button>Late/Early</Button>
 
           <Button
@@ -176,15 +172,32 @@ export default function Timesheet() {
     <>
       <Table
         columns={columns}
-        dataSource={dataTable}
+        dataSource={row}
         pagination={{
           defaultCurrent: 1,
-
-          total: 30,
         }}
         sx={{ align: 'center' }}
       />
-
+      <Modal
+        title="Time Logs"
+        centered
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        width={1000}
+      >
+        <ModalLogTimesheet />
+      </Modal>
+      {isOpen.isOpenForget && (
+        <ForgetModal
+          isOpen={isOpen.isOpenForget}
+          row={dataTable.map((item) => {
+            return item
+          })}
+          handleCloseForget={() => {
+            setIsOpen((isOpen.isOpenForget = false))
+          }}
+        ></ForgetModal>
+      )}
       {isOpen.isOpenLeave && (
         <LeaveModal
           isOpen={isOpen.isOpenLeave}

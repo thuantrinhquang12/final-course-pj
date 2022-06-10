@@ -7,7 +7,9 @@ table {
       align-items: center;
       background-color: #01c3ff;
       th {
-        border: 1px solid #000000;
+        text-align: center !important;
+        background-color: #01c3ff !important;
+        color: white !important;
       }
     }
   }
@@ -16,7 +18,8 @@ table {
     tr {
       border: 1px solid #000000;
       td {
-        border: 1px solid #000000;
+        text-align: center !important;
+        font-weight: 500;
       }
     }
   }

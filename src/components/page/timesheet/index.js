@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Button, Space, Form, DatePicker } from 'antd'
 import { Typography } from 'antd'
@@ -8,6 +8,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './table-timesheet'
+import axios from 'axios'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -16,13 +17,24 @@ const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
   const [valueForm, setValueForm] = useState()
+  const [dataTable, setDataTable] = useState()
+  const getTimeSheet = async () => {
+    const res = await axios(
+      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+    )
+    return setDataTable(res.data)
+  }
+  console.log(dataTable)
+  useEffect(() => {
+    getTimeSheet()
+  }, [])
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
     setValueForm(values)
     console.log(valueForm)
   }
   const handleReset = () => {
-    setdefaultValue(1), form.resetFields()
+    form.resetFields()
   }
   const [form] = Form.useForm()
   const onChangeChoose = (e) => {
@@ -61,26 +73,35 @@ export default function SearchField() {
                     onChange={onChangeChoose}
                     value={choose}
                   >
-                    <Space direction="vertical" size={50}>
+                    <Space direction="vertical" size={35}>
                       <Radio value={1}>Choose from list</Radio>
                       <Radio value={2}>Choose start, end</Radio>
                     </Space>
                   </Radio.Group>
                 </Form.Item>
+                <div className="selected_data">
+                  <Form.Item name="selected_date">
+                    <Select style={{ width: 150 }} disabled={choose === 2}>
+                      <Option value="this month">This month</Option>
+                      <Option value="last month">Last month</Option>
+                      <Option value="last year">Last year</Option>
+                      <Option value="all">All</Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item name="dateRange">
+                    <RangePicker
+                      format={dateFormat}
+                      disabled={choose === 1}
+                      disabledDate={(d) =>
+                        !d ||
+                        d.isAfter('2022-06-09') ||
+                        d.isSameOrBefore('1999-01-01')
+                      }
+                    />
+                  </Form.Item>
+                </div>
               </div>
-              <div className="selected_data">
-                <Form.Item name="selected_date">
-                  <Select style={{ width: 150 }} disabled={choose === 2}>
-                    <Option value="this month">This month</Option>
-                    <Option value="last month">Last month</Option>
-                    <Option value="last year">Last year</Option>
-                    <Option value="all">All</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item name="dateRange">
-                  <RangePicker format={dateFormat} disabled={choose === 1} />
-                </Form.Item>
-              </div>
+
               <div className="selected_sort">
                 <Text>Sort by work date</Text>
                 <Form.Item name="sort">
@@ -108,7 +129,7 @@ export default function SearchField() {
         </fieldset>
 
         <>
-          <Timesheet></Timesheet>
+          <Timesheet row={dataTable}></Timesheet>
         </>
       </div>
     </>

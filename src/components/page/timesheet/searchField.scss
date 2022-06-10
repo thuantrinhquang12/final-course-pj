@@ -1,10 +1,19 @@
 .searchList {
   align-content: center;
   width: 100%;
-  border: 2px solid #444444;
-  height: 350px;
-  padding: 10px;
 }
+fieldset {
+  margin-bottom: 30px;
+  border: 1px solid black;
+  legend {
+    width: 150px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+  }
+  padding: 0px 20px 0px 50px;
+}
+
 .ant-form {
   padding: 50px !important;
 }
@@ -17,17 +26,19 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top: 20px;
-  padding: 20px;
 }
 .selected_sort {
   display: flex;
   flex-direction: row;
   flex-grow: 2;
   width: 100px;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .selected_choose {
   flex-grow: 1;
+  width: 250px;
+  display: flex;
+  flex-direction: row;
 }
 .selected_date {
   flex-grow: 1;
@@ -39,15 +50,4 @@
   button {
     margin-left: 50px;
   }
-}
-fieldset {
-  margin-bottom: 50px;
-  border: 1px solid black;
-  legend {
-    width: 150px;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0px;
-  }
-  padding: 50px;
 }
