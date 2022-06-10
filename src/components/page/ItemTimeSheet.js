@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/ForgetModal'

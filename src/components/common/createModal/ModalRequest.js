@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Skeleton } from 'antd'
 import { typeStatusRequest } from '../../index'
+
 const Dialog = ({
   children,
   isOpen,
@@ -16,15 +17,23 @@ const Dialog = ({
     Modal.confirm({
       title: 'CLOSE MODAL',
       content: 'Are you sure ?',
-      cancelText: 'Cancel',
-      okText: 'Ok',
-      onOk() {
+      okText: 'Cancel',
+      cancelText: 'OK',
+      okButtonProps: {
+        type: 'default',
+      },
+      cancelButtonProps: {
+        style: { padding: '0 28px' },
+        type: 'primary',
+      },
+      onCancel() {
         handleModal()
       },
     })
   }
 
   if (!isOpen) return null
+
   return (
     <>
       <Modal

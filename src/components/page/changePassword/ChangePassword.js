@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
-import 'antd/dist/antd.min.css'
 import { typePopup } from '../../index'
 import style from './ChangePassword.scss'
 import { patch } from '../../service/requestApi'
