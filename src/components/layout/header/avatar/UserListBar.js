@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import styles from './Index.module.scss'
-import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
 import Cat from './crazyCat.jpg'
 import { Link } from 'react-router-dom'

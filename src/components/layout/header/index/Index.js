@@ -1,5 +1,4 @@
 import React from 'react'
-import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
 import Logo from '../logo/Logo'
 import ListItem from '../listItem/Index'
