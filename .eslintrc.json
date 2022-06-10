@@ -24,7 +24,11 @@
     "require-jsdoc": "off",
     "linebreak-style": "off",
     "operator-linebreak": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "max-len": [
+      "error",
+      { "ignoreTemplateLiterals": true, "ignoreStrings": true }
+    ]
   },
   "settings": {
     "react": {
