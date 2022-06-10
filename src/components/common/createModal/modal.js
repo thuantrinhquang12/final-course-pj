@@ -9,11 +9,9 @@ const Dialog = ({ children, isOpen, title, handleModal }) => {
       content: 'Bạn đã chắc chắn là 100% muốn đóng chưa ? Đừng hối hận nhé',
       okText: 'Rồi',
       cancelText: 'Mai rồi',
-
       onOk() {
         handleModal()
       },
-      onCancel() {},
     })
   }
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import 'antd/dist/antd.min.css'
 import { Row, Col } from 'antd'
-import Logo from '../Logo/Logo'
-import ListItem from '../ListItem/index'
-import Avatar from '../Avatar/index'
-import styles from './index.module.scss'
+import Logo from '../logo/Logo'
+import ListItem from '../listItem/Index'
+import Avatar from '../avatar/Index'
+import styles from './Index.module.scss'
 import { Outlet } from 'react-router-dom'
 
 const Index = () => {

@@ -1,4 +1,4 @@
-import { Form, Input, DatePicker, Select, Button, Modal, Row, Col } from 'antd'
+import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useEffect, useState } from 'react'
@@ -9,9 +9,16 @@ import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
 import './index.scss'
+import Dialog from '../../common/createModal/modal'
 
 const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
 const dateFormat = 'DD-MM-YYYY'
+
+const disabledDate = (current) => {
+  return (
+    current && current > moment().endOf('day') && current < moment.year(1900)
+  )
+}
 
 const UserEditForm = () => {
   const [componentSize, setComponentSize] = useState('default')
@@ -31,30 +38,12 @@ const UserEditForm = () => {
     axios.put(API + 'user_info/1', values)
   }
 
-  const confirm = () => {
-    Modal.confirm({
-      title: 'Close Edit Information',
-      content: 'Are you sure you want to cancel editing ?',
-      cancelText: 'No',
-      okText: 'Yes',
-      onOk() {
-        setModalVisible(false)
-      },
-      onCancel() {},
-    })
-  }
-
   return (
     <>
       <h3 onClick={() => setModalVisible(true)}>Edit Profile</h3>
-      <Modal
-        style={{
-          top: 20,
-        }}
-        visible={modalVisible}
-        onCancel={confirm}
-        width="90%"
-        footer={null}
+      <Dialog
+        isOpen={modalVisible}
+        handleModal={() => setModalVisible(!modalVisible)}
       >
         <fieldset className={styles.fieldset}>
           <legend>My Profile</legend>
@@ -153,7 +142,10 @@ const UserEditForm = () => {
                                   },
                                 ]}
                               >
-                                <DatePicker format={dateFormat} />
+                                <DatePicker
+                                  format={dateFormat}
+                                  disabledDate={disabledDate}
+                                />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -797,7 +789,7 @@ const UserEditForm = () => {
             </div>
           </Form>
         </fieldset>
-      </Modal>
+      </Dialog>
     </>
   )
 }

@@ -1,6 +1,6 @@
 import React from 'react'
-import Cat from './CrazyCat.jpg'
-import styles from './index.module.scss'
+import Cat from './crazyCat.jpg'
+import styles from './Index.module.scss'
 import UserList from './UserList'
 import UserBar from './Userbar'
 import 'antd/dist/antd.min.css'

@@ -15,6 +15,7 @@
   "rules": {
     "multiline-ternary": "off",
     "object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
+    "max-len": ["error", { "ignoreStrings": true }],
     "semi": ["error", "never"],
     "indent": "off",
     "require-jsdoc": "off",
