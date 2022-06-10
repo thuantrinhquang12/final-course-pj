@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
 import { typePopup } from '../../index'
 import style from './ChangePassword.scss'
-import { put } from '../../service/requestApi'
+import { patch } from '../../service/requestApi'
 
 const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [error, setError] = useState(false)
   const [form] = Form.useForm()
 
   const onFinish = async (values) => {
@@ -14,7 +15,7 @@ const ChangePassword = () => {
       new_password: newPass,
       new_password_confirmation: passConfirm,
     } = values
-    const res = await put('/change-password', {
+    const res = await patch('/change-password', {
       old_password: oldPassword,
       new_password: newPass,
       new_password_confirmation: passConfirm,
@@ -29,6 +30,7 @@ const ChangePassword = () => {
         )
       } else return false
     } catch (e) {
+      setError(true)
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
         'Failed',
@@ -44,6 +46,7 @@ const ChangePassword = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
     form.resetFields()
+    setError(false)
   }
 
   return (
@@ -140,6 +143,11 @@ const ChangePassword = () => {
               Cancel
             </Button>
           </Form.Item>
+          {error && (
+            <p style={{ color: 'red', textAlign: 'center' }}>
+              Wrong old password !!!
+            </p>
+          )}
         </Form>
       </Modal>
     </>
