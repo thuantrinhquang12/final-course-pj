@@ -29,7 +29,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const dateIn = new Date(row.checkin_original).getTime()
   const dateOut = new Date(row.checkout_original).getTime()
   const DateOT = (dateOut - dateIn) / (1000 * 3600)
-  // Actual Overtime
   const actualOvertime = new Date(DateOT * 60 * 60 * 1000)
     .toISOString()
     .slice(11, 16)
@@ -83,7 +82,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_OT,
-          request_for_date: dateTime.formatTimestampToDate(row.work_date),
+          request_for_date: row.work_date,
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
           created_at: currentTime.current,
@@ -218,9 +217,10 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                 </Col>
                 <Col flex="100%">
                   <span>
-                    - Thời gian request OT <span>không lớn hơn</span> thời gian
-                    Overtime Actual. Các trường hợp OT khi remote cần yêu cầu
-                    qua email.
+                    - Thời gian request OT
+                    <span style={{ color: 'red' }}> không lớn hơn </span> thời
+                    gian Overtime Actual. Các trường hợp OT khi remote cần yêu
+                    cầu qua email.
                   </span>
                 </Col>
               </Row>
