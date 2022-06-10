@@ -15,7 +15,6 @@ import {
   buttonForm,
   tryCatch,
   messageRequest,
-  requestSlice,
 } from '../../index'
 
 import styles from './RegisterOT.module.scss'
@@ -57,7 +56,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       for (const request of row.requests) {
         if (request.request_type === typeRequest.REQUEST_OT) {
           setRequestExists(true)
-          dispatch(requestSlice.getRequests(request.request_id))
+          dispatch(getRequests(request.request_id))
           break
         }
       }
@@ -91,7 +90,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
         }
 
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(postRequests(newRequest)),
           messageRequest.CREATE,
           handleCloseOT,
         )
@@ -103,19 +102,14 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(
-            requestSlice.putRequests({
-              id: request.id,
-              requestData: updateRequest,
-            }),
-          ),
+          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
           messageRequest.UPDATE,
           handleCloseOT,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.deleteRequests(request.id)),
+          dispatch(deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseOT,
         )
