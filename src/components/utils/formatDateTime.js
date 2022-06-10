@@ -20,10 +20,6 @@ export const formatDate = (value) => {
   return moment(value).format(formatDateType)
 }
 
-export const formatTimestampToDate = (value) => {
-  return moment.unix(value).format(formatTimeType)
-}
-
 export const momentType = (value) => {
   return moment(value, formatTimeType)
 }

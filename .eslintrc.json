@@ -15,17 +15,16 @@
   "rules": {
     "multiline-ternary": "off",
     "object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
-    "max-len": ["error", { "ignoreStrings": true }],
+    "max-len": [
+      "error",
+      { "ignoreStrings": true, "code": 120, "ignoreTemplateLiterals": true }
+    ],
     "semi": ["error", "never"],
     "indent": "off",
     "require-jsdoc": "off",
     "linebreak-style": "off",
     "operator-linebreak": "off",
-    "react/prop-types": "off",
-    "max-len": [
-      "error",
-      { "ignoreTemplateLiterals": true, "ignoreStrings": true }
-    ]
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
