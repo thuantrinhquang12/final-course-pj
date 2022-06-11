@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Skeleton } from 'antd'
 import { typeStatusRequest } from '../../index'
+import './ModalRequest.scss'
 
 const Dialog = ({
   children,
@@ -39,6 +40,7 @@ const Dialog = ({
       <Modal
         title={title}
         visible={isOpen}
+        className="modalRequestContainer"
         onCancel={
           statusRequest === typeStatusRequest.CONFIRMED ||
           statusRequest === typeStatusRequest.APPROVED

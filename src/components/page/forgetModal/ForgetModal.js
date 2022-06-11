@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -10,19 +10,21 @@ import {
   dateTime,
   typeStatusRequest,
   typeRequest,
-  handleDateTime,
   handleField,
   buttonForm,
   tryCatch,
   messageRequest,
+  endPoint,
   requestSlice,
 } from '../../index'
+import { getErrorCount } from './handleErrorCount'
 import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
-  const currentTime = useRef(handleDateTime.getCurrentTime())
+
   const dispatch = useDispatch()
+  const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
     reasonInput: yup
@@ -32,7 +34,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
-
   const {
     handleSubmit,
     control,
@@ -46,63 +47,75 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     resolver: yupResolver(schema),
   })
 
-  const { request, status } = useSelector((state) => state.requests)
-
   useEffect(() => {
-    if (row.requests.length !== 0) {
-      for (const request of row.requests) {
-        if (request.request_type === typeRequest.REQUEST_FORGET) {
-          setRequestExists(true)
-          dispatch(requestSlice.getRequests(request.request_id))
-        }
-      }
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_FORGET_OF_DAY,
+          date: row.work_date,
+        }),
+      )
     }
+    checkRequestExists()
   }, [])
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
-      setValue('checkInTime', dateTime.momentType(request.check_in))
-      setValue('checkOutTime', dateTime.momentType(request.check_out))
-      setValue('specialReason', request.special_reason)
+      setValue(
+        'checkInTime',
+        dateTime.momentType(dateTime.formatTime(request?.check_in)),
+      )
+      setValue(
+        'checkOutTime',
+        dateTime.momentType(dateTime.formatTime(request?.check_out)),
+      )
+      setValue('specialReason', request.special_reason || [])
       setValue('reasonInput', request.reason)
+      setRequestExists(true)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
+    const { specialReason } = values
+    const errorCount = getErrorCount(specialReason)
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_FORGET,
+          request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          request_for_date: row.work_date,
-          error_count: +((values.specialReason || []).length !== 0),
-          special_reason: values.specialReason || [],
+          error_count: errorCount,
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
-          created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_FORGET,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
           handleCloseModal,
         )
         break
       case 'UPDATE':
         const updateRequest = {
+          request_type: typeRequest.REQUEST_FORGET,
+          request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          error_count: +((values.specialReason || []).length !== 0),
-          special_reason: values.specialReason || [],
+          error_count: errorCount,
           reason: values.reasonInput,
-          update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
               id: request.id,
               requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_FORGET,
             }),
           ),
           messageRequest.UPDATE,
@@ -123,7 +136,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   const handleCloseModal = () => {
     handleCloseForget()
-    dispatch(requestSlice.getRequests(-1))
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_FORGET_OF_DAY,
+        date: -1,
+      }),
+    )
   }
 
   return (
@@ -167,12 +185,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                         <TimePicker
                           disabled={handleField.disableField(request.status)}
                           format={dateTime.formatTimeType}
+                          {...field}
                           style={{
                             width: '100px',
                             marginRight: '10px',
                             maxWidth: '100%',
                           }}
-                          {...field}
                         />
                         {errors.checkInTime && (
                           <span className={styles.errorField}>
@@ -228,10 +246,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                         {...field}
                       >
                         <Row style={{ marginBottom: 0 }}>
-                          <Checkbox value={0}>
+                          <Checkbox value={1}>
                             Check-in not counted as error
                           </Checkbox>
-                          <Checkbox value={1}>
+                          <Checkbox value={2}>
                             Check-out not counted as error
                           </Checkbox>
                         </Row>
