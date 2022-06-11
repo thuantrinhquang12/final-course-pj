@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { get } from '../service/requestApi'
 import ItemTimeSheet from './ItemTimeSheet'
+
 const Worksheet = () => {
   const [timeSheet, setTimeSheet] = useState([])
 
   const getTimeSheet = async () => {
-    const res = await get(`users/1/timesheet`)
-    setTimeSheet(res)
+    const res = await get(`/worksheet`)
+    setTimeSheet(res.data)
   }
 
   useEffect(() => {
