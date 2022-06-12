@@ -23,6 +23,7 @@ const Dialog = ({ children, isOpen, title, handleModal }) => {
   }
 
   if (!isOpen) return null
+
   return (
     <>
       <Modal

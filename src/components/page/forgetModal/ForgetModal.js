@@ -158,9 +158,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               )}
               <Row>
                 <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">
-                  {dateTime.formatTimestampToDate(row.work_date)}
-                </Col>
+                <Col flex="auto">{row.work_date}</Col>
               </Row>
               <Row>
                 <Col flex="150px">

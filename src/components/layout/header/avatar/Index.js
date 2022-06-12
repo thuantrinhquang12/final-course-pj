@@ -2,7 +2,7 @@ import React from 'react'
 import Cat from './crazyCat.jpg'
 import styles from './Index.module.scss'
 import UserList from './UserList'
-import UserBar from './Userbar'
+import UserBar from './UserBar'
 import { Row, Col } from 'antd'
 
 const Index = () => {

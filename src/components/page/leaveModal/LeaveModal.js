@@ -127,7 +127,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               : '',
           leave_start: leaveAllDayCheck ? '' : leaveStart,
           leave_end: leaveAllDayCheck ? '' : leaveEnd,
-          request_for_date: dateTime.formatTimestampToDate(row.work_date),
+          request_for_date: row.work_date,
           leave_all_day:
             (values.checkboxLeaveAllDay || []).length !== 0
               ? typeRequest.LEAVE_ALL_DAY
@@ -194,7 +194,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   return (
     <DialogRequest
-      isOpen={ispen}
+      isOpen={isOpen}
       handleModal={handleCloseModal}
       title="Register Leave"
       listButton={buttonForm.formRequestButton}
@@ -218,9 +218,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               )}
               <Row>
                 <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">
-                  {dateTime.formatTimestampToDate(row?.work_date)}
-                </Col>
+                <Col flex="auto">{row?.work_date}</Col>
               </Row>
               <Row>
                 <div className={styles.groupCol}>
