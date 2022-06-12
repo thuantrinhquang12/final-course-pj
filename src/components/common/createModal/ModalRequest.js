@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Skeleton } from 'antd'
 import { typeStatusRequest } from '../../index'
+
 const Dialog = ({
   children,
   isOpen,
@@ -32,6 +33,7 @@ const Dialog = ({
   }
 
   if (!isOpen) return null
+
   return (
     <>
       <Modal

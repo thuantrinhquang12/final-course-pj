@@ -39,8 +39,8 @@ const AppRoutesComponent = () => {
       <Routes>
         {/* public routes no layout */}
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/unauthorized" element={<AuthorError />} />
-        <Route path="*" element={<NotFound />} /> */}
+        <Route path="/unauthorized" element={<AuthorError />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<Header />}>
           {/* User routes */}
