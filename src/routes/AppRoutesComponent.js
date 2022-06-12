@@ -1,13 +1,13 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Login from '../components/page/Login/Login'
+import Login from '../components/page/login/Login'
 import PrivateRoute from './PrivateRoute'
-import Manager from '../components/page/Manager/Manager'
-import Home from '../components/page/Home/index/index'
+import Manager from '../components/page/manager/Manager'
+import Home from '../components/page/home/index/Index'
 import SearchField from '../components/page/timesheet'
-import Unauthorized from '../components/page/Unauthorized/Unauthorized'
-import Admin from '../components/page/Admin/Admin'
-import ErrorPage from '../components/page/ErrorPage/ErrorPage'
+import Unauthorized from '../components/page/unauthorized/Unauthorized'
+import Admin from '../components/page/admin/Admin'
+import ErrorPage from '../components/page/errorPage/ErrorPage'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/Login/Slice/sliceLogin'
@@ -41,11 +41,12 @@ const AppRoutesComponent = () => {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<ErrorPage />} />
         <Route path="Member" element={<Unauthorized />} />
-        <Route path="/timesheet" element={<SearchField />} />
 
         {/* User routes */}
+        <Route element={<Header />} />
         <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
           <Route path="/" element={<Home />} />
+          <Route path="/timesheet" element={<SearchField />} />
         </Route>
 
         {/* User routes */}
