@@ -10,6 +10,7 @@ const Logout = () => {
     await del('/logout')
     localStorage.removeItem(LOCAL_STORAGE.ROLE)
     localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN)
+    localStorage.removeItem(LOCAL_STORAGE.INF_USER)
     navigate('/login', { replace: true })
   }
 

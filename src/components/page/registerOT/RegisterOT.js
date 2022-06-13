@@ -238,6 +238,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                           rows={4}
                           disabled={handleField.disableField(request.status)}
                           {...field}
+                          autoSize={{ minRows: 5, maxRows: 5 }}
                         />
                         {errors.reasonInput && (
                           <span className={styles.errorField}>
