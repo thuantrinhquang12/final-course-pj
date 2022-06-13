@@ -26,6 +26,12 @@ const ItemTimeSheet = ({ row }) => {
           isOpenOT: !isOpen.isOpenOT,
         })
         break
+      case 'FORGET':
+        setIsOpen({
+          ...isOpen,
+          isOpenForget: !isOpen.isOpenForget,
+        })
+        break
       default:
         throw new Error('An error occurred')
     }
