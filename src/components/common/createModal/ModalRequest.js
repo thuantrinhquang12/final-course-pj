@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Skeleton } from 'antd'
 import { typeStatusRequest } from '../../index'
@@ -45,12 +45,13 @@ const Dialog = ({
             ? handleModal
             : confirm
         }
+        style={{ fontWeight: '500' }}
         footer={
           statusGetRequest === 'loading' ? (
             <>
-              <Skeleton.Button></Skeleton.Button>
-              <Skeleton.Button></Skeleton.Button>
-              <Skeleton.Button></Skeleton.Button>
+              <Skeleton.Button />
+              <Skeleton.Button />
+              <Skeleton.Button />
             </>
           ) : (
             <>
@@ -100,6 +101,7 @@ const Dialog = ({
     </>
   )
 }
+
 Dialog.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -109,4 +111,5 @@ Dialog.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
 }
-export default memo(Dialog)
+
+export default Dialog
