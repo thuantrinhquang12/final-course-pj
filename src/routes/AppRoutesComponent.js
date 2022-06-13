@@ -45,8 +45,16 @@ const AppRoutesComponent = () => {
 
         <Route element={<Header />}>
           {/* public routes with layout */}
-          <Route path="/member" element={<Unauthorized />} />
-          <Route path="/timesheet" element={<Worksheet />} />
+          <Route
+            element={
+              <PrivateRoute
+                allowedRoles={[ROLES.User, ROLES.Manager, ROLES.Admin]}
+              />
+            }
+          >
+            <Route path="/member" element={<Unauthorized />} />
+            <Route path="/timesheet" element={<Worksheet />} />
+          </Route>
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>

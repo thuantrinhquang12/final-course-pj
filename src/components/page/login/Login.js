@@ -23,11 +23,12 @@ const Login = () => {
         loginAccess({
           role: res.data.roles[0].title,
           tokenAccess: res.access_token,
+          shift: [res.data.shifts.check_in, res.data.shifts.check_out],
         }),
       )
-      await localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
-      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
-      await localStorage.setItem(
+      localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
+      localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
+      localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({
           avatar: res.data.avatar,
@@ -103,7 +104,9 @@ const Login = () => {
             </Button>
           </Form.Item>
           {error && (
-            <p style={{ color: 'red', textAlign: 'center' }}>
+            <p
+              style={{ color: 'red', textAlign: 'center', paddingTop: '10px' }}
+            >
               Email or Password fail!!
             </p>
           )}
