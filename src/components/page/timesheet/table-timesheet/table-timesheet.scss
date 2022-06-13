@@ -8,7 +8,7 @@ table {
       background-color: #01c3ff;
       th {
         text-align: center !important;
-        background-color: #01c3ff !important;
+        background-color: #6b6f70 !important;
         color: white !important;
       }
     }
@@ -19,8 +19,14 @@ table {
       border: 1px solid #000000;
       td {
         text-align: center !important;
-        font-weight: 500;
+        font-weight: 400;
       }
     }
   }
+}
+.table-row-light {
+  background-color: #ffffff;
+}
+.table-row-dark {
+  background-color: #fbfbfb;
 }

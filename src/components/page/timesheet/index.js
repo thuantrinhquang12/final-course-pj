@@ -8,6 +8,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './table-timesheet'
+// import { get } from '../../service/requestApi'
 import axios from 'axios'
 
 const { RangePicker } = DatePicker
@@ -16,7 +17,13 @@ const { Text } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
-  const [valueForm, setValueForm] = useState()
+  // const [valueForm, setValueForm] = useState([
+  //   {
+  //     sort: 'ascending',
+  //   },
+  // ])
+
+  // const [dataTimesheet, setDataTimesheet] = useState()
   const [dataTable, setDataTable] = useState()
   const getTimeSheet = async () => {
     const res = await axios(
@@ -25,13 +32,16 @@ export default function SearchField() {
     return setDataTable(res.data)
   }
   console.log(dataTable)
+  // const getTimeSheets = async () => {
+  //   const res = await get(`http://127.0.0.1:8000/api/worksheet`)
+  //   setDataTimesheet(res.data)
+  // }
   useEffect(() => {
     getTimeSheet()
   }, [])
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
     setValueForm(values)
-    console.log(valueForm)
   }
   const handleReset = () => {
     form.resetFields()

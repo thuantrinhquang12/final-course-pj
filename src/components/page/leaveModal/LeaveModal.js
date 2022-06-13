@@ -6,12 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { TimePicker, Input, Checkbox, Radio, Row, Col, Skeleton } from 'antd'
-import {
-  getRequests,
-  postRequests,
-  putRequests,
-  deleteRequests,
-} from '../../common/sliceReducer/requestSlice'
+
 typeStatusRequest
 import {
   DialogRequest,

@@ -3,20 +3,17 @@
   width: 100%;
 }
 fieldset {
-  margin-bottom: 30px;
-  border: 1px solid black;
+  margin-bottom: 30px !important;
+  border: 1px solid black !important;
   legend {
     width: 150px;
     font-size: 20px;
     font-weight: bold;
     margin: 0px;
   }
-  padding: 0px 20px 0px 50px;
+  padding: 0px 20px 0px 50px !important;
 }
 
-.ant-form {
-  padding: 50px !important;
-}
 .search-field {
   padding: 50px;
   width: 100%;
@@ -50,4 +47,5 @@ fieldset {
   button {
     margin-left: 50px;
   }
+  margin-bottom: 10px;
 }

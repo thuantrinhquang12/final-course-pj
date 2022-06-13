@@ -1,34 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Table, Space, Button, Typography, Modal } from 'antd'
 import 'antd/dist/antd.min.css'
 import './table-timesheet.scss'
-import axios from 'axios'
 import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
 import moment from 'moment'
 import ModalLogTimesheet from '../modalLogtimesheet/ModalLogTimesheet'
+
 const { Text } = Typography
 
-export default function Timesheet({ row }) {
+export default function Timesheet({ row }, sort) {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
   })
+
   const [checkModal, setCheckModal] = useState({
     row: [],
     name: '',
   })
+
   const [visible, setVisible] = useState(false)
-  const [dataTable, setDataTable] = useState([])
-  const getTimeSheet = async () => {
-    const res = await axios(
-      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
-    )
-    setDataTable(res.data)
-  }
-  useEffect(() => {
-    getTimeSheet()
-  }, [])
+  // const [dataTable, setDataTable] = useState([])
+  // // const getTimeSheet = async () => {
+  // //   const res = await axios(
+  // //     `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+  // //   )
+  // //   setDataTable(res.data)
+  // // }
+
+  // // useEffect(() => {
+  // //   getTimeSheet()
+  // //   getTimeSheets()
+  // // }, [])
 
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
@@ -53,17 +57,22 @@ export default function Timesheet({ row }) {
   const columns = [
     {
       title: 'No',
-      dataIndex: 'key',
-      key: 'no',
+      dataIndex: 'id',
+      key: 'id',
+      defaultSortOrder: 'ascend',
+      sorter: {
+        compare: (a, b) => b.id - a.id,
+        multiple: 1,
+      },
     },
     {
       title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'work_date',
+      key: 'work_date',
       render: (date) => {
         return (
           <Text onClick={() => setVisible(true)}>
-            {moment(date).format('DD/MM/YYYY , ddd')}{' '}
+            {moment(date).format('DD/MM/YYYY|ddd')}{' '}
           </Text>
         )
       },
@@ -72,11 +81,21 @@ export default function Timesheet({ row }) {
       title: 'Check in',
       dataIndex: 'checkin_original',
       key: 'checkin_original',
+      render: (checkin_original) => {
+        if (checkin_original !== null) {
+          return <Text>{moment(checkin_original).format('DD/MM/YYYY ')} </Text>
+        } else return <Text></Text>
+      },
     },
     {
       title: 'Check out',
       dataIndex: 'checkout_original',
       key: 'checkout_original',
+      render: (checkout_original) => {
+        if (checkout_original !== null) {
+          return <Text>{moment(checkout_original).format('DD/MM/YYYY ')} </Text>
+        } else return <Text></Text>
+      },
     },
     {
       title: 'Late',
@@ -102,23 +121,28 @@ export default function Timesheet({ row }) {
       title: 'In office',
       dataIndex: 'in_office',
       key: 'in_office',
-      render: (inoffice) => {
-        if (inoffice < 50) {
-          return <Text type="danger">{inoffice}</Text>
-        } else return <Text type="default">{inoffice}</Text>
+      render: (in_office) => {
+        if (in_office === null) {
+          return <Text>--:--</Text>
+        } else return <Text type="default">{in_office}</Text>
       },
     },
     {
       title: 'Ot',
-      dataIndex: 'ot',
-      key: 'ot',
+      dataIndex: 'ot_time',
+      key: 'ot_time',
+      render: (ot_time) => {
+        if (ot_time === null) {
+          return <Text>00:00</Text>
+        } else return <Text>{ot_time}</Text>
+      },
     },
     {
       title: 'Work time',
       dataIndex: 'work_time',
       key: 'work_time',
       render: (workTime) => {
-        if (workTime < 50) {
+        if (workTime === '08:00') {
           return <Text type="danger">{workTime}</Text>
         } else return <Text type="default">{workTime}</Text>
       },
@@ -130,8 +154,8 @@ export default function Timesheet({ row }) {
     },
     {
       title: 'Comp',
-      dataIndex: 'comp',
-      key: 'comp',
+      dataIndex: 'compensation',
+      key: 'compensation',
     },
     {
       title: 'Pleave',
@@ -153,7 +177,7 @@ export default function Timesheet({ row }) {
       key: 'action',
       render: (record) => (
         <Space>
-          <button
+          <Button
             onClick={() => {
               setCheckModal((prev) => {
                 return {
@@ -164,25 +188,19 @@ export default function Timesheet({ row }) {
               handleClickModal('forget')
             }}
           >
-            Forgett
-          </button>
-          {/* <Button
-            onClick={(e) => {
-              setCheckModal = {
-                row: record,
-                name: 'forget',
-              }
-              console.log('avc')
-              handleClickModal('forget')
-            }}
-          >
             Forget
-          </Button> */}
+          </Button>
 
           <Button>Late/Early</Button>
 
           <Button
             onClick={() => {
+              setCheckModal((prev) => {
+                return {
+                  row: record,
+                  name: 'leave',
+                }
+              })
               handleClickModal('leave')
             }}
           >
@@ -197,7 +215,10 @@ export default function Timesheet({ row }) {
     <>
       <Table
         columns={columns}
-        dataSource={dataTable}
+        dataSource={row}
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
+        }
         pagination={{
           defaultCurrent: 1,
         }}
@@ -212,7 +233,7 @@ export default function Timesheet({ row }) {
       >
         <ModalLogTimesheet />
       </Modal>
-      {checkModal.name === 'forget' && (
+      {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={true}
           row={checkModal.row}
@@ -223,8 +244,8 @@ export default function Timesheet({ row }) {
       )}
       {isOpen.isOpenLeave && (
         <LeaveModal
-          isOpen={isOpen.isOpenLeave}
-          row={dataTable}
+          isOpen={true}
+          row={checkModal.row}
           handleCloseLeave={() => {
             setIsOpen((isOpen.isOpenLeave = false))
           }}
