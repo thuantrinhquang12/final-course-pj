@@ -3,7 +3,7 @@ import styles from './Index.module.scss'
 import Cat from './crazyCat.jpg'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
-import UserEditForm from '../../../page/EditProfileModal/UserEditForm'
+import UserEditForm from '../../../page/editProfileModal/UserEditForm'
 
 const UserList = () => {
   return (

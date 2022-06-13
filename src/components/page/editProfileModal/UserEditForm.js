@@ -1,5 +1,4 @@
 import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
-import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
@@ -8,16 +7,15 @@ import axios from 'axios'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
-import './index.scss'
+import './Index.scss'
 import Dialog from '../../common/createModal/Modal'
+import { tryCatch, messageRequest } from '../../index'
 
 const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
 const dateFormat = 'DD-MM-YYYY'
 
 const disabledDate = (current) => {
-  return (
-    current && current > moment().endOf('day') && current < moment.year(1900)
-  )
+  return current && current > moment().endOf('day')
 }
 
 const UserEditForm = () => {
@@ -27,7 +25,6 @@ const UserEditForm = () => {
   }
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
-
   useEffect(() => {
     axios.get(API + 'user_info/1').then((res) => {
       setProfileInfo(res.data)
@@ -35,7 +32,21 @@ const UserEditForm = () => {
   }, [])
 
   const onSubmit = async (values) => {
-    axios.put(API + 'user_info/1', values)
+    const valueEdit = {
+      ...values,
+      birth_date: moment(values.birth_date).format('DD-MM-YYYY'),
+      date_of_issue: moment(values.date_of_issue).format('DD-MM-YYYY'),
+      passport_expiration: moment(values.passport_expiration).format(
+        'DD-MM-YYYY',
+      ),
+    }
+    await tryCatch.handleTryCatch(
+      axios.put(API + 'user_info/1', valueEdit),
+      messageRequest.UPDATE,
+      () => {
+        setModalVisible(false)
+      },
+    )
   }
 
   return (
@@ -54,7 +65,13 @@ const UserEditForm = () => {
               nickname: profileInfo.nickname,
               identity_number: profileInfo.identity_number,
               place_of_issue: profileInfo.place_of_issue,
+              birth_date: moment(profileInfo.birth_date, 'DD-MM-YYYY'),
+              date_of_issue: moment(profileInfo.date_of_issue, 'DD-MM-YYYY'),
               passport_number: profileInfo.passport_number,
+              passport_expiration: moment(
+                profileInfo.passport_expiration,
+                'DD-MM-YYYY',
+              ),
               nationality: profileInfo.nationality,
               other_email: profileInfo.other_email,
               skype: profileInfo.skype,
@@ -100,7 +117,7 @@ const UserEditForm = () => {
                       <Row>
                         <Col span={12}>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Gender:
                                 <span className={styles.requiredField}>
@@ -122,7 +139,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Birth Date:
                                 <span className={styles.requiredField}>
@@ -150,7 +167,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Identity Number:
                                 <span className={styles.requiredField}>
@@ -183,7 +200,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Date of issue Identity:
                                 <span className={styles.requiredField}>
@@ -208,7 +225,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Place of issue Identity:
                                 <span className={styles.requiredField}>
@@ -237,7 +254,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Passport Number:
                               </div>
@@ -259,7 +276,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Passport Expiration:
                               </div>
@@ -275,7 +292,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Nationality:
                                 <span className={styles.requiredField}>
@@ -507,13 +524,13 @@ const UserEditForm = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={4}>
+                    <Col span={5}>
                       <div className={styles.labelInput}>
                         Permanent Address:
                         <span className={styles.requiredField}>(*)</span>
                       </div>
                     </Col>
-                    <Col span={20}>
+                    <Col span={19}>
                       <Form.Item
                         label=""
                         labelAlign="left"
@@ -543,13 +560,13 @@ const UserEditForm = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={4}>
+                    <Col span={5}>
                       <div className={styles.labelInput}>
                         Temporary Address:
                         <span className={styles.requiredField}>(*)</span>
                       </div>
                     </Col>
-                    <Col span={20}>
+                    <Col span={19}>
                       <Form.Item
                         label=""
                         labelAlign="left"
@@ -586,7 +603,7 @@ const UserEditForm = () => {
                       <Row>
                         <Col span={12}>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Tax Identification:
                               </div>
@@ -608,7 +625,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Insurance Number:
                               </div>
@@ -624,7 +641,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>
+                            <Col span={10}>
                               <div className={styles.labelInput}>
                                 Healthcare Provider:
                               </div>
@@ -646,7 +663,7 @@ const UserEditForm = () => {
                             </Col>
                           </Row>
                           <Row>
-                            <Col span={8}>Tax Identification: </Col>
+                            <Col span={10}>Tax Identification: </Col>
                             <Col span={10}>
                               <Form.Item
                                 label=""
@@ -667,7 +684,7 @@ const UserEditForm = () => {
                         <Col span={12}>
                           <Row>
                             <Col span={2}></Col>
-                            <Col span={12}>
+                            <Col span={14}>
                               <div className={styles.labelInput}>
                                 Emergency Contact Name:
                                 <span className={styles.requiredField}>
@@ -675,7 +692,7 @@ const UserEditForm = () => {
                                 </span>
                               </div>
                             </Col>
-                            <Col span={10}>
+                            <Col span={8}>
                               <Form.Item
                                 label=""
                                 labelAlign="left"
@@ -697,7 +714,7 @@ const UserEditForm = () => {
                           </Row>
                           <Row>
                             <Col span={2}></Col>
-                            <Col span={12}>
+                            <Col span={14}>
                               <div className={styles.labelInput}>
                                 Emergency Contact Relationship:
                                 <span className={styles.requiredField}>
@@ -705,7 +722,7 @@ const UserEditForm = () => {
                                 </span>
                               </div>
                             </Col>
-                            <Col span={10}>
+                            <Col span={8}>
                               <Form.Item
                                 label=""
                                 labelAlign="left"
@@ -727,7 +744,7 @@ const UserEditForm = () => {
                           </Row>
                           <Row>
                             <Col span={2}></Col>
-                            <Col span={12}>
+                            <Col span={14}>
                               <div className={styles.labelInput}>
                                 Emergency Contact Number:
                                 <span className={styles.requiredField}>
@@ -735,7 +752,7 @@ const UserEditForm = () => {
                                 </span>
                               </div>
                             </Col>
-                            <Col span={10}>
+                            <Col span={8}>
                               <Form.Item
                                 label=""
                                 labelAlign="left"
@@ -757,12 +774,12 @@ const UserEditForm = () => {
                           </Row>
                           <Row>
                             <Col span={2}></Col>
-                            <Col span={12}>
+                            <Col span={14}>
                               <div className={styles.labelInput}>
                                 Start Date:
                               </div>
                             </Col>
-                            <Col span={10}>
+                            <Col span={8}>
                               <Form.Item
                                 label=""
                                 labelAlign="left"

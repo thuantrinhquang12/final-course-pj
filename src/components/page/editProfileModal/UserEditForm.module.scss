@@ -9,6 +9,7 @@
   }
   padding: 50px;
 }
+
 .form {
   display: flex;
   justify-content: center;
@@ -38,6 +39,7 @@
   }
   .requiredField {
     color: red;
+    margin-left: 2px;
   }
 }
 
