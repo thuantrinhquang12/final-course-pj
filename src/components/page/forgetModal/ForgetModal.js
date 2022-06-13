@@ -22,8 +22,10 @@ import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
+
   const dispatch = useDispatch()
-  console.log('mouting')
+  const { request, status } = useSelector((state) => state.requests)
+
   const schema = yup.object().shape({
     reasonInput: yup
       .string()
@@ -32,9 +34,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
-  const { request, status } = useSelector((state) => state.requests)
-
-  console.log('request', request)
 
   const {
     handleSubmit,
@@ -50,7 +49,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   })
 
   useEffect(() => {
-    console.log('run api')
     const checkRequestExists = async () => {
       await dispatch(
         requestSlice.getRequestsOfDay({
@@ -64,7 +62,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
-      console.log('setValue run')
       setValue(
         'checkInTime',
         dateTime.momentType(dateTime.formatTime(request?.check_in)),
@@ -73,7 +70,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
         'checkOutTime',
         dateTime.momentType(dateTime.formatTime(request?.check_out)),
       )
-      setValue('specialReason', request.special_reason)
+      setValue('specialReason', request.special_reason || [])
       setValue('reasonInput', request.reason)
       setRequestExists(true)
     }
@@ -140,7 +137,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   const handleCloseModal = () => {
     handleCloseForget()
-    dispatch(requestSlice.getRequestsOfDay(-1))
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_FORGET_OF_DAY,
+        date: -1,
+      }),
+    )
   }
 
   return (
@@ -245,10 +247,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                         {...field}
                       >
                         <Row style={{ marginBottom: 0 }}>
-                          <Checkbox value={0}>
+                          <Checkbox value={1}>
                             Check-in not counted as error
                           </Checkbox>
-                          <Checkbox value={1}>
+                          <Checkbox value={2}>
                             Check-out not counted as error
                           </Checkbox>
                         </Row>
