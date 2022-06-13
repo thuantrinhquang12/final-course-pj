@@ -14,10 +14,16 @@ export default function Timesheet({ row }) {
     isOpenForget: false,
     isOpenLeave: false,
   })
+  const [checkModal, setCheckModal] = useState({
+    row: [],
+    name: '',
+  })
   const [visible, setVisible] = useState(false)
   const [dataTable, setDataTable] = useState([])
   const getTimeSheet = async () => {
-    const res = await axios(`http://127.0.0.1:8000/api/worksheet`)
+    const res = await axios(
+      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+    )
     setDataTable(res.data)
   }
   useEffect(() => {
@@ -145,15 +151,32 @@ export default function Timesheet({ row }) {
     {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (record) => (
         <Space>
-          <Button
-            onClick={() => {
+          <button
+            onClick={() =>
+              setCheckModal((prev) => {
+                return {
+                  row: record,
+                  name: 'forget',
+                }
+              })
+            }
+          >
+            Forgett
+          </button>
+          {/* <Button
+            onClick={(e) => {
+              setCheckModal = {
+                row: record,
+                name: 'forget',
+              }
+              console.log('avc')
               handleClickModal('forget')
             }}
           >
             Forget
-          </Button>
+          </Button> */}
 
           <Button>Late/Early</Button>
 
@@ -168,11 +191,12 @@ export default function Timesheet({ row }) {
       ),
     },
   ]
+
   return (
     <>
       <Table
         columns={columns}
-        dataSource={row}
+        dataSource={dataTable}
         pagination={{
           defaultCurrent: 1,
         }}
@@ -187,12 +211,10 @@ export default function Timesheet({ row }) {
       >
         <ModalLogTimesheet />
       </Modal>
-      {isOpen.isOpenForget && (
+      {checkModal.name === 'forget' && (
         <ForgetModal
           isOpen={isOpen.isOpenForget}
-          row={dataTable.map((item) => {
-            return item
-          })}
+          row={checkModal.row}
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
           }}
