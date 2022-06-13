@@ -5,19 +5,25 @@ import { Modal } from 'antd'
 const Dialog = ({ children, isOpen, title, handleModal }) => {
   const confirm = () => {
     Modal.confirm({
-      title: 'Đóng Mô Đan',
-      content: 'Bạn đã chắc chắn là 100% muốn đóng chưa ? Đừng hối hận nhé',
-      okText: 'Rồi',
-      cancelText: 'Mai rồi',
-
-      onOk() {
+      title: 'CLOSE MODAL',
+      content: 'Are you sure ?',
+      okText: 'Cancel',
+      cancelText: 'OK',
+      okButtonProps: {
+        type: 'default',
+      },
+      cancelButtonProps: {
+        style: { padding: '0 28px' },
+        type: 'primary',
+      },
+      onCancel() {
         handleModal()
       },
-      onCancel() {},
     })
   }
 
   if (!isOpen) return null
+
   return (
     <>
       <Modal
@@ -32,6 +38,7 @@ const Dialog = ({ children, isOpen, title, handleModal }) => {
     </>
   )
 }
+
 Dialog.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -41,4 +48,5 @@ Dialog.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
 }
+
 export default Dialog

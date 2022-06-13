@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/ForgetModal'
@@ -11,6 +10,7 @@ const ItemTimeSheet = ({ row }) => {
     isOpenLeave: false,
     isOpenOT: false,
   })
+
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
@@ -36,6 +36,7 @@ const ItemTimeSheet = ({ row }) => {
         throw new Error('An error occurred')
     }
   }
+
   return (
     <div
       style={{
@@ -44,16 +45,13 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>Date: {moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
-      <div>Checkin: {moment(row.check_in).format('hh:mm:ss a')}</div>
-      <div>Check out: {moment(row.check_out).format('hh:mm:ss a')}</div>
+      <div>Wd: {row.work_date}</div>
+      <div>Ci:{moment(row.check_in).format('HH:mm')}</div>
+      <div>Co:{moment(row.check_out).format('HH:mm')}</div>
       <div>Late: {row.late}</div>
       <div>Early: {row.early}</div>
+      <div>Wt: {row.work_time}</div>
       <div>In office: {row.in_office}</div>
-      <div>OT: {row.ot}</div>
-      <div>Work time: {row.work_time}</div>
-      <div>Lack: {row.lack_time}</div>
-      <div>Pleave: {row.pleave}</div>
       <button
         type="button"
         onClick={() => {
