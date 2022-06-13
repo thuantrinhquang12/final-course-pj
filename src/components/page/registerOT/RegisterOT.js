@@ -17,7 +17,6 @@ import {
   messageRequest,
   requestSlice,
 } from '../../index'
-
 import styles from './RegisterOT.module.scss'
 
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
