@@ -23,7 +23,6 @@ const get = async (url, params = {}) => {
   try {
     const config = { params }
     const response = await instance.get(url, config)
-    console.log('response get', response)
     return response.data
   } catch (error) {
     console.log(error)

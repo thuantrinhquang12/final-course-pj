@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars*/
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
@@ -26,11 +25,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [leaveAllDayCheck, setLeaveAllDayCheck] = useState(false)
   const [timeCount, setTimeCount] = useState()
-  console.log('mount')
+
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
-
-  console.log(request, status)
 
   const schema = yup.object().shape({
     reasonInput: yup
@@ -59,7 +56,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   })
 
   useEffect(() => {
-    console.log('run api')
     const checkRequestExists = async () => {
       await dispatch(
         requestSlice.getRequestsOfDay({
@@ -73,7 +69,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
-      console.log('run check')
       if (request.leave_all_day === typeRequest.LEAVE_ALL_DAY) {
         setValue('checkboxLeaveAllDay', [typeRequest.LEAVE_ALL_DAY])
         setLeaveAllDayCheck(!!request.leave_all_day)
@@ -103,8 +98,8 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
-          check_in: dateTime.formatTime(row.checkin_original || '09:00'),
-          check_out: dateTime.formatTime(row.checkout_original || '16:00'),
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
           request_type:
             values.radioPaid == 'paid'
               ? typeRequest.REQUEST_LEAVE_PAID
@@ -208,7 +203,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       }),
     )
   }
-  console.log(request.status, requestExists, status)
 
   return (
     <DialogRequest
@@ -221,7 +215,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       statusGetRequest={status}
     >
       <>
-        {console.log('render')}
         <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
             <Skeleton paragraph={{ rows: 10 }} />

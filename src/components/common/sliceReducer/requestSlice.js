@@ -16,9 +16,7 @@ export const getRequestsOfDay = createAsyncThunk(
   'requests/getRequestsOfDay',
   async (data) => {
     const { url, date } = data
-    console.log('thunk get run')
     if (date === -1) {
-      console.log('date -1')
       return {}
     }
     const response = await get(url, {
@@ -59,11 +57,9 @@ const requestsSlice = createSlice({
   },
   extraReducers: {
     [getRequestsOfDay.pending]: (state) => {
-      console.log('get pending')
       state.status = 'loading'
     },
     [getRequestsOfDay.fulfilled]: (state, action) => {
-      console.log('get fulfilled')
       state.status = 'success'
       state.request = action.payload
     },
