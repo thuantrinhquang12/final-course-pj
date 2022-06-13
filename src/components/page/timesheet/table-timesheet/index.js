@@ -214,6 +214,7 @@ export default function Timesheet({ row }, sort) {
   return (
     <>
       <Table
+        scroll={{ x: 900, y: 900 }}
         columns={columns}
         dataSource={row}
         rowClassName={(record, index) =>

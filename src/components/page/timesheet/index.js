@@ -13,7 +13,7 @@ import axios from 'axios'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
-const { Text } = Typography
+const { Text, Title } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
@@ -137,7 +137,9 @@ export default function SearchField() {
             </div>
           </Form>
         </fieldset>
-
+        <>
+          <Title level={5}>Total number of record : 96</Title>
+        </>
         <>
           <Timesheet row={dataTable}></Timesheet>
         </>
