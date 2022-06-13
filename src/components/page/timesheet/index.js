@@ -8,8 +8,8 @@ import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './table-timesheet'
-// import { get } from '../../service/requestApi'
-import axios from 'axios'
+import { get } from '../../service/requestApi'
+// import axios from 'axios'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -23,21 +23,21 @@ export default function SearchField() {
   //   },
   // ])
 
-  // const [dataTimesheet, setDataTimesheet] = useState()
-  const [dataTable, setDataTable] = useState()
-  const getTimeSheet = async () => {
-    const res = await axios(
-      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
-    )
-    return setDataTable(res.data)
-  }
-  console.log(dataTable)
-  // const getTimeSheets = async () => {
-  //   const res = await get(`http://127.0.0.1:8000/api/worksheet`)
-  //   setDataTimesheet(res.data)
+  const [dataTimesheet, setDataTimesheet] = useState()
+  // const [dataTable, setDataTable] = useState()
+  // const getTimeSheet = async () => {
+  //   const res = await axios(
+  //     `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
+  //   )
+  //   return setDataTable(res.data)
   // }
+  // console.log(dataTable)
+  const getTimeSheets = async () => {
+    const res = await get(`http://127.0.0.1:8000/api/worksheet`)
+    setDataTimesheet(res.data)
+  }
   useEffect(() => {
-    getTimeSheet()
+    getTimeSheets()
   }, [])
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
@@ -141,7 +141,7 @@ export default function SearchField() {
           <Title level={5}>Total number of record : 96</Title>
         </>
         <>
-          <Timesheet row={dataTable}></Timesheet>
+          <Timesheet row={dataTimesheet}></Timesheet>
         </>
       </div>
     </>
