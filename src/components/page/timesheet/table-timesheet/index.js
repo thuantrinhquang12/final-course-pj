@@ -154,14 +154,15 @@ export default function Timesheet({ row }) {
       render: (record) => (
         <Space>
           <button
-            onClick={() =>
+            onClick={() => {
               setCheckModal((prev) => {
                 return {
                   row: record,
                   name: 'forget',
                 }
               })
-            }
+              handleClickModal('forget')
+            }}
           >
             Forgett
           </button>
@@ -213,7 +214,7 @@ export default function Timesheet({ row }) {
       </Modal>
       {checkModal.name === 'forget' && (
         <ForgetModal
-          isOpen={isOpen.isOpenForget}
+          isOpen={true}
           row={checkModal.row}
           handleCloseForget={() => {
             setIsOpen((isOpen.isOpenForget = false))
