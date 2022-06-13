@@ -6,6 +6,7 @@ table {
     tr {
       align-items: center;
       background-color: #01c3ff;
+      border: 1px solid #6b6f70;
       th {
         text-align: center !important;
         background-color: #6b6f70 !important;
@@ -20,6 +21,7 @@ table {
       td {
         text-align: center !important;
         font-weight: 400;
+        border: 1px solid #f0f0f0 !important;
       }
     }
   }

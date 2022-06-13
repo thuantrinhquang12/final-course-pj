@@ -4,6 +4,7 @@ import 'antd/dist/antd.min.css'
 import './table-timesheet.scss'
 import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
+import RegisterOT from '../../registerOT/RegisterOT'
 import moment from 'moment'
 import ModalLogTimesheet from '../modalLogtimesheet/ModalLogTimesheet'
 
@@ -47,6 +48,12 @@ export default function Timesheet({ row }, sort) {
         setIsOpen({
           ...isOpen,
           isOpenLeave: !isOpen.isOpenLeave,
+        })
+        break
+      case 'OT':
+        setIsOpen({
+          ...isOpen,
+          isOpenOT: !isOpen.isOpenOT,
         })
         break
       default:
@@ -178,6 +185,7 @@ export default function Timesheet({ row }, sort) {
       render: (record) => (
         <Space>
           <Button
+            size="small"
             onClick={() => {
               setCheckModal((prev) => {
                 return {
@@ -191,9 +199,10 @@ export default function Timesheet({ row }, sort) {
             Forget
           </Button>
 
-          <Button>Late/Early</Button>
+          <Button size="small">Late/Early</Button>
 
           <Button
+            size="small"
             onClick={() => {
               setCheckModal((prev) => {
                 return {
@@ -205,6 +214,20 @@ export default function Timesheet({ row }, sort) {
             }}
           >
             Leave
+          </Button>
+          <Button
+            size="small"
+            onClick={() => {
+              setCheckModal((prev) => {
+                return {
+                  row: record,
+                  name: 'ot',
+                }
+              })
+              handleClickModal('ot')
+            }}
+          >
+            OT
           </Button>
         </Space>
       ),
@@ -219,10 +242,7 @@ export default function Timesheet({ row }, sort) {
         rowClassName={(record, index) =>
           index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
         }
-        pagination={{
-          defaultCurrent: 1,
-        }}
-        sx={{ align: 'center' }}
+        sx={{ align: 'center', width: '100%' }}
       />
       <Modal
         title="Time Logs"
@@ -250,6 +270,15 @@ export default function Timesheet({ row }, sort) {
             setIsOpen((isOpen.isOpenLeave = false))
           }}
         ></LeaveModal>
+      )}
+      {isOpen.isOpenOT && (
+        <RegisterOT
+          isOpen={true}
+          row={checkModal.row}
+          handleCloseOT={() => {
+            setIsOpen((isOpen.isOpenOT = false))
+          }}
+        />
       )}
     </>
   )

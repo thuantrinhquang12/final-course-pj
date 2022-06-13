@@ -36,6 +36,7 @@ export default function SearchField() {
     const res = await get(`http://127.0.0.1:8000/api/worksheet`)
     setDataTimesheet(res.data)
   }
+  console.log(dataTimesheet)
   useEffect(() => {
     getTimeSheets()
   }, [])

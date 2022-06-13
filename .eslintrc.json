@@ -24,8 +24,7 @@
     "require-jsdoc": "off",
     "linebreak-style": "off",
     "operator-linebreak": "off",
-    "react/prop-types": "off",
-    "camelcase": ["error", { "allow": ["aa_bb"] }]
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
