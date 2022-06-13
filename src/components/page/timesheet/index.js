@@ -139,7 +139,7 @@ export default function SearchField() {
           </Form>
         </fieldset>
         <>
-          <Title level={5}>Total number of record : 96</Title>
+          <Title level={5}>Total number of record : 30</Title>
         </>
         <>
           <Timesheet row={dataTimesheet}></Timesheet>

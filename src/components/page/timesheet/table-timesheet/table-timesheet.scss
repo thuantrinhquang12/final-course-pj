@@ -1,5 +1,4 @@
 table {
-  border: 1px solid #000000;
   thead {
     align-items: center;
     align-content: center;
@@ -21,7 +20,7 @@ table {
       td {
         text-align: center !important;
         font-weight: 400;
-        border: 1px solid #f0f0f0 !important;
+        // border: 1px solid #f0f0f0 !important;
       }
     }
   }
