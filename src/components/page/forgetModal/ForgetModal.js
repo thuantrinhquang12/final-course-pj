@@ -43,7 +43,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       checkInTime: dateTime.momentType('08:00'),
       checkOutTime: dateTime.momentType('17:00'),
     },
-
     resolver: yupResolver(schema),
   })
 
@@ -77,7 +76,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_type: typeRequest.REQUEST_FORGET,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          request_for_date: dateTime.formatDate(row.work_date),
+          request_for_date: row.work_date,
           error_count: +((values.specialReason || []).length !== 0),
           special_reason: values.specialReason || [],
           reason: values.reasonInput,
@@ -140,15 +139,15 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       <>
         <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
-            <Skeleton paragraph={{ rows: 10 }}></Skeleton>
+            <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
               {requestExists && (
                 <Row>
-                  <>
-                    <Col flex="150px">Registration date: </Col>
-                    <Col flex="auto">{request?.create_at}</Col>
-                  </>
+                  <Col flex="150px">Registration date: </Col>
+                  <Col flex="auto">
+                    {dateTime.formatDateTime(request?.create_at)}
+                  </Col>
                 </Row>
               )}
               <Row>
@@ -184,7 +183,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.check_in)})
+                    ({dateTime.formatTime(row.checkin_original)})
                   </span>
                 </Col>
               </Row>
@@ -213,7 +212,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.check_out)})
+                    ({dateTime.formatTime(row.checkout_original)})
                   </span>
                 </Col>
               </Row>
@@ -224,21 +223,19 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     name="specialReason"
                     control={control}
                     render={({ field }) => (
-                      <>
-                        <Checkbox.Group
-                          disabled={handleField.disableField(request.status)}
-                          {...field}
-                        >
-                          <Row style={{ marginBottom: 0 }}>
-                            <Checkbox value={0}>
-                              Check-in not counted as error
-                            </Checkbox>
-                            <Checkbox value={1}>
-                              Check-out not counted as error
-                            </Checkbox>
-                          </Row>
-                        </Checkbox.Group>
-                      </>
+                      <Checkbox.Group
+                        disabled={handleField.disableField(request.status)}
+                        {...field}
+                      >
+                        <Row style={{ marginBottom: 0 }}>
+                          <Checkbox value={0}>
+                            Check-in not counted as error
+                          </Checkbox>
+                          <Checkbox value={1}>
+                            Check-out not counted as error
+                          </Checkbox>
+                        </Row>
+                      </Checkbox.Group>
                     )}
                   />
                 </Col>
@@ -248,30 +245,24 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
                 <Col flex="100%">
-                  {status === 'loading' ? (
-                    <Skeleton active size="small" block={true}>
-                      <Input.TextArea></Input.TextArea>
-                    </Skeleton>
-                  ) : (
-                    <Controller
-                      name="reasonInput"
-                      control={control}
-                      render={({ field }) => (
-                        <>
-                          <Input.TextArea
-                            rows={4}
-                            disabled={handleField.disableField(request.status)}
-                            {...field}
-                          />
-                          {errors.reasonInput && (
-                            <span className={styles.errorField}>
-                              {errors.reasonInput?.message}
-                            </span>
-                          )}
-                        </>
-                      )}
-                    />
-                  )}
+                  <Controller
+                    name="reasonInput"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input.TextArea
+                          autoSize={{ minRows: 5, maxRows: 5 }}
+                          disabled={handleField.disableField(request.status)}
+                          {...field}
+                        />
+                        {errors.reasonInput && (
+                          <span className={styles.errorField}>
+                            {errors.reasonInput?.message}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
                 </Col>
               </Row>
             </>
@@ -281,14 +272,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     </DialogRequest>
   )
 }
+
 ForgetModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseForget: PropTypes.func,
-  // row: PropTypes.shape({
-  //   requests: PropTypes.array,
-  //   work_date: PropTypes.string,
-  //   check_in: PropTypes.string,
-  //   check_out: PropTypes.string,
-  // }),
+  row: PropTypes.object,
 }
+
 export default ForgetModal

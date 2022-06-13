@@ -26,6 +26,12 @@ const ItemTimeSheet = ({ row }) => {
           isOpenOT: !isOpen.isOpenOT,
         })
         break
+      case 'FORGET':
+        setIsOpen({
+          ...isOpen,
+          isOpenForget: !isOpen.isOpenForget,
+        })
+        break
       default:
         throw new Error('An error occurred')
     }
@@ -39,13 +45,21 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>{row.work_date}</div>
-      <div>{moment(row.check_in).format('HH:mm')}</div>
-      <div>{moment(row.check_out).format('HH:mm')}</div>
-      <div>{row.late}</div>
-      <div>{row.early}</div>
-      <div>{row.work_time}</div>
-      <div>{row.in_office}</div>
+      <div>Wd: {row.work_date}</div>
+      <div>Ci:{moment(row.check_in).format('HH:mm')}</div>
+      <div>Co:{moment(row.check_out).format('HH:mm')}</div>
+      <div>Late: {row.late}</div>
+      <div>Early: {row.early}</div>
+      <div>Wt: {row.work_time}</div>
+      <div>In office: {row.in_office}</div>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('forget')
+        }}
+      >
+        Forget
+      </button>
       <button
         type="button"
         onClick={() => {
