@@ -18,24 +18,31 @@ import {
   messageRequest,
   requestSlice,
 } from '../../index'
-
 import styles from './LeaveModal.module.scss'
 
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [leaveAllDayCheck, setLeaveAllDayCheck] = useState(false)
-  const [leaveStart, setLeaveStart] = useState()
-  const [leaveEnd, setLeaveEnd] = useState()
   const [timeCount, setTimeCount] = useState()
+
   const currentTime = useRef(handleDateTime.getCurrentTime())
   const dispatch = useDispatch()
+  const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
     reasonInput: yup
       .string()
       .required('Please enter reason')
       .max(100, 'Please enter not too 100 characters'),
+    rangeInput: yup.array().when('checkboxLeaveAllDay', {
+      is: (value) => {
+        return (value || []).length === 0
+      },
+      then: yup.array().nullable(true).required('Please enter range'),
+      otherwise: yup.array().nullable(true).notRequired(),
+    }),
   })
+
   const {
     handleSubmit,
     control,
@@ -47,8 +54,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     },
     resolver: yupResolver(schema),
   })
-
-  const { request, status } = useSelector((state) => state.requests)
 
   useEffect(() => {
     if (row.requests.length !== 0) {
@@ -67,12 +72,16 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
-      setValue(
-        'checkboxLeaveAllDay',
-        request.leave_all_day === typeRequest.LEAVE_ALL_DAY
-          ? [typeRequest.LEAVE_ALL_DAY]
-          : [],
-      )
+      if (request.leave_all_day === typeRequest.LEAVE_ALL_DAY) {
+        setValue('checkboxLeaveAllDay', [typeRequest.LEAVE_ALL_DAY])
+        setLeaveAllDayCheck(!!request.leave_all_day)
+      } else {
+        setValue('rangeInput', [
+          moment(request.leave_start, dateTime.formatTimeType),
+          moment(request.leave_end, dateTime.formatTimeType),
+        ])
+        setTimeCount(request.leave_time)
+      }
       setValue(
         'radioPaid',
         request.request_type === typeRequest.REQUEST_LEAVE_PAID
@@ -82,32 +91,11 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           : '',
       )
       setValue('reasonInput', request.reason)
-      setLeaveStart(request?.leave_start)
-      setLeaveEnd(request?.leave_end)
     }
   }, [request])
 
-  useEffect(() => {
-    if (leaveStart && leaveEnd) {
-      const start = moment(leaveStart, dateTime.formatTimeType)
-      const end = moment(leaveEnd, dateTime.formatTimeType)
-      const millisecond = end.diff(start, 'millisecond')
-      const timeCount = moment()
-        .hour(0)
-        .minute(0)
-        .millisecond(millisecond)
-        .format(dateTime.formatTimeType)
-      setTimeCount(timeCount)
-    }
-  }, [leaveStart, leaveEnd])
-
-  const handleOnChange = (values, timeString) => {
-    const [leaveStart, leaveEnd] = timeString
-    setLeaveStart(leaveStart)
-    setLeaveEnd(leaveEnd)
-  }
-
   const onSubmit = async (values, e) => {
+    const [leaveStart, leaveEnd] = values.rangeInput || []
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -118,8 +106,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               : values.radioPaid == 'unpaid'
               ? typeRequest.REQUEST_LEAVE_UNPAID
               : '',
-          leave_start: leaveAllDayCheck ? '' : leaveStart,
-          leave_end: leaveAllDayCheck ? '' : leaveEnd,
+          leave_start: leaveAllDayCheck ? '' : dateTime.formatTime(leaveStart),
+          leave_end: leaveAllDayCheck ? '' : dateTime.formatTime(leaveEnd),
+          leave_time: leaveAllDayCheck ? '' : timeCount,
           request_for_date: row.work_date,
           leave_all_day:
             (values.checkboxLeaveAllDay || []).length !== 0
@@ -144,8 +133,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               : values.radioPaid == 'unpaid'
               ? typeRequest.REQUEST_LEAVE_UNPAID
               : '',
-          leave_start: leaveStart,
-          leave_end: leaveEnd,
+          leave_start: leaveAllDayCheck ? '' : dateTime.formatTime(leaveStart),
+          leave_end: leaveAllDayCheck ? '' : dateTime.formatTime(leaveEnd),
+          leave_time: leaveAllDayCheck ? '' : timeCount,
           leave_all_day:
             (values.checkboxLeaveAllDay || []).length !== 0
               ? typeRequest.LEAVE_ALL_DAY
@@ -176,6 +166,23 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     }
   }
 
+  const handleOnChangeRange = (values) => {
+    if (values) {
+      const [leaveStart, leaveEnd] = values
+      const start = moment(leaveStart, dateTime.formatTimeType)
+      const end = moment(leaveEnd, dateTime.formatTimeType)
+      const millisecond = end.diff(start, 'millisecond')
+      const timeCount = moment()
+        .hour(0)
+        .minute(0)
+        .millisecond(millisecond)
+        .format(dateTime.formatTimeType)
+      setTimeCount(timeCount)
+    } else {
+      setTimeCount('')
+    }
+  }
+
   const handleChangeLeaveAllDay = (e) => {
     e.target.checked ? setLeaveAllDayCheck(true) : setLeaveAllDayCheck(false)
   }
@@ -198,47 +205,65 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       <>
         <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
-            <Skeleton paragraph={{ rows: 10 }}></Skeleton>
+            <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
               {requestExists && (
                 <Row>
-                  <>
-                    <Col flex="150px">Registration date: </Col>
-                    <Col flex="auto">{request?.create_at}</Col>
-                  </>
+                  <Col xl={4} md={6} xs={6}>
+                    Registration date:
+                  </Col>
+                  <Col xl={20} md={18} xs={18}>
+                    {dateTime.formatDateTime(request?.create_at)}
+                  </Col>
                 </Row>
               )}
               <Row>
-                <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">{row?.work_date}</Col>
+                <Col xl={4} md={6} xs={6}>
+                  Register for date:
+                </Col>
+                <Col xl={20} md={18} xs={18}>
+                  {dateTime.formatDate(row?.work_date)}
+                </Col>
               </Row>
               <Row>
-                <div className={styles.groupCol}>
-                  <Col flex="150px">Check-in: </Col>
-                  <Col flex="auto">
+                <Col xl={8} md={6} xs={12} className={styles.dFlex}>
+                  <Col xl={12} md={12} xs={12}>
+                    Check-in:
+                  </Col>
+                  <Col xl={12} md={12} xs={12}>
                     {dateTime.formatTime(row?.checkin_original)}
                   </Col>
-                </div>
-                <div className={styles.groupCol}>
-                  <Col flex="150px">Check-out: </Col>
-                  <Col flex="auto">
+                </Col>
+                <Col xl={8} md={6} xs={12} className={styles.dFlex}>
+                  <Col xl={12} md={12} xs={12}>
+                    Check-out:
+                  </Col>
+                  <Col xl={12} md={12} xs={12}>
                     {dateTime.formatTime(row?.checkout_original)}
                   </Col>
-                </div>
+                </Col>
               </Row>
               <Row>
-                <div className={styles.groupCol}>
-                  <Col flex="150px">Work time: </Col>
-                  <Col flex="auto">{dateTime.formatTime(row?.work_time)}</Col>
-                </div>
-                <div className={styles.groupCol}>
-                  <Col flex="150px">Lack time: </Col>
-                  <Col flex="auto">{dateTime.formatTime(row?.lack_time)}</Col>
-                </div>
+                <Col xl={8} md={6} xs={12} className={styles.dFlex}>
+                  <Col xl={12} md={12} xs={12}>
+                    Work time:
+                  </Col>
+                  <Col xl={12} md={12} xs={12}>
+                    {row?.work_time}
+                  </Col>
+                </Col>
+                <Col xl={8} md={6} xs={12} className={styles.dFlex}>
+                  <Col xl={12} md={12} xs={12}>
+                    Lack time:
+                  </Col>
+                  <Col xl={12} md={12} xs={12}>
+                    {row?.lack_time}
+                  </Col>
+                </Col>
               </Row>
               <Row>
-                <Col flex="auto">
+                <Col xl={24} md={24} xs={24}>
                   <Controller
                     name="checkboxLeaveAllDay"
                     control={control}
@@ -260,48 +285,80 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                   />
                 </Col>
               </Row>
-              <Row style={{ flexWrap: 'nowrap', alignItems: 'center' }}>
-                <Col flex="150px">Range</Col>
-                <div
+              <Row>
+                <Col xl={4} md={6} xs={6} style={{ lineHeight: '32px' }}>
+                  Range
+                </Col>
+                <Col
+                  xl={20}
+                  md={18}
+                  xs={18}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     flexWrap: 'wrap',
                   }}
                 >
-                  <div>
-                    <Col flex="auto">
-                      <TimePicker.RangePicker
-                        disabled={
-                          handleField.disableField(request.status) ||
-                          handleField.disableFieldWhenChoose(leaveAllDayCheck)
-                        }
-                        showTime={{
-                          defaultValue:
-                            Object.keys(request).length !== 0
-                              ? [
-                                  moment(
-                                    request?.leave_start,
-                                    dateTime.formatTimeType,
-                                  ),
-                                  moment(
-                                    request?.leave_end,
-                                    dateTime.formatTimeType,
-                                  ),
-                                ]
-                              : [],
-                        }}
-                        onChange={handleOnChange}
-                        format={dateTime.formatTimeType}
-                        style={{
-                          width: '201px',
-                          marginRight: '10px',
-                          maxWidth: '100%',
-                        }}
-                      />
-                    </Col>
-                  </div>
-                  <div>
+                  <Col flex={'150px'}>
+                    <Controller
+                      name="rangeInput"
+                      control={control}
+                      render={({ field }) => {
+                        return (
+                          <>
+                            <TimePicker.RangePicker
+                              disabled={
+                                handleField.disableField(request.status) ||
+                                handleField.disableFieldWhenChoose(
+                                  leaveAllDayCheck,
+                                )
+                              }
+                              showTime={{
+                                defaultValue:
+                                  Object.keys(request).length !== 0 &&
+                                  request?.leave_start &&
+                                  request?.leave_end
+                                    ? [
+                                        moment(
+                                          request?.leave_start,
+                                          dateTime.formatTimeType,
+                                        ),
+                                        moment(
+                                          request?.leave_end,
+                                          dateTime.formatTimeType,
+                                        ),
+                                      ]
+                                    : [],
+                              }}
+                              onChange={(e) => {
+                                handleOnChangeRange(e)
+                                return field.onChange(e)
+                              }}
+                              format={dateTime.formatTimeType}
+                              style={{
+                                width: '100%',
+                                minWidth: '150px',
+                                maxWidth: '205px',
+                                marginRight: '10px',
+                              }}
+                            />
+                            {!leaveAllDayCheck && errors.rangeInput && (
+                              <div className={styles.errorField}>
+                                {errors.rangeInput?.message}
+                              </div>
+                            )}
+                          </>
+                        )
+                      }}
+                    />
+                  </Col>
+                  <Col
+                    flex={'auto'}
+                    style={{
+                      alignSelf: 'flex-start',
+                      lineHeight: '32px',
+                    }}
+                  >
                     <Controller
                       name="radioPaid"
                       control={control}
@@ -314,35 +371,35 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                             <Radio value={'paid'}>Paid</Radio>
                             <Radio value={'unpaid'}>Unpaid</Radio>
                           </Radio.Group>
+                          <div style={{ display: 'inline-block' }}>
+                            | TimeCount:
+                            <span
+                              style={handleDateTime.compareTime(
+                                timeCount,
+                                row.lack_time,
+                              )}
+                            >
+                              {!leaveAllDayCheck && <span> {timeCount}</span>}
+                            </span>
+                          </div>
                         </>
                       )}
                     />
-                  </div>
-                  <div>
-                    | TimeCount:
-                    <span
-                      style={handleDateTime.compareTime(
-                        timeCount,
-                        row.lack_time,
-                      )}
-                    >
-                      {timeCount}
-                    </span>
-                  </div>
-                </div>
+                  </Col>
+                </Col>
               </Row>
               <Row>
-                <Col flex="150px" style={{ marginBottom: '10px' }}>
+                <Col xl={4} md={6} xs={24} style={{ marginBottom: '10px' }}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="100%">
+                <Col xl={20} md={18} xs={24}>
                   <Controller
                     name="reasonInput"
                     control={control}
                     render={({ field }) => (
                       <>
                         <Input.TextArea
-                          rows={4}
+                          autoSize={{ minRows: 5, maxRows: 5 }}
                           disabled={handleField.disableField(request.status)}
                           {...field}
                         />
@@ -367,11 +424,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 LeaveModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseLeave: PropTypes.func,
-  // row: PropTypes.shape({
-  //   requests: PropTypes.array,
-  //   work_date: PropTypes.string,
-  //   check_in: PropTypes.string,
-  //   check_out: PropTypes.string,
-  // }),
+  row: PropTypes.object,
 }
+
 export default LeaveModal

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Table, Row, Col } from 'antd'
+import { dateTime } from '../../../index'
 import styles from './Index.module.scss'
 import './Index.scss'
-import { dateTime } from '../../../index'
 
 const Index = () => {
   const [page, setPage] = useState(10)

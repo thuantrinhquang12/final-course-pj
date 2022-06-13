@@ -14,12 +14,6 @@ const ItemTimeSheet = ({ row }) => {
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
-      case 'FORGET':
-        setIsOpen({
-          ...isOpen,
-          isOpenForget: !isOpen.isOpenForget,
-        })
-        break
       case 'LEAVE':
         setIsOpen({
           ...isOpen,
@@ -30,6 +24,12 @@ const ItemTimeSheet = ({ row }) => {
         setIsOpen({
           ...isOpen,
           isOpenOT: !isOpen.isOpenOT,
+        })
+        break
+      case 'FORGET':
+        setIsOpen({
+          ...isOpen,
+          isOpenForget: !isOpen.isOpenForget,
         })
         break
       default:
