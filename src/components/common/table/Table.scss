@@ -4,6 +4,24 @@
   display: flex;
 }
 
+.ant-pagination-total-text {
+  position: absolute;
+  left: 0;
+}
+
+.ant-pagination-options {
+  position: absolute;
+  right: 0;
+
+  &::after {
+    position: absolute;
+    content: 'Item perpage';
+    display: block;
+    top: 0;
+    left: -100%;
+  }
+}
+
 .tb_end {
   @include addFlex;
   justify-content: flex-end;

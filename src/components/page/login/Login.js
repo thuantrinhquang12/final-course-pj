@@ -19,12 +19,12 @@ const Login = () => {
       setLoading(false)
       await dispatch(
         loginAccess({
-          role: res.data.role,
+          role: res.data.roles[0].title,
           tokenAccess: res.access_token,
         }),
       )
       await localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
-      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.role)
+      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
       await localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({

@@ -54,3 +54,4 @@ const del = async (url, data = {}) => {
 }
 
 export { get, post, put, del }
+export default instance

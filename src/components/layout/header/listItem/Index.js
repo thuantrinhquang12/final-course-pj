@@ -22,7 +22,7 @@ const Index = () => {
           </Link>
         </Col>
         <Col xs={24} md={8} xl={8} className={styles.column}>
-          <Link to={data} className={styles.formGroup}>
+          <Link to={data || ''} className={styles.formGroup}>
             <i className="fa-solid fa-bars-progress"></i>
             <h3>MANAGER</h3>
           </Link>
