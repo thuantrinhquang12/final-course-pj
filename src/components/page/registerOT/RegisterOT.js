@@ -16,7 +16,6 @@ import {
   tryCatch,
   messageRequest,
 } from '../../index'
-
 import styles from './RegisterOT.module.scss'
 
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
