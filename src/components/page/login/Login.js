@@ -18,6 +18,7 @@ const Login = () => {
     try {
       setLoading(true)
       const res = await login(values)
+      console.log(res)
       setLoading(false)
       await dispatch(
         loginAccess({
@@ -28,6 +29,10 @@ const Login = () => {
       )
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
       localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
+      localStorage.setItem(
+        'data',
+        JSON.stringify([res.data.id, res.data.shifts]),
+      )
       localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({

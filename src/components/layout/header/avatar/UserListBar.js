@@ -5,6 +5,7 @@ import { Row, Col } from 'antd'
 import Cat from './crazyCat.jpg'
 import { Link } from 'react-router-dom'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
+import Logout from '../../../page/logout/Logout'
 
 const UserListBar = ({ open, onClick }) => {
   const refChildren = useRef(null)
@@ -78,7 +79,7 @@ const UserListBar = ({ open, onClick }) => {
                 <i className="fa-solid fa-key"></i>
               </div>
               <a href="#" className={styles.formGroup}>
-                <h3>LogOut</h3>
+                <Logout />
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
               </a>
             </div>

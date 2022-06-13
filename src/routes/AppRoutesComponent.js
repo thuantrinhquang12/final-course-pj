@@ -33,7 +33,6 @@ const AppRoutesComponent = () => {
       loginAccess({ role: datatype.role, tokenAccess: datatype.tokenAccess }),
     )
   }
-  // check thời gian tồn tại của tokenAccess
 
   return (
     <>
