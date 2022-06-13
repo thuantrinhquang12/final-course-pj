@@ -5,3 +5,7 @@ export const PUT_REQUEST_LEAVE = 'register-leave/update/'
 export const GET_REQUEST_FORGET_OF_DAY = 'register-forget/show'
 export const POST_REQUEST_FORGET = 'register-forget/store'
 export const PUT_REQUEST_FORGET = 'register-forget/update/'
+
+export const GET_REQUEST_OT = 'register-ot/2'
+export const POST_REQUEST_OT = 'register-ot'
+export const PUT_REQUEST_OT = 'register-forget/update/'

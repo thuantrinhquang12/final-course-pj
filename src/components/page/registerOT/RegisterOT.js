@@ -8,16 +8,17 @@ import { Input, Row, Col, Skeleton, TimePicker } from 'antd'
 import {
   DialogRequest,
   dateTime,
-  typeStatusRequest,
   typeRequest,
   handleDateTime,
   handleField,
   buttonForm,
   tryCatch,
+  endPoint,
   messageRequest,
   requestSlice,
 } from '../../index'
 import styles from './RegisterOT.module.scss'
+import moment from 'moment'
 
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -49,29 +50,45 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   })
 
   const { request, status } = useSelector((state) => state.requests)
+  console.log(request)
 
   useEffect(() => {
-    if (row.requests.length !== 0) {
-      for (const request of row.requests) {
-        if (request.request_type === typeRequest.REQUEST_OT) {
-          setRequestExists(true)
-          dispatch(requestSlice.getRequests(request.request_id))
-          break
-        }
-      }
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_OT,
+          date: row.work_date,
+        }),
+      )
     }
+    checkRequestExists()
   }, [])
 
   useEffect(() => {
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_OT,
+          date: row.work_date,
+        }),
+      )
+    }
+    checkRequestExists()
+  }, [])
+
+  const date2 = new Date(`01/01/2022 ${request.request_ot_time}`)
+  console.log(date2)
+  useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('reasonInput', request.reason)
-      setValue('timeRequestOT', request.timeRequestOT)
+      setValue('timeRequestOT', moment(date2))
+      setRequestExists(true)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
     if (
-      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) < DateOT
+      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) > DateOT
     ) {
       setErrorTimeOT(true)
       return null
@@ -82,14 +99,19 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
         const newRequest = {
           request_type: typeRequest.REQUEST_OT,
           request_for_date: row.work_date,
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
+          request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
-          status: typeStatusRequest.SEND,
-          created_at: currentTime.current,
-          requestOT: values.timeRequestOT,
         }
 
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_OT,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
           handleCloseOT,
         )
@@ -238,6 +260,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                           disabled={handleField.disableField(request.status)}
                           {...field}
                           autoSize={{ minRows: 5, maxRows: 5 }}
+                          style={{ border: ' black 1px solid' }}
                         />
                         {errors.reasonInput && (
                           <span className={styles.errorField}>
