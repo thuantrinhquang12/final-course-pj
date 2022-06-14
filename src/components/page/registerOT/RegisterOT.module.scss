@@ -1,17 +1,19 @@
-.groupCol {
-  display: flex;
-  flex-basis: 40%;
-  flex-wrap: wrap;
-  .ant-col {
-    background-color: red !important;
-    .ant-picker {
+.form {
+  .groupCol {
+    display: flex;
+    flex-basis: 40%;
+    flex-wrap: wrap;
+    .ant-col {
       background-color: red !important;
+      .ant-picker {
+        background-color: red !important;
+      }
     }
   }
-}
-.errorField {
-  color: red;
-}
-.requiredField {
-  color: red;
+  .errorField {
+    color: red;
+  }
+  .requiredField {
+    color: red;
+  }
 }

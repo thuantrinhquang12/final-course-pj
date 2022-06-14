@@ -169,7 +169,11 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       statusGetRequest={status}
     >
       <>
-        <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          id="myForm"
+          onSubmit={handleSubmit(onSubmit)}
+          className={styles.form}
+        >
           {status === 'loading' ? (
             <Skeleton paragraph={{ rows: 10 }}></Skeleton>
           ) : (

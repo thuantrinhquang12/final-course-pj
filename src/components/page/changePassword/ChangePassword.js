@@ -50,7 +50,7 @@ const ChangePassword = () => {
   }
 
   return (
-    <>
+    <div className={style.ChangePassword}>
       <h3 onClick={showModal}>Change Password</h3>
       <Modal
         title={<h3 style={{ color: 'white', margin: '0' }}>Change Password</h3>}
@@ -150,7 +150,7 @@ const ChangePassword = () => {
           )}
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 

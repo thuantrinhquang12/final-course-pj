@@ -23,15 +23,14 @@ const Login = () => {
         loginAccess({
           role: res.data.roles[0].title,
           tokenAccess: res.access_token,
-          shift: [res.data.shifts.check_in, res.data.shifts.check_out],
+          shift: res.data.shifts,
         }),
       )
+      const UsedTimeToken = 3600 * 1000
+      const timeExpires = Date.now() + UsedTimeToken
+      localStorage.setItem(LOCAL_STORAGE.TIMEEXPIRED, timeExpires)
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
       localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
-      localStorage.setItem(
-        'data',
-        JSON.stringify([res.data.id, res.data.shifts]),
-      )
       localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({
