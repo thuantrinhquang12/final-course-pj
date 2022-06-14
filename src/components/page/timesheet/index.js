@@ -7,7 +7,7 @@ import { Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
-import Timesheet from './table-timesheet'
+import Timesheet from './tableTimesheet'
 import { get } from '../../service/requestApi'
 // import axios from 'axios'
 

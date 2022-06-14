@@ -6,7 +6,7 @@ import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
 import RegisterOT from '../../registerOT/RegisterOT'
 import moment from 'moment'
-import ModalLogTimesheet from '../modalLogtimesheet/ModalLogTimesheet'
+import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
 
 const { Text } = Typography
 

@@ -3,10 +3,8 @@
   height: 100vh;
   align-items: center;
   position: relative;
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_w2S_7GZ1f-xBEPS5sSdTsCLrmcqkWHh6tw&usqp=CAU');
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color: #7f53ac;
+  background-image: linear-gradient(315deg, #7f53ac 0%, #647dee 74%);
   justify-content: center;
   form {
     width: 100%;
@@ -66,6 +64,7 @@
   font-family: 'Inter';
   border-radius: 1.5px;
   transition: 0.4s;
+  height: auto !important;
 
   &:hover {
     color: black !important;

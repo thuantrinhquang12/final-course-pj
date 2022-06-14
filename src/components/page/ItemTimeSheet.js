@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/ForgetModal'
 import LeaveModal from './leaveModal/LeaveModal'
-import RegisterOT from './RegisterOT/RegisterOT'
+import RegisterOT from './registerOT/RegisterOT'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
@@ -11,11 +11,7 @@ const ItemTimeSheet = ({ row }) => {
     isOpenOT: false,
   })
 
-<<<<<<< HEAD
-  const handleClickModal = (type) => {
-=======
   const handleClickModal = (type) => () => {
->>>>>>> demo
     const modalType = type.toUpperCase()
     switch (modalType) {
       case 'LEAVE':

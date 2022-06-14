@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -8,25 +8,26 @@ import { Input, Row, Col, Skeleton, TimePicker } from 'antd'
 import {
   DialogRequest,
   dateTime,
-  typeStatusRequest,
   typeRequest,
-  handleDateTime,
   handleField,
   buttonForm,
   tryCatch,
+  endPoint,
   messageRequest,
+  requestSlice,
 } from '../../index'
+import styles from './RegisterOT.module.scss'
+import moment from 'moment'
 
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [errorTimeOT, setErrorTimeOT] = useState(false)
-  const currentTime = useRef(handleDateTime.getCurrentTime())
+
   const dispatch = useDispatch()
 
   const dateIn = new Date(row.checkin_original).getTime()
   const dateOut = new Date(row.checkout_original).getTime()
-  const DateOT = (dateOut - dateIn) / (1000 * 3600)
-  // Actual Overtime
+  const DateOT = (dateOut - dateIn) / (1000 * 3600) - 10
   const actualOvertime = new Date(DateOT * 60 * 60 * 1000)
     .toISOString()
     .slice(11, 16)
@@ -50,45 +51,66 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const { request, status } = useSelector((state) => state.requests)
 
   useEffect(() => {
-    if (row.requests.length !== 0) {
-      for (const request of row.requests) {
-        if (request.request_type === typeRequest.REQUEST_OT) {
-          setRequestExists(true)
-          dispatch(getRequests(request.request_id))
-          break
-        }
-      }
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_OT,
+          date: row.work_date,
+        }),
+      )
     }
+    checkRequestExists()
   }, [])
+
+  useEffect(() => {
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_OT,
+          date: row.work_date,
+        }),
+      )
+    }
+    checkRequestExists()
+  }, [])
+
+  const date2 = new Date(`01/01/2022 ${request.request_ot_time}`)
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('reasonInput', request.reason)
-      setValue('timeRequestOT', request.timeRequestOT)
+      setValue('timeRequestOT', moment(date2))
+      setRequestExists(true)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
     if (
-      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) < DateOT
+      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) > DateOT
     ) {
       setErrorTimeOT(true)
       return null
     }
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
+
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_OT,
-          request_for_date: dateTime.formatTimestampToDate(row.work_date),
+          request_for_date: row.work_date,
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
+          request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
-          status: typeStatusRequest.SEND,
-          created_at: currentTime.current,
-          requestOT: values.timeRequestOT,
         }
 
         await tryCatch.handleTryCatch(
-          dispatch(postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_OT,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
           handleCloseOT,
         )
@@ -96,18 +118,28 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       case 'UPDATE':
         const updateRequest = {
           request_type: typeRequest.REQUEST_OT,
+          request_for_date: row.work_date,
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
+          request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
-          update_at: currentTime.current,
         }
+        console.log(updateRequest)
         await tryCatch.handleTryCatch(
-          dispatch(putRequests({ id: request.id, requestData: updateRequest })),
+          dispatch(
+            requestSlice.putRequests({
+              id: request.id,
+              requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_OT,
+            }),
+          ),
           messageRequest.UPDATE,
           handleCloseOT,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(deleteRequests(request.id)),
+          dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
           handleCloseOT,
         )
@@ -116,11 +148,20 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
         throw new Error('An error occurred')
     }
   }
+  const handleCloseModal = () => {
+    handleCloseOT()
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_LEAVE_OF_DAY,
+        date: -1,
+      }),
+    )
+  }
 
   return (
     <DialogRequest
       isOpen={isOpen}
-      handleModal={handleCloseOT}
+      handleModal={handleCloseModal}
       title="Register Overtime"
       listButton={buttonForm.formRequestButton}
       statusRequest={request.status}
@@ -128,7 +169,11 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       statusGetRequest={status}
     >
       <>
-        <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          id="myForm"
+          onSubmit={handleSubmit(onSubmit)}
+          className={styles.form}
+        >
           {status === 'loading' ? (
             <Skeleton paragraph={{ rows: 10 }}></Skeleton>
           ) : (
@@ -210,9 +255,10 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                 </Col>
                 <Col flex="100%">
                   <span>
-                    - Thời gian request OT <span>không lớn hơn</span> thời gian
-                    Overtime Actual. Các trường hợp OT khi remote cần yêu cầu
-                    qua email.
+                    - Thời gian request OT
+                    <span style={{ color: 'red' }}> không lớn hơn </span> thời
+                    gian Overtime Actual. Các trường hợp OT khi remote cần yêu
+                    cầu qua email.
                   </span>
                 </Col>
               </Row>
@@ -230,6 +276,8 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                           rows={4}
                           disabled={handleField.disableField(request.status)}
                           {...field}
+                          autoSize={{ minRows: 5, maxRows: 5 }}
+                          style={{ border: ' black 1px solid' }}
                         />
                         {errors.reasonInput && (
                           <span className={styles.errorField}>
