@@ -2,11 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Scrollbars } from 'react-custom-scrollbars'
 
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Scrollbars } from 'react-custom-scrollbars'
-import styles from './ScrollBar.module.scss'
-
 const ScrollBarCommon = ({
   maxContainerHeight,
   minContainerHeight,
