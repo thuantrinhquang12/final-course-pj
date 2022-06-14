@@ -90,7 +90,7 @@ export default function Timesheet({ row }, sort) {
       key: 'checkin_original',
       render: (checkin_original) => {
         if (checkin_original !== null) {
-          return <Text>{moment(checkin_original).format('DD/MM/YYYY ')} </Text>
+          return <Text>{moment(checkin_original).format('HH:mm')} </Text>
         } else return <Text></Text>
       },
     },
@@ -100,7 +100,7 @@ export default function Timesheet({ row }, sort) {
       key: 'checkout_original',
       render: (checkout_original) => {
         if (checkout_original !== null) {
-          return <Text>{moment(checkout_original).format('DD/MM/YYYY ')} </Text>
+          return <Text>{moment(checkout_original).format('HH:mm ')} </Text>
         } else return <Text></Text>
       },
     },

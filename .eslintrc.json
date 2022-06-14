@@ -24,7 +24,8 @@
     "require-jsdoc": "off",
     "linebreak-style": "off",
     "operator-linebreak": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "properties": "always"
   },
   "settings": {
     "react": {
