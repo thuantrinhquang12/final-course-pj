@@ -49,6 +49,7 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
+<<<<<<< HEAD
       <div>wd{row.work_date}</div>
       <div>
         ci
@@ -69,6 +70,29 @@ const ItemTimeSheet = ({ row }) => {
       <div>if{row.in_office ? row.in_office : '--|--'}</div>
 
       <button type="button" onClick={handleClickModal('leave')}>
+=======
+      <div>Wd: {row.work_date}</div>
+      <div>Ci:{moment(row.check_in).format('HH:mm')}</div>
+      <div>Co:{moment(row.check_out).format('HH:mm')}</div>
+      <div>Late: {row.late}</div>
+      <div>Early: {row.early}</div>
+      <div>Wt: {row.work_time}</div>
+      <div>In office: {row.in_office}</div>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('forget')
+        }}
+      >
+        Forget
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          handleClickModal('leave')
+        }}
+      >
+>>>>>>> develop
         Leave
       </button>
       <button type="button" onClick={handleClickModal('ot')}>

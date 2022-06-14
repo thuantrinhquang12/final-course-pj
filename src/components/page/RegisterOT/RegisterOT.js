@@ -17,8 +17,6 @@ import {
   messageRequest,
 } from '../../index'
 
-import styles from './RegisterOT.module.scss'
-
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [errorTimeOT, setErrorTimeOT] = useState(false)
