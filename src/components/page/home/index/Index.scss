@@ -1,11 +1,14 @@
 .tableNotice {
+  .ant-table-title {
+    background-color: white;
+  }
   .ant-table-thead {
     th {
-      background-color: #2196f3;
+      background-color: #c9cccf;
 
       &.ant-table-column-has-sorters {
         &:hover {
-          background-color: #2196f3;
+          background-color: #c9cccf;
         }
       }
     }

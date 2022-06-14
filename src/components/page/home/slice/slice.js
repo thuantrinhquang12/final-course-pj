@@ -4,34 +4,43 @@ import { get } from '../../../service/requestApi'
 
 export const getDataListNotice = createAsyncThunk(
   'noticeList/getDataListNotice',
-  async (perPage, page) => {
+  async (item) => {
     const response = await get(
-      `/notification?per_page=${perPage}&page=${page}&sort=asc`,
+      `/notification?per_page=${item.perPage}&page=${item.page}&sort=asc`,
     )
-    return response.data
+    console.log('res', response)
+    return response
   },
 )
 
-const initialState = { tableData: [], per_page: 10, page: 1 }
+const initialState = {
+  tableData: [],
+  per_page: 10,
+  page: 1,
+  total: 0,
+  lastPage: 0,
+  currentPage: 1,
+}
 
 const noticeList = createSlice({
   name: 'noticeList',
   initialState,
   reducers: {
-    increment(state) {
-      state.value++
-    },
-    decrement(state) {
-      state.value--
+    setItemPerPage(state, action) {
+      state.per_page = action.payload
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getDataListNotice.fulfilled, (state, action) => {
-      console.log('action', action.payload)
-      state.tableData = action.payload
+      state.per_page = action.payload.meta.per_page
+      state.total = action.payload.meta.total
+      state.page = action.payload.meta.current_page
+      state.lastPage = action.payload.meta.last_page
+      state.currentPage = action.payload.meta.current_page
+      state.tableData = action.payload.data
     })
   },
 })
 
-export const { increment, decrement } = noticeList.actions
+export const { setItemPerPage } = noticeList.actions
 reducerRegistry.register(noticeList.name, noticeList.reducer)

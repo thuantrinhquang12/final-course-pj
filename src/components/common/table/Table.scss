@@ -5,6 +5,7 @@
 }
 
 .ant-pagination-total-text {
+  font-weight: 600;
   position: absolute;
   left: 0;
 }
@@ -14,8 +15,9 @@
   right: 0;
 
   &::after {
+    font-weight: 600;
     position: absolute;
-    content: 'Item perpage';
+    content: 'Item Perpage';
     display: block;
     top: 0;
     left: -100%;
