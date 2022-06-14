@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -9,7 +9,6 @@ import {
   DialogRequest,
   dateTime,
   typeRequest,
-  handleDateTime,
   handleField,
   buttonForm,
   tryCatch,
@@ -23,12 +22,12 @@ import moment from 'moment'
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [errorTimeOT, setErrorTimeOT] = useState(false)
-  const currentTime = useRef(handleDateTime.getCurrentTime())
+
   const dispatch = useDispatch()
 
   const dateIn = new Date(row.checkin_original).getTime()
   const dateOut = new Date(row.checkout_original).getTime()
-  const DateOT = (dateOut - dateIn) / (1000 * 3600)
+  const DateOT = (dateOut - dateIn) / (1000 * 3600) - 10
   const actualOvertime = new Date(DateOT * 60 * 60 * 1000)
     .toISOString()
     .slice(11, 16)
@@ -50,7 +49,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   })
 
   const { request, status } = useSelector((state) => state.requests)
-  console.log(request)
 
   useEffect(() => {
     const checkRequestExists = async () => {
@@ -77,7 +75,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   }, [])
 
   const date2 = new Date(`01/01/2022 ${request.request_ot_time}`)
-  console.log(date2)
+
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('reasonInput', request.reason)
@@ -94,6 +92,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       return null
     }
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
+
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
@@ -119,14 +118,19 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       case 'UPDATE':
         const updateRequest = {
           request_type: typeRequest.REQUEST_OT,
+          request_for_date: row.work_date,
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
+          request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
-          update_at: currentTime.current,
         }
+        console.log(updateRequest)
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
               id: request.id,
               requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_OT,
             }),
           ),
           messageRequest.UPDATE,
@@ -144,11 +148,20 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
         throw new Error('An error occurred')
     }
   }
+  const handleCloseModal = () => {
+    handleCloseOT()
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_LEAVE_OF_DAY,
+        date: -1,
+      }),
+    )
+  }
 
   return (
     <DialogRequest
       isOpen={isOpen}
-      handleModal={handleCloseOT}
+      handleModal={handleCloseModal}
       title="Register Overtime"
       listButton={buttonForm.formRequestButton}
       statusRequest={request.status}

@@ -3,6 +3,7 @@ import styles from './Index.module.scss'
 import Cat from './crazyCat.jpg'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
+import UserEditForm from '../../../page/editProfileModal/UserEditForm'
 
 const UserList = () => {
   return (
@@ -16,7 +17,7 @@ const UserList = () => {
       <div className={styles.UserBody}>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-hammer"></i>
-          <h3>Edit Profile</h3>
+          <UserEditForm />
         </div>
         <div className={styles.UserGroup}>
           <i className="fa-solid fa-key"></i>

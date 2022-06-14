@@ -29,7 +29,6 @@ export const getRequestsOfDay = createAsyncThunk(
 export const postRequests = createAsyncThunk(
   'requests/postRequests',
   async (data) => {
-    console.log(data)
     const { url, requestData } = data
     return await post(url, requestData)
   },
