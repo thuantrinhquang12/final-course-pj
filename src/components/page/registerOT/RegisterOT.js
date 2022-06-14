@@ -17,8 +17,6 @@ import {
   messageRequest,
 } from '../../index'
 
-import styles from './RegisterOT.module.scss'
-
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [errorTimeOT, setErrorTimeOT] = useState(false)
@@ -82,7 +80,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_OT,
-          request_for_date: row.work_date,
+          request_for_date: dateTime.formatTimestampToDate(row.work_date),
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
           created_at: currentTime.current,
