@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import styles from './Index.module.scss'
 import UserListBar from './UserListBar'
 
-const Userbar = () => {
+const UserBar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const barRef = useRef(null)
   const handleClick = () => {
@@ -26,4 +26,4 @@ const Userbar = () => {
   )
 }
 
-export default Userbar
+export default UserBar

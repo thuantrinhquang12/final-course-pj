@@ -23,6 +23,7 @@ const Dialog = ({ children, isOpen, title, handleModal }) => {
   }
 
   if (!isOpen) return null
+
   return (
     <>
       <Modal
@@ -37,6 +38,7 @@ const Dialog = ({ children, isOpen, title, handleModal }) => {
     </>
   )
 }
+
 Dialog.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -46,4 +48,5 @@ Dialog.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
 }
+
 export default Dialog
