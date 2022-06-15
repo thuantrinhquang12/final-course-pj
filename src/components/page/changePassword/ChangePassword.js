@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
 import { typePopup } from '../../index'
-import style from './ChangePassword.scss'
+import './ChangePassword.scss'
 import { patch } from '../../service/requestApi'
 
 const ChangePassword = () => {
@@ -23,6 +23,7 @@ const ChangePassword = () => {
     try {
       if (res.status === 'success') {
         setIsModalVisible(false)
+        form.resetFields()
         typePopup.popupNotice(
           typePopup.SUCCESS_MESSAGE,
           'Success',
@@ -50,10 +51,11 @@ const ChangePassword = () => {
   }
 
   return (
-    <div className={style.ChangePassword}>
+    <div>
       <h3 onClick={showModal}>Change Password</h3>
       <Modal
         title={<h3 style={{ color: 'white', margin: '0' }}>Change Password</h3>}
+        className="ChangePassword"
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[]}
@@ -135,7 +137,7 @@ const ChangePassword = () => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item className={style.buttonConfirmpass}>
+          <Form.Item className="buttonConfirmpass">
             <Button type="primary" htmlType="submit">
               Submit
             </Button>

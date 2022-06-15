@@ -22,7 +22,7 @@ export const getRequestsOfDay = createAsyncThunk(
     const response = await get(url, {
       request_for_date: date,
     })
-    return !response.code ? response : {}
+    return response ? response : {}
   },
 )
 

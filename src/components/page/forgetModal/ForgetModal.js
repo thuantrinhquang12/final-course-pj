@@ -1,4 +1,3 @@
-/* eslint-disable  no-unused-vars*/
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
@@ -19,6 +18,7 @@ import {
   endPoint,
   requestSlice,
 } from '../../index'
+import { getErrorCount } from './handleErrorCount'
 import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
@@ -35,7 +35,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
-
   const {
     handleSubmit,
     control,
@@ -78,6 +77,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   }, [request])
 
   const onSubmit = async (values, e) => {
+    const { specialReason } = values
+    const errorCount = getErrorCount(specialReason)
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -86,8 +87,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          error_count: +((values.specialReason || []).length !== 0),
-          special_reason: values.specialReason || [],
+          error_count: errorCount,
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
         }
@@ -108,8 +108,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          error_count: +((values.specialReason || []).length !== 0) + 1,
-          special_reason: values.specialReason || [],
+          error_count: errorCount,
           reason: values.reasonInput,
         }
         await tryCatch.handleTryCatch(
