@@ -15,6 +15,7 @@ import Header from '../components/layout/header/index/Index'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
+
   const ROLES = {
     User: 1,
     Manager: 2,
@@ -22,6 +23,7 @@ const AppRoutesComponent = () => {
   }
 
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   if (tokenAccess && !data) {
@@ -44,8 +46,16 @@ const AppRoutesComponent = () => {
 
         <Route element={<Header />}>
           {/* public routes with layout */}
-          <Route path="/member" element={<Unauthorized />} />
-          <Route path="/timesheet" element={<Worksheet />} />
+          <Route
+            element={
+              <PrivateRoute
+                allowedRoles={[ROLES.User, ROLES.Manager, ROLES.Admin]}
+              />
+            }
+          >
+            <Route path="/member" element={<Unauthorized />} />
+            <Route path="/timesheet" element={<Worksheet />} />
+          </Route>
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
