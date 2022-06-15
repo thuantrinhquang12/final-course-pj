@@ -16,6 +16,7 @@ import {
   handleField,
   buttonForm,
   tryCatch,
+  endPoint,
   messageRequest,
   requestSlice,
 } from '../../index'
@@ -105,10 +106,10 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               : values.radioPaid == 'unpaid'
               ? typeRequest.REQUEST_LEAVE_UNPAID
               : '',
+          request_for_date: row.work_date,
           leave_start: leaveAllDayCheck ? '' : dateTime.formatTime(leaveStart),
           leave_end: leaveAllDayCheck ? '' : dateTime.formatTime(leaveEnd),
           leave_time: leaveAllDayCheck ? '' : timeCount,
-          request_for_date: row.work_date,
           leave_all_day:
             (values.checkboxLeaveAllDay || []).length !== 0
               ? typeRequest.LEAVE_ALL_DAY
@@ -123,7 +124,12 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
         }
 
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_LEAVE,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
           handleCloseModal,
         )
@@ -136,6 +142,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               : values.radioPaid == 'unpaid'
               ? typeRequest.REQUEST_LEAVE_UNPAID
               : '',
+          request_for_date: row.work_date,
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
           leave_start: leaveAllDayCheck ? '' : dateTime.formatTime(leaveStart),
           leave_end: leaveAllDayCheck ? '' : dateTime.formatTime(leaveEnd),
           leave_time: leaveAllDayCheck ? '' : timeCount,
@@ -155,6 +164,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
             requestSlice.putRequests({
               id: request.id,
               requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_LEAVE,
             }),
           ),
           messageRequest.UPDATE,
@@ -322,23 +332,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                                   leaveAllDayCheck,
                                 )
                               }
-                              showTime={{
-                                defaultValue:
-                                  Object.keys(request).length !== 0 &&
-                                  request?.leave_start &&
-                                  request?.leave_end
-                                    ? [
-                                        moment(
-                                          request?.leave_start,
-                                          dateTime.formatTimeType,
-                                        ),
-                                        moment(
-                                          request?.leave_end,
-                                          dateTime.formatTimeType,
-                                        ),
-                                      ]
-                                    : [],
-                              }}
+                              {...field}
                               onChange={(e) => {
                                 handleOnChangeRange(e)
                                 return field.onChange(e)
