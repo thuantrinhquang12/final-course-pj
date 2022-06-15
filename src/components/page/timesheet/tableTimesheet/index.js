@@ -149,8 +149,8 @@ export default function Timesheet({ row }, sort) {
       key: 'work_time',
       render: (workTime) => {
         if (workTime === '08:00') {
-          return <Text type="danger">{workTime}</Text>
-        } else return <Text type="default">{workTime}</Text>
+          return <Text type="default">{workTime}</Text>
+        } else return <Text type="danger">{workTime}</Text>
       },
     },
     {

@@ -9,6 +9,7 @@ import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
+import { getTimesheet } from './slice/slice'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -16,15 +17,16 @@ const { Text, Title } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
-  const worksheet = useSelector((state) => {
-    console.log('state', state)
-    return state.timesheet.worksheet
-  })
+
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(TimesheetSlice.getTimesheet())
+    dispatch(getTimesheet())
   }, [])
+  const worksheet = useSelector((state) => {
+    return state.timesheet.worksheet
+  })
+  console.log(worksheet)
   const OnchangeRange = (value, dateString) => {
     setDateRange(dateString)
   }
@@ -129,10 +131,10 @@ export default function SearchField() {
           </Form>
         </fieldset>
         <>
-          <Title level={5}>Total number of record : 30</Title>
+          <Title level={5}>Total number of record : {worksheet.per_page}</Title>
         </>
         <>
-          <Timesheet row={worksheet}></Timesheet>
+          <Timesheet row={worksheet.data}></Timesheet>
         </>
       </div>
     </>
