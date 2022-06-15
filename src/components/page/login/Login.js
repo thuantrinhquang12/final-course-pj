@@ -11,6 +11,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const onSubmit = async (values) => {
@@ -25,7 +26,7 @@ const Login = () => {
         }),
       )
       await localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
-      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.role)
+      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
       await localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({
@@ -40,6 +41,7 @@ const Login = () => {
       )
       navigate('/', { replace: true })
     } catch (e) {
+      setError(true)
       typePopup.popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Login Failed')
       setLoading(false)
     }
@@ -97,9 +99,14 @@ const Login = () => {
               htmlType="submit"
               loading={loading}
             >
-              Sign in
+              Sign In
             </Button>
           </Form.Item>
+          {error && (
+            <p style={{ color: 'red', textAlign: 'center' }}>
+              Email or Password fail!!
+            </p>
+          )}
         </Form>
       </div>
     </>

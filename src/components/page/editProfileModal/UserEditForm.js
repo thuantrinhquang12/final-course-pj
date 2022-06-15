@@ -2,16 +2,16 @@ import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import axios from 'axios'
-
+import { get, put } from '../../service/requestApi'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
 import './Index.scss'
 import Dialog from '../../common/createModal/Modal'
 import { tryCatch, messageRequest } from '../../index'
+import { dateTime } from '../../index'
 
-const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
+const API = '/members'
 const dateFormat = 'DD-MM-YYYY'
 
 const disabledDate = (current) => {
@@ -26,22 +26,23 @@ const UserEditForm = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
   useEffect(() => {
-    axios.get(API + 'user_info/1').then((res) => {
+    get(API + '/edit').then((res) => {
       setProfileInfo(res.data)
     })
   }, [])
 
   const onSubmit = async (values) => {
+    console.log(values)
     const valueEdit = {
       ...values,
-      birth_date: moment(values.birth_date).format('DD-MM-YYYY'),
-      date_of_issue: moment(values.date_of_issue).format('DD-MM-YYYY'),
-      passport_expiration: moment(values.passport_expiration).format(
-        'DD-MM-YYYY',
-      ),
+      birth_date: dateTime.momentTypeDate(values.birth_date),
+      identity_card_date: dateTime.momentTypeDate(values.identity_card_date),
+      passport_expiration: dateTime.momentTypeDate(values.passport_expiration),
+      gender: profileInfo.gender,
+      marital_status: profileInfo.marital_status,
     }
     await tryCatch.handleTryCatch(
-      axios.put(API + 'user_info/1', valueEdit),
+      put(API + '/update', valueEdit),
       messageRequest.UPDATE,
       () => {
         setModalVisible(false)
@@ -61,24 +62,45 @@ const UserEditForm = () => {
           <Form
             layout="horizontal"
             initialValues={{
-              gender: profileInfo.gender,
+              gender: profileInfo.gender == 1 ? 'Male' : 'Female',
               nickname: profileInfo.nickname,
               identity_number: profileInfo.identity_number,
-              place_of_issue: profileInfo.place_of_issue,
-              birth_date: moment(profileInfo.birth_date, 'DD-MM-YYYY'),
-              date_of_issue: moment(profileInfo.date_of_issue, 'DD-MM-YYYY'),
+              identity_card_place: profileInfo.identity_card_place,
+              birth_date: profileInfo.birth_date
+                ? moment(
+                    moment(profileInfo.birth_date).format('DD-MM-YYYY'),
+                    'DD-MM-YYYY',
+                  )
+                : '',
+              identity_card_date: profileInfo.identity_card_date
+                ? moment(
+                    moment(profileInfo.identity_card_date).format('DD-MM-YYYY'),
+                    'DD-MM-YYYY',
+                  )
+                : '',
               passport_number: profileInfo.passport_number,
-              passport_expiration: moment(
-                profileInfo.passport_expiration,
-                'DD-MM-YYYY',
-              ),
+              passport_expiration: profileInfo.passport_expiration
+                ? moment(
+                    moment(profileInfo.passport_expiration).format(
+                      'DD-MM-YYYY',
+                    ),
+                    'DD-MM-YYYY',
+                  )
+                : '',
               nationality: profileInfo.nationality,
               other_email: profileInfo.other_email,
               skype: profileInfo.skype,
               facebook: profileInfo.facebook,
               bank_name: profileInfo.bank_name,
               bank_account: profileInfo.bank_account,
-              marital_status: profileInfo.marial_status,
+              marital_status:
+                profileInfo.marital_status == 1
+                  ? 'Married'
+                  : profileInfo.marital_status == 2
+                  ? 'Single'
+                  : profileInfo.marital_status == 3
+                  ? 'Divorce'
+                  : 'Other',
               academic_level: profileInfo.academic_level,
               permanent_address: profileInfo.permanent_address,
               temporary_address: profileInfo.temporary_address,
@@ -212,7 +234,7 @@ const UserEditForm = () => {
                               <Form.Item
                                 label=""
                                 labelAlign="left"
-                                name="date_of_issue"
+                                name="identity_card_date"
                                 rules={[
                                   {
                                     required: true,
@@ -237,7 +259,7 @@ const UserEditForm = () => {
                               <Form.Item
                                 label=""
                                 labelAlign="left"
-                                name="place_of_issue"
+                                name="identity_card_place"
                                 rules={[
                                   {
                                     required: true,
