@@ -21,8 +21,8 @@ export default function Timesheet({ row }, sort) {
   })
 
   const [visible, setVisible] = useState(false)
-  const [dateTimelog, setDateTimelog] = useState('av')
-  const handleClickModal = (type) => {  
+  const [dateTimelog, setDateTimelog] = useState('')
+  const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
       case 'FORGET':
@@ -53,6 +53,7 @@ export default function Timesheet({ row }, sort) {
       title: 'No',
       dataIndex: 'id',
       key: 'id',
+      fixed: 'left',
       defaultSortOrder: 'ascend',
       sorter: {
         compare: (a, b) => b.id - a.id,
@@ -63,6 +64,8 @@ export default function Timesheet({ row }, sort) {
       title: 'Date',
       dataIndex: 'work_date',
       key: 'work_date',
+      fixed: 'left',
+      width: 110,
       render: (date) => {
         return (
           <Text
@@ -73,7 +76,7 @@ export default function Timesheet({ row }, sort) {
               console.log(dateTimelog)
             }}
           >
-            {moment(date).format('DD/MM/YYYY|ddd')}{' '}
+            {moment(date).format('DD/MM/YYYY ddd')}{' '}
           </Text>
         )
       },
@@ -82,6 +85,7 @@ export default function Timesheet({ row }, sort) {
       title: 'Check in',
       dataIndex: 'checkin_original',
       key: 'checkin_original',
+
       render: (checkin) => {
         if (checkin !== null) {
           return <Text>{moment(checkin).format('HH:mm')} </Text>
@@ -92,6 +96,7 @@ export default function Timesheet({ row }, sort) {
       title: 'Check out',
       dataIndex: 'checkout_original',
       key: 'checkout_original',
+
       render: (checkout) => {
         if (checkout !== null) {
           return <Text>{moment(checkout).format('HH:mm ')} </Text>
@@ -176,6 +181,8 @@ export default function Timesheet({ row }, sort) {
     {
       title: 'Action',
       key: 'action',
+      width: 250,
+      fixed: 'right',
       render: (record) => (
         <Space>
           <Button
@@ -231,6 +238,7 @@ export default function Timesheet({ row }, sort) {
   return (
     <>
       <Table
+        scroll={{ x: 1300, y: 150 }}
         columns={columns}
         dataSource={row}
         rowClassName={(record, index) =>

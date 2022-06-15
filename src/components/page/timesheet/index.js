@@ -8,7 +8,7 @@ import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './tableTimesheet'
-import { get } from '../../service/requestApi'
+import { useDispatch, useSelector } from 'react-redux'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -16,14 +16,18 @@ const { Text, Title } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
-  const [dataTimesheet, setDataTimesheet] = useState()
-  const getTimeSheets = async () => {
-    const res = await get(process.env.REACT_APP_API_ENDPOINT + `/worksheet`)
-    setDataTimesheet(res.data)
-  }
+  const worksheet = useSelector((state) => {
+    console.log('state', state)
+    return state.timesheet.worksheet
+  })
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    getTimeSheets()
+    dispatch(TimesheetSlice.getTimesheet())
   }, [])
+  const OnchangeRange = (value, dateString) => {
+    setDateRange(dateString)
+  }
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
     setValueForm(values)
@@ -86,6 +90,7 @@ export default function SearchField() {
                   </Form.Item>
                   <Form.Item name="dateRange">
                     <RangePicker
+                      onChange={OnchangeRange}
                       format={dateFormat}
                       disabled={choose === 1}
                       disabledDate={(d) =>
@@ -127,7 +132,7 @@ export default function SearchField() {
           <Title level={5}>Total number of record : 30</Title>
         </>
         <>
-          <Timesheet row={dataTimesheet}></Timesheet>
+          <Timesheet row={worksheet}></Timesheet>
         </>
       </div>
     </>
