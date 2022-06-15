@@ -23,7 +23,7 @@ const Login = () => {
         loginAccess({
           role: res.data.roles[0].title,
           tokenAccess: res.access_token,
-          shift: res.data.shifts,
+          data: res.data,
         }),
       )
       const UsedTimeToken = 3600 * 1000
