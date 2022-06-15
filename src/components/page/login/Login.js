@@ -28,7 +28,7 @@ const Login = () => {
       )
       const UsedTimeToken = 3600 * 1000
       const timeExpires = Date.now() + UsedTimeToken
-      localStorage.setItem(LOCAL_STORAGE.TIMEEXPIRED, timeExpires)
+      localStorage.setItem(LOCAL_STORAGE.TIME_EXPIRED, timeExpires)
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
       localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
       localStorage.setItem(
@@ -77,7 +77,7 @@ const Login = () => {
           >
             <Input
               prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Username"
+              placeholder="Email"
             />
           </Form.Item>
 

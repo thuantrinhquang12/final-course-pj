@@ -6,32 +6,31 @@ import Cat from './crazyCat.jpg'
 import { Link } from 'react-router-dom'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
+import UserEditForm from '../../../page/editProfileModal/UserEditForm'
+import { LOCAL_STORAGE } from '../../../constant/localStorage'
+import { useSelector } from 'react-redux'
 
 const UserListBar = ({ open, onClick }) => {
   const refChildren = useRef(null)
   const remove = useRef(null)
 
+  const { name } = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
+  const data = useSelector((state) => state.userInfo?.currentUser?.role)
+
   useEffect(() => {
     const children = refChildren.current
     const removeX = remove.current
 
-    const handleClick = (e) => {
-      e.stopPropagation()
-    }
-
     const handleRemove = (e) => {
-      e.stopPropagation()
       onClick()
     }
 
     if (children && removeX) {
-      children.addEventListener('click', handleClick)
       removeX.addEventListener('click', handleRemove)
     }
 
     return () => {
       if (children && removeX) {
-        children.removeEventListener('click', handleClick)
         removeX.removeEventListener('click', handleRemove)
       }
     }
@@ -40,14 +39,14 @@ const UserListBar = ({ open, onClick }) => {
   if (!open) return null
 
   return (
-    <div className={styles.UserListBar} onClick={onClick}>
+    <div className={styles.UserListBar}>
       <Row style={{ width: '100%', height: '100%' }}>
         <Col xs={20} className={styles.UserCol} ref={refChildren}>
           <div className={styles.UserListColumn}>
             <div className={styles.NavHeader}>
               <div className={styles.NavImage}>
                 <img src={Cat} alt="CatCrazy" />
-                <h3>Crazy Cat</h3>
+                <h3>{name}</h3>
               </div>
               <i
                 className="fa-solid fa-xmark"
@@ -55,33 +54,33 @@ const UserListBar = ({ open, onClick }) => {
                 ref={remove}
               ></i>
             </div>
-            <div className={styles.NavBody}>
+            <div className={styles.NavBody} onClick={onClick}>
               <Link to="/" className={styles.formGroup}>
                 <h3>HOME</h3>
                 <i className="fa-solid fa-house-chimney"></i>
               </Link>
-              <Link to="timesheet" className={styles.formGroup}>
+              <Link to="/timesheet" className={styles.formGroup}>
                 <h3>TIMESHEET</h3>
                 <i className="fa-solid fa-business-time"></i>
               </Link>
-              <Link to="admin" className={styles.formGroup}>
+              <Link to={data || '/'} className={styles.formGroup}>
                 <h3>MANAGER</h3>
                 <i className="fa-solid fa-bars-progress"></i>
               </Link>
             </div>
             <div className={styles.NavBody}>
               <div className={styles.formGroup}>
-                <h3>Edit Profile</h3>
+                <UserEditForm />
                 <i className="fa-solid fa-hammer"></i>
               </div>
               <div className={styles.formGroup}>
                 <ChangePassword />
                 <i className="fa-solid fa-key"></i>
               </div>
-              <a href="#" className={styles.formGroup}>
+              <div className={styles.formGroup}>
                 <Logout />
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
-              </a>
+              </div>
             </div>
           </div>
         </Col>

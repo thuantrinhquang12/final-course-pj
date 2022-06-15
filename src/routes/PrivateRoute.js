@@ -21,7 +21,7 @@ const PrivateRoute = ({ allowedRoles }) => {
     auth = []
   }
 
-  const timeUsedToken = localStorage.getItem(LOCAL_STORAGE.TIMEEXPIRED)
+  const timeUsedToken = localStorage.getItem(LOCAL_STORAGE.TIME_EXPIRED)
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
   if (tokenAccess) {
     if (Date.now() > timeUsedToken) {
