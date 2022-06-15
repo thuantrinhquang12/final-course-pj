@@ -123,7 +123,7 @@ const CommonTable = ({
     })
   }, [data, columns, remove, sorter, styleHead, styleBody])
 
-  if ((data || []).length === 0) {
+  if ((data || []).length === 0 && columns.length === 0) {
     return null
   }
   return (

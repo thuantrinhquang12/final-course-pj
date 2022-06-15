@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Col, DatePicker, Space, Input, Skeleton } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import styles from './Index.module.scss'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
-import handleTime, { handlePlusTime, handleFormat } from './handleTime'
+import { handlePlusTime, handleFormat, handleSubTime } from './handleTime'
+import { get } from '../../../service/requestApi'
 import moment from 'moment'
 import {
   DialogRequest,
@@ -18,28 +19,44 @@ import {
   tryCatch,
   messageRequest,
   requestSlice,
+  endPoint,
 } from '../../../index'
 
 const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   const [requestExists, setRequestExists] = useState(false)
   const { request, status } = useSelector((state) => state.requests)
-  const currentTime = useRef(handleDateTime.getCurrentTime())
-  const lateTime = handleTime('08:00', row.late)
-  const earlyTime = handleTime(row.early, '17:00')
-  const overTime = '01:00'
-  const timeRequest = handleFormat(handlePlusTime(lateTime, earlyTime))
+
+  const [overTime, setOverTime] = useState(null)
+  const timeRequest = handleFormat(handlePlusTime(row.late, row.early))
+
+  const getCompensation = async (date) => {
+    const respon = await get(
+      `worksheet/show-date?work_date=${dateTime.formatDate(date)}`,
+    )
+      .then((res) => {
+        const checkOut = dateTime.formatTime(res.checkout_original)
+        const checkIn = dateTime.formatTime(res.checkin_original)
+        return handleSubTime(checkIn, checkOut)
+      })
+      .catch(() => {
+        return null
+      })
+
+    return respon
+  }
+
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (row.requests.length !== 0) {
-      for (const request of row.requests) {
-        if (request.request_type === typeRequest.REQUEST_LATE_EARLY) {
-          setRequestExists(true)
-          dispatch(requestSlice.getRequests(request.request_id))
-          break
-        }
-      }
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_LATE_EARLY_OF_DAY,
+          date: row.work_date,
+        }),
+      )
     }
+    checkRequestExists()
   }, [])
 
   const schema = yup.object().shape({
@@ -66,9 +83,17 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('reasonInput', request.reason)
+      setRequestExists(true)
     }
   }, [request])
+
   const onSubmit = async (values, e) => {
+    const overTM = +(overTime ? overTime : '00:00').replace(':', '')
+    const timeRq = +(timeRequest ? timeRequest : '00:00').replace(':', '')
+
+    if (overTM < timeRq) {
+      return null
+    }
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -78,38 +103,49 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
           check_out: dateTime.formatTime(values.checkOutTime),
           request_for_date: dateTime.formatDate(row.work_date),
           reason: values.reasonInput,
+          compensation_time: overTime,
+          compensation_date: dateTime.formatDate(values.checkDateTime),
           status: typeStatusRequest.SEND,
-          created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_LATE_EARLY,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
-          handleCloseLateEarly,
+          handleCloseModal,
         )
         break
       case 'UPDATE':
         const updateRequest = {
+          request_type: typeRequest.REQUEST_LATE_EARLY,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
+          request_for_date: dateTime.formatDate(row.work_date),
           reason: values.reasonInput,
-          update_at: currentTime.current,
+          compensation_time: overTime,
+          compensation_date: dateTime.formatDate(values.checkDateTime),
+          status: typeStatusRequest.SEND,
         }
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
               id: request.id,
               requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_LATE_EARLY,
             }),
           ),
           messageRequest.UPDATE,
-          handleCloseLateEarly,
+          handleCloseModal,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
           dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
-          handleCloseLateEarly,
+          handleCloseModal,
         )
         break
       default:
@@ -117,11 +153,21 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
     }
   }
 
+  const handleCloseModal = () => {
+    handleCloseLateEarly()
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_LATE_EARLY_OF_DAY,
+        date: -1,
+      }),
+    )
+  }
+
   return (
     <>
       <DialogRequest
         title="Register Late/Early"
-        handleModal={handleCloseLateEarly}
+        handleModal={handleCloseModal}
         isOpen={isOpen}
         listButton={buttonForm.formRequestButton}
         statusRequest={request.status}
@@ -139,10 +185,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <Col xs={24} md={24} xl={24}>
                       <div className={styles.formGroup}>
                         <Col xs={6} md={6} xl={4}>
-                          <h3>Registration date::</h3>
+                          <h3>Registration date:</h3>
                         </Col>
                         <Col xs={20} md={20} xl={20}>
-                          <h3>{request?.create_at}</h3>
+                          <h3>{dateTime.formatDateTime(request?.create_at)}</h3>
                         </Col>
                       </div>
                     </Col>
@@ -189,7 +235,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                         </Col>
                         <Col xs={12} md={12} xl={16}>
                           <h3 style={{ color: 'red' }}>
-                            {lateTime !== null ? lateTime : ''}
+                            {row.late ? row.late : ''}
                           </h3>
                         </Col>
                       </Col>
@@ -199,7 +245,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                         </Col>
                         <Col xs={12} md={12} xl={16}>
                           <h3 style={{ color: 'red' }}>
-                            {earlyTime !== null ? earlyTime : ''}
+                            {row.early ? row.early : ''}
                           </h3>
                         </Col>
                       </Col>
@@ -228,6 +274,11 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                     }
                                     format={dateTime.formatDateTypeYear}
                                     onChange={(e) => {
+                                      const res = async () => {
+                                        const respon = await getCompensation(e)
+                                        setOverTime(respon)
+                                      }
+                                      res()
                                       return field.onChange(e)
                                     }}
                                     defaultValue={moment().subtract(1, 'days')}
@@ -275,7 +326,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           <Col xs={12} md={10} xl={13}>
                             <h3
                               style={handleDateTime.compareTime(
-                                overTime,
+                                overTime ? overTime : '00:00',
                                 timeRequest,
                               )}
                             >
