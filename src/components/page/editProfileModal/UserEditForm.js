@@ -32,7 +32,6 @@ const UserEditForm = () => {
   }, [])
 
   const onSubmit = async (values) => {
-    console.log(values)
     const valueEdit = {
       ...values,
       birth_date: dateTime.momentTypeDate(values.birth_date),

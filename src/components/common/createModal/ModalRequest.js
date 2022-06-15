@@ -39,6 +39,7 @@ const Dialog = ({
       <Modal
         title={title}
         visible={isOpen}
+        className="modalRequestContainer"
         onCancel={
           statusRequest === typeStatusRequest.CONFIRMED ||
           statusRequest === typeStatusRequest.APPROVED
@@ -110,6 +111,10 @@ Dialog.propTypes = {
   handleModal: PropTypes.func,
   title: PropTypes.string,
   isOpen: PropTypes.bool,
+  listButton: PropTypes.array,
+  statusRequest: PropTypes.number,
+  requestExists: PropTypes.bool,
+  statusGetRequest: PropTypes.string,
 }
 
 export default Dialog

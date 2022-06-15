@@ -6,16 +6,15 @@ import { del } from '../../service/requestApi'
 const Logout = () => {
   const navigate = useNavigate()
 
-  const OnClick = async () => {
+  const onClick = async () => {
     await del('/logout')
-    localStorage.removeItem(LOCAL_STORAGE.ROLE)
-    localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN)
+    localStorage.clear()
     navigate('/login', { replace: true })
   }
 
   return (
     <>
-      <h3 onClick={OnClick}>Logout</h3>
+      <h3 onClick={onClick}>Logout</h3>
     </>
   )
 }

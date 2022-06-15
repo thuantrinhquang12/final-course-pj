@@ -12,18 +12,34 @@ export const getRequests = createAsyncThunk(
   },
 )
 
+export const getRequestsOfDay = createAsyncThunk(
+  'requests/getRequestsOfDay',
+  async (data) => {
+    const { url, date } = data
+    if (date === -1) {
+      return {}
+    }
+    const response = await get(url, {
+      request_for_date: date,
+    })
+    return response ? response : {}
+  },
+)
+
 export const postRequests = createAsyncThunk(
   'requests/postRequests',
   async (data) => {
-    return await post('requests', data)
+    const { url, requestData } = data
+    const response = await post(url, requestData)
+    return response.error ? response.error : response
   },
 )
 
 export const putRequests = createAsyncThunk(
   'requests/putRequests',
   async (data) => {
-    const { id, requestData } = data
-    return await put(`requests/${id}`, requestData)
+    const { id, requestData, url } = data
+    return await put(url + id, requestData)
   },
 )
 
@@ -41,14 +57,14 @@ const requestsSlice = createSlice({
     status: null,
   },
   extraReducers: {
-    [getRequests.pending]: (state) => {
+    [getRequestsOfDay.pending]: (state) => {
       state.status = 'loading'
     },
-    [getRequests.fulfilled]: (state, action) => {
+    [getRequestsOfDay.fulfilled]: (state, action) => {
       state.status = 'success'
       state.request = action.payload
     },
-    [getRequests.rejected]: (state) => {
+    [getRequestsOfDay.rejected]: (state) => {
       state.status = 'failed'
     },
     [postRequests.pending]: (state) => {
