@@ -13,7 +13,9 @@ const Index = () => {
     return state.noticeList
   })
 
-  console.log('modal', modal)
+  const stateUser = useSelector((state) => {
+    return state.userInfo.currentUser.data
+  })
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -41,8 +43,8 @@ const Index = () => {
       title: (
         <p className={`${styles.tableHeader} ${styles.whiteColor}`}>Author</p>
       ),
-      dataIndex: 'subject',
-      key: 'subject',
+      dataIndex: 'created_by',
+      key: 'created_by',
       render: (payload) => {
         return <p className={styles.tableHeader}>{payload}</p>
       },
@@ -245,7 +247,7 @@ const Index = () => {
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
                     <p>Name:</p>
-                    <p>Berenice Connelly</p>
+                    <p>{stateUser.full_name}</p>
                   </div>
                 </div>
               </Col>
@@ -254,7 +256,7 @@ const Index = () => {
                   <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
                     <p>Email:</p>
-                    <p>vinaphone232@gmail.com</p>
+                    <p>{stateUser.email}</p>
                   </div>
                 </div>
               </Col>
@@ -263,7 +265,7 @@ const Index = () => {
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
                     <p>Nick name:</p>
-                    <p>NamDx Update composer</p>
+                    <p>{stateUser.nick_name}</p>
                   </div>
                 </div>
               </Col>
@@ -272,7 +274,7 @@ const Index = () => {
                   <i className="fa-solid fa-phone"></i>
                   <div className="formGroupText">
                     <p>Phone:</p>
-                    <p>0263862877</p>
+                    <p>{stateUser.phone}</p>
                   </div>
                 </div>
               </Col>

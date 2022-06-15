@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
+/* eslint-disable  no-unused-vars*/
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -10,19 +11,20 @@ import {
   dateTime,
   typeStatusRequest,
   typeRequest,
-  handleDateTime,
   handleField,
   buttonForm,
   tryCatch,
   messageRequest,
+  endPoint,
   requestSlice,
 } from '../../index'
 import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
-  const currentTime = useRef(handleDateTime.getCurrentTime())
+
   const dispatch = useDispatch()
+  const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
     reasonInput: yup
@@ -43,68 +45,78 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       checkInTime: dateTime.momentType('08:00'),
       checkOutTime: dateTime.momentType('17:00'),
     },
-
     resolver: yupResolver(schema),
   })
 
-  const { request, status } = useSelector((state) => state.requests)
-
   useEffect(() => {
-    if (row.requests.length !== 0) {
-      for (const request of row.requests) {
-        if (request.request_type === typeRequest.REQUEST_FORGET) {
-          setRequestExists(true)
-          dispatch(requestSlice.getRequests(request.request_id))
-        }
-      }
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_FORGET_OF_DAY,
+          date: row.work_date,
+        }),
+      )
     }
+    checkRequestExists()
   }, [])
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
-      setValue('checkInTime', dateTime.momentType(request.check_in))
-      setValue('checkOutTime', dateTime.momentType(request.check_out))
-      setValue('specialReason', request.special_reason)
+      setValue(
+        'checkInTime',
+        dateTime.momentType(dateTime.formatTime(request?.check_in)),
+      )
+      setValue(
+        'checkOutTime',
+        dateTime.momentType(dateTime.formatTime(request?.check_out)),
+      )
+      setValue('specialReason', request.special_reason || [])
       setValue('reasonInput', request.reason)
+      setRequestExists(true)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
-    console.log()
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_FORGET,
+          request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          request_for_date: dateTime.formatDate(row.work_date),
           error_count: +((values.specialReason || []).length !== 0),
           special_reason: values.specialReason || [],
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
-          created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_FORGET,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
           handleCloseModal,
         )
         break
       case 'UPDATE':
         const updateRequest = {
+          request_type: typeRequest.REQUEST_FORGET,
+          request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          error_count: +((values.specialReason || []).length !== 0),
+          error_count: +((values.specialReason || []).length !== 0) + 1,
           special_reason: values.specialReason || [],
           reason: values.reasonInput,
-          update_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
               id: request.id,
               requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_FORGET,
             }),
           ),
           messageRequest.UPDATE,
@@ -125,7 +137,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   const handleCloseModal = () => {
     handleCloseForget()
-    dispatch(requestSlice.getRequests(-1))
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_FORGET_OF_DAY,
+        date: -1,
+      }),
+    )
   }
 
   return (
@@ -141,22 +158,20 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
       <>
         <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
-            <Skeleton paragraph={{ rows: 10 }}></Skeleton>
+            <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
               {requestExists && (
                 <Row>
-                  <>
-                    <Col flex="150px">Registration date: </Col>
-                    <Col flex="auto">{request?.create_at}</Col>
-                  </>
+                  <Col flex="150px">Registration date: </Col>
+                  <Col flex="auto">
+                    {dateTime.formatDateTime(request?.create_at)}
+                  </Col>
                 </Row>
               )}
               <Row>
                 <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">
-                  {dateTime.formatTimestampToDate(row.work_date)}
-                </Col>
+                <Col flex="auto">{row.work_date}</Col>
               </Row>
               <Row>
                 <Col flex="150px">
@@ -171,12 +186,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                         <TimePicker
                           disabled={handleField.disableField(request.status)}
                           format={dateTime.formatTimeType}
+                          {...field}
                           style={{
                             width: '100px',
                             marginRight: '10px',
                             maxWidth: '100%',
                           }}
-                          {...field}
                         />
                         {errors.checkInTime && (
                           <span className={styles.errorField}>
@@ -187,7 +202,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.check_in)})
+                    ({dateTime.formatTime(row.checkin_original)})
                   </span>
                 </Col>
               </Row>
@@ -216,7 +231,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.check_out)})
+                    ({dateTime.formatTime(row.checkout_original)})
                   </span>
                 </Col>
               </Row>
@@ -227,21 +242,19 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     name="specialReason"
                     control={control}
                     render={({ field }) => (
-                      <>
-                        <Checkbox.Group
-                          disabled={handleField.disableField(request.status)}
-                          {...field}
-                        >
-                          <Row style={{ marginBottom: 0 }}>
-                            <Checkbox value={0}>
-                              Check-in not counted as error
-                            </Checkbox>
-                            <Checkbox value={1}>
-                              Check-out not counted as error
-                            </Checkbox>
-                          </Row>
-                        </Checkbox.Group>
-                      </>
+                      <Checkbox.Group
+                        disabled={handleField.disableField(request.status)}
+                        {...field}
+                      >
+                        <Row style={{ marginBottom: 0 }}>
+                          <Checkbox value={1}>
+                            Check-in not counted as error
+                          </Checkbox>
+                          <Checkbox value={2}>
+                            Check-out not counted as error
+                          </Checkbox>
+                        </Row>
+                      </Checkbox.Group>
                     )}
                   />
                 </Col>
@@ -251,30 +264,24 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
                 <Col flex="100%">
-                  {status === 'loading' ? (
-                    <Skeleton active size="small" block={true}>
-                      <Input.TextArea></Input.TextArea>
-                    </Skeleton>
-                  ) : (
-                    <Controller
-                      name="reasonInput"
-                      control={control}
-                      render={({ field }) => (
-                        <>
-                          <Input.TextArea
-                            rows={4}
-                            disabled={handleField.disableField(request.status)}
-                            {...field}
-                          />
-                          {errors.reasonInput && (
-                            <span className={styles.errorField}>
-                              {errors.reasonInput?.message}
-                            </span>
-                          )}
-                        </>
-                      )}
-                    />
-                  )}
+                  <Controller
+                    name="reasonInput"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Input.TextArea
+                          autoSize={{ minRows: 5, maxRows: 5 }}
+                          disabled={handleField.disableField(request.status)}
+                          {...field}
+                        />
+                        {errors.reasonInput && (
+                          <span className={styles.errorField}>
+                            {errors.reasonInput?.message}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
                 </Col>
               </Row>
             </>
@@ -284,14 +291,11 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     </DialogRequest>
   )
 }
+
 ForgetModal.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseForget: PropTypes.func,
-  // row: PropTypes.shape({
-  //   requests: PropTypes.array,
-  //   work_date: PropTypes.string,
-  //   check_in: PropTypes.string,
-  //   check_out: PropTypes.string,
-  // }),
+  row: PropTypes.object,
 }
+
 export default ForgetModal

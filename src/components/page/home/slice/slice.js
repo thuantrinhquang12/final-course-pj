@@ -8,7 +8,7 @@ export const getDataListNotice = createAsyncThunk(
     const response = await get(
       `/notification?per_page=${item.perPage}&page=${item.page}&sort=asc`,
     )
-    console.log('res', response)
+    // console.log('res', response)
     return response
   },
 )
@@ -32,12 +32,12 @@ const noticeList = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getDataListNotice.fulfilled, (state, action) => {
-      state.per_page = action.payload.meta.per_page
-      state.total = action.payload.meta.total
-      state.page = action.payload.meta.current_page
-      state.lastPage = action.payload.meta.last_page
-      state.currentPage = action.payload.meta.current_page
-      state.tableData = action.payload.data
+      state.per_page = action.payload.meta?.per_page
+      state.total = action.payload.meta?.total
+      state.page = action.payload.meta?.current_page
+      state.lastPage = action.payload.meta?.last_page
+      state.currentPage = action.payload?.meta.current_page
+      state.tableData = action.payload?.data
     })
   },
 })

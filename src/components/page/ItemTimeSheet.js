@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react'
 import moment from 'moment'
 import ForgetModal from './forgetModal/ForgetModal'
@@ -11,15 +10,10 @@ const ItemTimeSheet = ({ row }) => {
     isOpenLeave: false,
     isOpenOT: false,
   })
-  const handleClickModal = (type) => {
+
+  const handleClickModal = (type) => () => {
     const modalType = type.toUpperCase()
     switch (modalType) {
-      case 'FORGET':
-        setIsOpen({
-          ...isOpen,
-          isOpenForget: !isOpen.isOpenForget,
-        })
-        break
       case 'LEAVE':
         setIsOpen({
           ...isOpen,
@@ -32,10 +26,17 @@ const ItemTimeSheet = ({ row }) => {
           isOpenOT: !isOpen.isOpenOT,
         })
         break
+      case 'FORGET':
+        setIsOpen({
+          ...isOpen,
+          isOpenForget: !isOpen.isOpenForget,
+        })
+        break
       default:
         throw new Error('An error occurred')
     }
   }
+
   return (
     <div
       style={{
@@ -44,40 +45,35 @@ const ItemTimeSheet = ({ row }) => {
         margin: '20px',
       }}
     >
-      <div>Date: {moment.unix(row.work_date).format('YYYY/MM/DD')}</div>
-      <div>Checkin: {moment(row.check_in).format('hh:mm:ss a')}</div>
-      <div>Check out: {moment(row.check_out).format('hh:mm:ss a')}</div>
-      <div>Late: {row.late}</div>
-      <div>Early: {row.early}</div>
-      <div>In office: {row.in_office}</div>
-      <div>OT: {row.ot}</div>
-      <div>Work time: {row.work_time}</div>
-      <div>Lack: {row.lack_time}</div>
-      <div>Pleave: {row.pleave}</div>
-      <button
-        type="button"
-        onClick={() => {
-          handleClickModal('forget')
-        }}
-      >
-        Forget
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          handleClickModal('leave')
-        }}
-      >
+      <div>wd{row.work_date}</div>
+      <div>
+        ci
+        {row.checkin_original
+          ? moment(row.check_in || row.checkin_original).format('HH:mm')
+          : '--|--'}
+      </div>
+      <div>
+        co{' '}
+        {row.checkout_original
+          ? moment(row.check_in || row.checkout_original).format('HH:mm')
+          : '--|--'}
+      </div>
+      <div>l{row.late ? row.late : '--|--'}</div>
+      <div>e{row.early ? row.early : '--|--'}</div>
+      <div>lack{row.lack_time ? row.lack_time : '--|--'}</div>
+      <div>wt{row.work_time ? row.work_time : '--|--'}</div>
+      <div>if{row.in_office ? row.in_office : '--|--'}</div>
+
+      <button type="button" onClick={handleClickModal('leave')}>
         Leave
       </button>
-      <button
-        type="button"
-        onClick={() => {
-          handleClickModal('ot')
-        }}
-      >
+      <button type="button" onClick={handleClickModal('ot')}>
         OT
       </button>
+      <button type="button" onClick={handleClickModal('forget')}>
+        Forget
+      </button>
+
       {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={isOpen.isOpenForget}

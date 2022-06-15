@@ -1,26 +1,36 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
-import 'antd/dist/antd.min.css'
 import { typePopup } from '../../index'
-import style from './ChangePassword.module.scss'
+import style from './ChangePassword.scss'
+import { patch } from '../../service/requestApi'
 
 const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [error, setError] = useState(false)
   const [form] = Form.useForm()
 
   const onFinish = async (values) => {
-    // call API
-    console.log(values)
+    const {
+      old_password: oldPassword,
+      new_password: newPass,
+      new_password_confirmation: passConfirm,
+    } = values
+    const res = await patch('/change-password', {
+      old_password: oldPassword,
+      new_password: newPass,
+      new_password_confirmation: passConfirm,
+    })
     try {
-      if (true) {
+      if (res.status === 'success') {
         setIsModalVisible(false)
         typePopup.popupNotice(
           typePopup.SUCCESS_MESSAGE,
           'Success',
           'Change Password Successful',
         )
-      }
+      } else return false
     } catch (e) {
+      setError(true)
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
         'Failed',
@@ -36,13 +46,14 @@ const ChangePassword = () => {
   const handleCancel = () => {
     setIsModalVisible(false)
     form.resetFields()
+    setError(false)
   }
 
   return (
-    <>
+    <div className={style.ChangePassword}>
       <h3 onClick={showModal}>Change Password</h3>
       <Modal
-        title={<p style={{ color: 'blue' }}>Change Password</p>}
+        title={<h3 style={{ color: 'white', margin: '0' }}>Change Password</h3>}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[]}
@@ -63,26 +74,13 @@ const ChangePassword = () => {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: 'Required to enter email!',
-              },
-              {
-                type: 'email',
-                message: 'Enter a valid email address!',
-              },
-            ]}
-          >
+          <Form.Item label="Email" name="email" rules={[]}>
             <Input disabled={true} />
           </Form.Item>
 
           <Form.Item
-            label="Old password"
-            name="oldPassword"
+            label="Old Password:"
+            name="old_password"
             rules={[
               {
                 required: true,
@@ -94,8 +92,8 @@ const ChangePassword = () => {
           </Form.Item>
 
           <Form.Item
-            label="Password"
-            name="password"
+            label="Password:"
+            name="new_password"
             rules={[
               {
                 required: true,
@@ -111,9 +109,9 @@ const ChangePassword = () => {
           </Form.Item>
 
           <Form.Item
-            name="confirm"
-            label="Confirm Password"
-            dependencies={['password']}
+            name="new_password_confirmation"
+            label="Confirm Password:"
+            dependencies={['new_password']}
             hasFeedback
             rules={[
               {
@@ -122,7 +120,7 @@ const ChangePassword = () => {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
+                  if (!value || getFieldValue('new_password') === value) {
                     return Promise.resolve()
                   }
                   return Promise.reject(
@@ -137,7 +135,7 @@ const ChangePassword = () => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item className={style.button}>
+          <Form.Item className={style.buttonConfirmpass}>
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
@@ -145,9 +143,14 @@ const ChangePassword = () => {
               Cancel
             </Button>
           </Form.Item>
+          {error && (
+            <p style={{ color: 'red', textAlign: 'center' }}>
+              Wrong old password !!!
+            </p>
+          )}
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 

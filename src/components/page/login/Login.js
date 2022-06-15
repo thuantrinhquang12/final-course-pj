@@ -7,9 +7,11 @@ import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { useNavigate } from 'react-router-dom'
 import { loginAccess } from './slice/sliceLogin'
 import { login } from '../../service/authService'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const onSubmit = async (values) => {
@@ -23,9 +25,13 @@ const Login = () => {
           tokenAccess: res.access_token,
         }),
       )
-      await localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
-      await localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
-      await localStorage.setItem(
+      const UsedTimeToken = 3600 * 1000
+      const timeExpires = Date.now() + UsedTimeToken
+      localStorage.setItem(LOCAL_STORAGE.TIMEEXPIRED, timeExpires)
+      localStorage.setItem(LOCAL_STORAGE.DATA, JSON.stringify(res.data))
+      localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
+      localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
+      localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({
           avatar: res.data.avatar,
@@ -39,6 +45,7 @@ const Login = () => {
       )
       navigate('/', { replace: true })
     } catch (e) {
+      setError(true)
       typePopup.popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Login Failed')
       setLoading(false)
     }
@@ -57,7 +64,6 @@ const Login = () => {
           <Form.Item
             name="email"
             className={styles.InputField}
-            labelAlign="left"
             rules={[
               {
                 required: true,
@@ -69,12 +75,14 @@ const Login = () => {
               },
             ]}
           >
-            <Input className={styles.Input} placeholder="Email" />
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Username"
+            />
           </Form.Item>
 
           <Form.Item
             name="password"
-            labelAlign="left"
             rules={[
               {
                 required: true,
@@ -82,7 +90,10 @@ const Login = () => {
               },
             ]}
           >
-            <Input.Password className={styles.Input} placeholder="Password" />
+            <Input.Password
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              placeholder="Password"
+            />
           </Form.Item>
 
           <Form.Item className={styles.ItemSignin}>
@@ -92,9 +103,16 @@ const Login = () => {
               htmlType="submit"
               loading={loading}
             >
-              Sign in
+              Sign In
             </Button>
           </Form.Item>
+          {error && (
+            <p
+              style={{ color: 'red', textAlign: 'center', paddingTop: '10px' }}
+            >
+              Email or Password fail!!
+            </p>
+          )}
         </Form>
       </div>
     </>
