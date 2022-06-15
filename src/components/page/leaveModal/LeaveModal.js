@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars*/
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
@@ -26,11 +25,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [leaveAllDayCheck, setLeaveAllDayCheck] = useState(false)
   const [timeCount, setTimeCount] = useState()
-  console.log('mount')
+
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
-
-  console.log(request, status)
 
   const schema = yup.object().shape({
     reasonInput: yup
@@ -59,16 +56,19 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   })
 
   useEffect(() => {
-    console.log('run api')
     const checkRequestExists = async () => {
-      await dispatch(requestSlice.getRequestsOfDay(row.work_date))
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_LEAVE_OF_DAY,
+          date: row.work_date,
+        }),
+      )
     }
     checkRequestExists()
   }, [])
 
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
-      console.log('run check')
       if (request.leave_all_day === typeRequest.LEAVE_ALL_DAY) {
         setValue('checkboxLeaveAllDay', [typeRequest.LEAVE_ALL_DAY])
         setLeaveAllDayCheck(!!request.leave_all_day)
@@ -117,11 +117,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
         }
-        if (leaveAllDayCheck) {
-          delete newRequest.leave_start
-          delete newRequest.leave_end
-          delete newRequest.leave_time
-        }
 
         await tryCatch.handleTryCatch(
           dispatch(
@@ -153,11 +148,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               ? typeRequest.LEAVE_ALL_DAY
               : typeRequest.LEAVE_BY_RANGE,
           reason: values.reasonInput,
-        }
-        if (leaveAllDayCheck) {
-          delete updateRequest.leave_start
-          delete updateRequest.leave_end
-          delete updateRequest.leave_time
         }
         await tryCatch.handleTryCatch(
           dispatch(
@@ -206,9 +196,13 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   const handleCloseModal = () => {
     handleCloseLeave()
-    dispatch(requestSlice.getRequestsOfDay(-1))
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_LEAVE_OF_DAY,
+        date: -1,
+      }),
+    )
   }
-  console.log(request.status, requestExists, status)
 
   return (
     <DialogRequest
@@ -221,7 +215,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
       statusGetRequest={status}
     >
       <>
-        {console.log('render')}
         <form id="myForm" onSubmit={handleSubmit(onSubmit)}>
           {status === 'loading' ? (
             <Skeleton paragraph={{ rows: 10 }} />
