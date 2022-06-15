@@ -1,4 +1,3 @@
-/* eslint-disable  no-unused-vars*/
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import * as yup from 'yup'
@@ -18,11 +17,15 @@ import {
   endPoint,
   requestSlice,
 } from '../../index'
+import { getErrorCount } from './handleErrorCount'
 import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
+
   const dispatch = useDispatch()
+  const { request, status } = useSelector((state) => state.requests)
+
   const schema = yup.object().shape({
     reasonInput: yup
       .string()
@@ -31,9 +34,6 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
-
-  const { request, status } = useSelector((state) => state.requests)
-
   const {
     handleSubmit,
     control,
@@ -69,13 +69,15 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
         'checkOutTime',
         dateTime.momentType(dateTime.formatTime(request?.check_out)),
       )
-      setValue('specialReason', request.special_reason)
+      setValue('specialReason', request.special_reason || [])
       setValue('reasonInput', request.reason)
       setRequestExists(true)
     }
   }, [request])
 
   const onSubmit = async (values, e) => {
+    const { specialReason } = values
+    const errorCount = getErrorCount(specialReason)
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
@@ -84,9 +86,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          request_for_date: row.work_date,
-          error_count: +((values.specialReason || []).length !== 0),
-          special_reason: values.specialReason || [],
+          error_count: errorCount,
           reason: values.reasonInput,
           status: typeStatusRequest.SEND,
         }
@@ -107,8 +107,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
           request_for_date: row.work_date,
           check_in: dateTime.formatTime(values.checkInTime),
           check_out: dateTime.formatTime(values.checkOutTime),
-          error_count: +((values.specialReason || []).length !== 0),
-          special_reason: values.specialReason || [],
+          error_count: errorCount,
           reason: values.reasonInput,
         }
         await tryCatch.handleTryCatch(
@@ -137,7 +136,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
 
   const handleCloseModal = () => {
     handleCloseForget()
-    dispatch(requestSlice.getRequestsOfDay(-1))
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_FORGET_OF_DAY,
+        date: -1,
+      }),
+    )
   }
 
   return (
@@ -242,10 +246,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                         {...field}
                       >
                         <Row style={{ marginBottom: 0 }}>
-                          <Checkbox value={0}>
+                          <Checkbox value={1}>
                             Check-in not counted as error
                           </Checkbox>
-                          <Checkbox value={1}>
+                          <Checkbox value={2}>
                             Check-out not counted as error
                           </Checkbox>
                         </Row>
