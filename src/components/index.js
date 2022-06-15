@@ -1,5 +1,6 @@
 export { default as Dialog } from './common/createModal/Modal'
 export { default as DialogRequest } from './common/createModal/ModalRequest'
+export { default as CMTable } from './common/table/Table'
 export { default as ScrollBarCustom } from './common/customScrollbars/ScrollBar'
 export { default as NotFound } from './page/errorPage/notFoundPage/NotFound'
 export { default as AuthorError } from './page/errorPage/authorPage/AuthorError'
