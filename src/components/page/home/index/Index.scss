@@ -27,3 +27,36 @@
     }
   }
 }
+
+.modalNotice {
+  .ant-modal-header {
+    background-color: #0599ef;
+
+    .ant-modal-title {
+      color: white;
+    }
+  }
+
+  .ant-modal-close-x {
+    color: white;
+  }
+
+  .ant-modal-footer {
+    display: none;
+  }
+
+  .formGroup {
+    display: flex;
+    align-items: baseline;
+    font-weight: 600;
+
+    i {
+      margin-right: 10px;
+    }
+
+    .formGroupText {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}
