@@ -5,11 +5,14 @@ import axios from 'axios'
 import moment from 'moment'
 
 const { Text } = Typography
-export default function ModalLogTimesheet() {
+export default function ModalLogTimesheet({ date }) {
+  console.log(date)
   const [dateTimeLog, setDateTimeLog] = useState([])
   const getDataTimeLog = async () => {
     const res = await axios(
-      `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timelogs`,
+      `http://127.0.0.1:8000/api/time-log?work_date=${moment(date).format(
+        'YYYY-MM-DD ',
+      )}`,
     )
     setDateTimeLog(res.data)
   }
@@ -19,16 +22,15 @@ export default function ModalLogTimesheet() {
   const columns = [
     {
       title: 'No',
-      dataIndex: 'key',
+      dataIndex: 'id',
       key: 'key',
-      render: (text) => <a>{text}</a>,
     },
     {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
       render: (date) => {
-        return <Text>{moment(date).format('DD/MM/YYYY ')} </Text>
+        return <Text>{moment(date).format('YYYY/MM/DD, dddd')} </Text>
       },
     },
     {

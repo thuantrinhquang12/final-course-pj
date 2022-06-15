@@ -9,7 +9,6 @@ import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './tableTimesheet'
 import { get } from '../../service/requestApi'
-// import axios from 'axios'
 
 const { RangePicker } = DatePicker
 const { Option } = Select
@@ -17,26 +16,11 @@ const { Text, Title } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
-  // const [valueForm, setValueForm] = useState([
-  //   {
-  //     sort: 'ascending',
-  //   },
-  // ])
-
   const [dataTimesheet, setDataTimesheet] = useState()
-  // const [dataTable, setDataTable] = useState()
-  // const getTimeSheet = async () => {
-  //   const res = await axios(
-  //     `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
-  //   )
-  //   return setDataTable(res.data)
-  // }
-  // console.log(dataTable)
   const getTimeSheets = async () => {
-    const res = await get(`http://127.0.0.1:8000/api/worksheet`)
+    const res = await get(process.env.REACT_APP_API_ENDPOINT + `/worksheet`)
     setDataTimesheet(res.data)
   }
-  console.log(dataTimesheet)
   useEffect(() => {
     getTimeSheets()
   }, [])
@@ -44,6 +28,7 @@ export default function SearchField() {
     console.log('Received values of form: ', values)
     setValueForm(values)
   }
+
   const handleReset = () => {
     form.resetFields()
   }

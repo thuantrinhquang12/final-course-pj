@@ -15,27 +15,14 @@ export default function Timesheet({ row }, sort) {
     isOpenForget: false,
     isOpenLeave: false,
   })
-
   const [checkModal, setCheckModal] = useState({
     row: [],
     name: '',
   })
 
   const [visible, setVisible] = useState(false)
-  // const [dataTable, setDataTable] = useState([])
-  // // const getTimeSheet = async () => {
-  // //   const res = await axios(
-  // //     `https://62957a16810c00c1cb6190ee.mockapi.io/timesheet/timesheet`,
-  // //   )
-  // //   setDataTable(res.data)
-  // // }
-
-  // // useEffect(() => {
-  // //   getTimeSheet()
-  // //   getTimeSheets()
-  // // }, [])
-
-  const handleClickModal = (type) => {
+  const [dateTimelog, setDateTimelog] = useState('av')
+  const handleClickModal = (type) => {  
     const modalType = type.toUpperCase()
     switch (modalType) {
       case 'FORGET':
@@ -78,7 +65,14 @@ export default function Timesheet({ row }, sort) {
       key: 'work_date',
       render: (date) => {
         return (
-          <Text onClick={() => setVisible(true)}>
+          <Text
+            onClick={() => {
+              setVisible(true)
+
+              setDateTimelog(date)
+              console.log(dateTimelog)
+            }}
+          >
             {moment(date).format('DD/MM/YYYY|ddd')}{' '}
           </Text>
         )
@@ -88,19 +82,19 @@ export default function Timesheet({ row }, sort) {
       title: 'Check in',
       dataIndex: 'checkin_original',
       key: 'checkin_original',
-      render: (checkin_original) => {
-        if (checkin_original !== null) {
-          return <Text>{moment(checkin_original).format('HH:mm')} </Text>
-        } else return <Text></Text>
+      render: (checkin) => {
+        if (checkin !== null) {
+          return <Text>{moment(checkin).format('HH:mm')} </Text>
+        } else <Text></Text>
       },
     },
     {
       title: 'Check out',
       dataIndex: 'checkout_original',
       key: 'checkout_original',
-      render: (checkout_original) => {
-        if (checkout_original !== null) {
-          return <Text>{moment(checkout_original).format('HH:mm ')} </Text>
+      render: (checkout) => {
+        if (checkout !== null) {
+          return <Text>{moment(checkout).format('HH:mm ')} </Text>
         } else return <Text></Text>
       },
     },
@@ -128,20 +122,20 @@ export default function Timesheet({ row }, sort) {
       title: 'In office',
       dataIndex: 'in_office',
       key: 'in_office',
-      render: (in_office) => {
-        if (in_office === null) {
+      render: (office) => {
+        if (office === null) {
           return <Text>--:--</Text>
-        } else return <Text type="default">{in_office}</Text>
+        } else return <Text type="default">{office}</Text>
       },
     },
     {
       title: 'Ot',
       dataIndex: 'ot_time',
       key: 'ot_time',
-      render: (ot_time) => {
-        if (ot_time === null) {
+      render: (ot) => {
+        if (ot === null) {
           return <Text>00:00</Text>
-        } else return <Text>{ot_time}</Text>
+        } else return <Text>{ot}</Text>
       },
     },
     {
@@ -245,6 +239,7 @@ export default function Timesheet({ row }, sort) {
         sx={{ align: 'center', width: '100%' }}
       />
       <Modal
+        date={dateTimelog}
         title="Time Logs"
         centered
         visible={visible}
