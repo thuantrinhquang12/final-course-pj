@@ -1,11 +1,12 @@
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import React from 'react'
-import { useLocation, Navigate, Outlet } from 'react-router-dom'
+import { useLocation, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
 const PrivateRoute = ({ allowedRoles }) => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const role = useSelector((state) => state.userInfo?.currentUser?.role)
 
@@ -20,7 +21,14 @@ const PrivateRoute = ({ allowedRoles }) => {
     auth = []
   }
 
+  const timeUsedToken = localStorage.getItem(LOCAL_STORAGE.TIME_EXPIRED)
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+  if (tokenAccess) {
+    if (Date.now() > timeUsedToken) {
+      navigate('/login', { replace: true })
+      localStorage.clear()
+    }
+  }
 
   return auth?.find((role) => allowedRoles?.includes(role)) ? (
     <Outlet />
