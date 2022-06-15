@@ -92,7 +92,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
         }
-        console.log(request.id)
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.postRequests({
@@ -113,7 +112,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
         }
-        console.log(updateRequest)
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
