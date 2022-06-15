@@ -50,10 +50,10 @@ const ChangePassword = () => {
   }
 
   return (
-    <>
+    <div className={style.ChangePassword}>
       <h3 onClick={showModal}>Change Password</h3>
       <Modal
-        title={<h3 style={{ color: 'blue' }}>Change Password</h3>}
+        title={<h3 style={{ color: 'white', margin: '0' }}>Change Password</h3>}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[]}
@@ -135,7 +135,7 @@ const ChangePassword = () => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item className={style.button1}>
+          <Form.Item className={style.buttonConfirmpass}>
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
@@ -150,7 +150,7 @@ const ChangePassword = () => {
           )}
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }
 
