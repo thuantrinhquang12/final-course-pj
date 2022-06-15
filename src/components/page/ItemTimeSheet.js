@@ -4,6 +4,7 @@ import ForgetModal from './forgetModal/ForgetModal'
 import LeaveModal from './leaveModal/LeaveModal'
 import RegisterOT from './registerOT/RegisterOT'
 import LateEarlyModal from './lateEarlyModal/index/Index'
+import PropTypes from 'prop-types'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
@@ -123,6 +124,10 @@ const ItemTimeSheet = ({ row }) => {
       )}
     </div>
   )
+}
+
+ItemTimeSheet.propTypes = {
+  row: PropTypes.object,
 }
 
 export default ItemTimeSheet

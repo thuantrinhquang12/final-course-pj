@@ -28,8 +28,8 @@ const Index = () => {
       title: <p className={styles.BlackColor}>No</p>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload) => {
-        return <p>{payload}</p>
+      render: (payload, recored) => {
+        return <p>{recored.key}</p>
       },
     },
     {
@@ -201,7 +201,7 @@ const Index = () => {
             data={stateNotice.tableData}
             // remove={['published_to']}
             columns={columns}
-            sorter={{ no: 'number', author: 'string', publishedDate: 'date' }}
+            sorter={{ published_date: 'date' }}
             scroll={{
               x: 1000,
               y: 350,

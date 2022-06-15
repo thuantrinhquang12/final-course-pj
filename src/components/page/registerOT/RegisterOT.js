@@ -20,11 +20,10 @@ import styles from './RegisterOT.module.scss'
 import moment from 'moment'
 
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
-  const [requestExists, setRequestExists] = useState(false)
-  const [errorTimeOT, setErrorTimeOT] = useState(false)
-
   const dispatch = useDispatch()
 
+  const [requestExists, setRequestExists] = useState(false)
+  const [errorTimeOT, setErrorTimeOT] = useState(false)
   const dateIn = new Date(row.checkin_original).getTime()
   const dateOut = new Date(row.checkout_original).getTime()
   const DateOT = (dateOut - dateIn) / (1000 * 3600) - 10
@@ -39,6 +38,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       .max(100, 'Please enter not too 100 characters'),
     timeRequestOT: yup.date().nullable().required('Please enter timeRequestOT'),
   })
+
   const {
     handleSubmit,
     control,
@@ -49,18 +49,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   })
 
   const { request, status } = useSelector((state) => state.requests)
-
-  useEffect(() => {
-    const checkRequestExists = async () => {
-      await dispatch(
-        requestSlice.getRequestsOfDay({
-          url: endPoint.GET_REQUEST_OT,
-          date: row.work_date,
-        }),
-      )
-    }
-    checkRequestExists()
-  }, [])
 
   useEffect(() => {
     const checkRequestExists = async () => {
@@ -91,6 +79,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       setErrorTimeOT(true)
       return null
     }
+
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
 
     switch (buttonSubmit) {
@@ -103,7 +92,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
         }
-
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.postRequests({
@@ -124,7 +112,6 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
         }
-        console.log(updateRequest)
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
@@ -152,7 +139,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
     handleCloseOT()
     dispatch(
       requestSlice.getRequestsOfDay({
-        url: endPoint.GET_REQUEST_LEAVE_OF_DAY,
+        url: endPoint.GET_REQUEST_OT,
         date: -1,
       }),
     )
@@ -300,5 +287,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
 RegisterOT.propTypes = {
   isOpen: PropTypes.bool,
   handleCloseOT: PropTypes.func,
+  row: PropTypes.object,
 }
+
 export default RegisterOT

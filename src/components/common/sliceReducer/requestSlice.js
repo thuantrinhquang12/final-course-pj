@@ -22,7 +22,7 @@ export const getRequestsOfDay = createAsyncThunk(
     const response = await get(url, {
       request_for_date: date,
     })
-    return !response.code ? response : {}
+    return response ? response : {}
   },
 )
 
@@ -30,7 +30,8 @@ export const postRequests = createAsyncThunk(
   'requests/postRequests',
   async (data) => {
     const { url, requestData } = data
-    return await post(url, requestData)
+    const response = await post(url, requestData)
+    return response.error ? response.error : response
   },
 )
 

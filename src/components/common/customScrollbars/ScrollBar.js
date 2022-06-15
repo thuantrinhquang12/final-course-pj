@@ -90,6 +90,7 @@ ScrollBarCommon.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  style: PropTypes.object,
 }
 
 export default ScrollBarCommon

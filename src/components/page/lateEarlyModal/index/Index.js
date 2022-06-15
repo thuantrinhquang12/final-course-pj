@@ -8,6 +8,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { handlePlusTime, handleFormat, handleSubTime } from './handleTime'
 import { get } from '../../../service/requestApi'
 import moment from 'moment'
+import PropTypes from 'prop-types'
+
 import {
   DialogRequest,
   dateTime,
@@ -185,10 +187,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <Col xs={24} md={24} xl={24}>
                       <div className={styles.formGroup}>
                         <Col xs={6} md={6} xl={4}>
-                          <h3>Registration date:</h3>
+                          Registration date:
                         </Col>
                         <Col xs={20} md={20} xl={20}>
-                          <h3>{dateTime.formatDateTime(request?.create_at)}</h3>
+                          {dateTime.formatDateTime(request?.create_at)}
                         </Col>
                       </div>
                     </Col>
@@ -198,10 +200,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
                       <Col xs={6} md={6} xl={4}>
-                        <h3>Register for date:</h3>
+                        Register for date:
                       </Col>
                       <Col xs={20} md={20} xl={20}>
-                        <h3>{row.work_date}</h3>
+                        {row.work_date}
                       </Col>
                     </div>
                   </Col>
@@ -210,18 +212,18 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Check-in:</h3>
+                          Check-in:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
-                          <h3>{dateTime.formatTime(row?.checkin_original)}</h3>
+                          {dateTime.formatTime(row?.checkin_original)}
                         </Col>
                       </Col>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Check-out:</h3>
+                          Check-out:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
-                          <h3>{dateTime.formatTime(row?.checkout_original)}</h3>
+                          {dateTime.formatTime(row?.checkout_original)}
                         </Col>
                       </Col>
                     </div>
@@ -231,7 +233,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Late time:</h3>
+                          Late time:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
                           <h3 style={{ color: 'red' }}>
@@ -241,7 +243,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                       </Col>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Early:</h3>
+                          Early:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
                           <h3 style={{ color: 'red' }}>
@@ -256,10 +258,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={24} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={6} md={12} xl={8}>
-                          <h3>
-                            Date cover up:{' '}
-                            <span className={styles.requiredField}>(*)</span>
-                          </h3>
+                          Date cover up:{' '}
+                          <span className={styles.requiredField}>(*)</span>
                         </Col>
                         <Col xs={18} md={12} xl={16}>
                           <Controller
@@ -308,10 +308,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           style={{ display: 'flex' }}
                         >
                           <Col xs={12} md={10} xl={8}>
-                            <h3>Overtime:</h3>
+                            Overtime:
                           </Col>
                           <Col xs={12} md={14} xl={16}>
-                            <h3>{overTime}</h3>
+                            {overTime}
                           </Col>
                         </Col>
                         <Col
@@ -321,7 +321,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           style={{ display: 'flex' }}
                         >
                           <Col xs={12} md={14} xl={11}>
-                            <h3>Time request:</h3>
+                            Time request:
                           </Col>
                           <Col xs={12} md={10} xl={13}>
                             <h3
@@ -341,10 +341,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
                       <Col xs={6} md={6} xl={4} style={{ display: 'flex' }}>
-                        <h3>
-                          Reason:{' '}
-                          <span className={styles.requiredField}>(*)</span>
-                        </h3>
+                        Reason:
+                        <span className={styles.requiredField}>(*)</span>
                       </Col>
                       <Col xs={18} md={18} xl={20}>
                         <Controller
@@ -379,6 +377,12 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       </DialogRequest>
     </>
   )
+}
+
+Index.propTypes = {
+  handleCloseLateEarly: PropTypes.func,
+  isOpen: PropTypes.bool,
+  row: PropTypes.object,
 }
 
 export default Index
