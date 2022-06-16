@@ -7,6 +7,7 @@ import LeaveModal from '../../leaveModal/LeaveModal'
 import RegisterOT from '../../registerOT/RegisterOT'
 import moment from 'moment'
 import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
+import PropTypes from 'prop-types'
 
 const { Text } = Typography
 
@@ -303,4 +304,7 @@ export default function Timesheet({ row }) {
       )}
     </>
   )
+}
+Timesheet.propTypes = {
+  row: PropTypes.object,
 }

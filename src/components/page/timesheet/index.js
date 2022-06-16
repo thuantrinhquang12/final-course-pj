@@ -10,13 +10,11 @@ import 'antd/dist/antd.min.css'
 import Timesheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTimesheet } from './slice/slice'
-
 const { Option } = Select
 const { Text, Title } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
-
   const dispatch = useDispatch()
   const [params, setParams] = useState({
     page: 3,
