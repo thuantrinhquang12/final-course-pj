@@ -9,3 +9,9 @@ export const PUT_REQUEST_FORGET = 'register-forget/update/'
 export const GET_REQUEST_OT = 'register-ot/show'
 export const POST_REQUEST_OT = 'register-ot/store'
 export const PUT_REQUEST_OT = 'register-ot/update/'
+
+export const GET_REQUEST_MANAGER = 'request/sent'
+export const PUT_REQUEST_MANAGER = 'request/confirm/'
+
+export const GET_REQUEST_ADMIN = 'admin/request/get'
+export const PUT_REQUEST_ADMIN = 'admin/request/approve/'

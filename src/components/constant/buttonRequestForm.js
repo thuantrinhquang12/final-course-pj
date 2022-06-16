@@ -18,6 +18,14 @@ export const formRequestButton = [
     loading: 'loadingUpdate',
   },
   {
+    key: 'cancel',
+    name: 'cancel',
+    text: 'Cancel',
+    htmlType: '',
+    type: '',
+    idForm: '',
+  },
+  {
     key: 'delete',
     name: 'delete',
     text: 'Delete',
@@ -25,13 +33,6 @@ export const formRequestButton = [
     type: 'primary',
     idForm: 'myForm',
     loading: 'loadingDelete',
-  },
-  {
-    key: 'cancel',
-    name: 'cancel',
-    text: 'Cancel',
-    htmlType: '',
-    type: '',
-    idForm: '',
+    danger: 'danger',
   },
 ]

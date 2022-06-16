@@ -1,14 +1,13 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import Login from '../components/page/login/Login'
 import PrivateRoute from './PrivateRoute'
 import Manager from '../components/page/manager/Manager'
 import Home from '../components/page/home/index/Index'
 import Unauthorized from '../components/page/unauthorized/Unauthorized'
-import Admin from '../components/page/admin/Admin'
-import { NotFound, AuthorError } from '../components'
+import { AuthorError, NotFound } from '../components'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
-import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Worksheet from '../components/page/Index'
 import Header from '../components/layout/header/index/Index'
@@ -69,7 +68,7 @@ const AppRoutesComponent = () => {
 
           {/* Admin routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<Manager />} />
           </Route>
         </Route>
       </Routes>
