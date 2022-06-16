@@ -15,6 +15,7 @@ const CommonTable = ({
   styleBody,
   className,
   title,
+  onRow,
 }) => {
   const [dataSource, setDataSource] = useState(null)
   const [columnS, setColumnS] = useState(null)
@@ -130,6 +131,13 @@ const CommonTable = ({
   return (
     <>
       <Table
+        onRow={
+          onRow
+            ? onRow
+            : () => {
+                return null
+              }
+        }
         title={
           title
             ? title
@@ -182,5 +190,6 @@ CommonTable.propTypes = {
   styleBody: PropTypes.object,
   className: PropTypes.string,
   title: PropTypes.func,
+  onRow: PropTypes.func,
 }
 export default CommonTable

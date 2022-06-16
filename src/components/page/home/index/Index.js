@@ -10,6 +10,7 @@ import { saveAs } from 'file-saver'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
+  const [heightTable, setHeightTable] = useState(0)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
@@ -23,13 +24,21 @@ const Index = () => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
   }, [])
 
+  useEffect(() => {
+    const Screen = screen.height
+    const Header = document.querySelector('#Header').offsetHeight
+    const HomeTable = document.querySelector('#HomeTable')
+    ;(HomeTable.style.height = `${Screen - Header}px`),
+      setHeightTable(HomeTable.offsetHeight - 450)
+  }, [])
+
   const columns = [
     {
       title: <p className={styles.BlackColor}>No</p>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
-        return <p>{recored.key}</p>
+        return <p>{(stateNotice.page - 1) * 10 + Number(recored.key)}</p>
       },
     },
     {
@@ -180,7 +189,7 @@ const Index = () => {
   }
 
   return (
-    <div className={styles.Home}>
+    <div className={styles.Home} id="HomeTable">
       <Row
         style={{
           height: '100%',
@@ -188,7 +197,6 @@ const Index = () => {
           justifyContent: 'center',
           padding: '50px 0',
           borderRadius: 5,
-          overflow: 'hidden',
         }}
       >
         <Col xs={24} md={20} xl={20}>
@@ -196,7 +204,6 @@ const Index = () => {
             title={(data) => {
               return <h1>Official Notice</h1>
             }}
-            // pagination={{ pageSize: page }}
             className="tableNotice"
             data={stateNotice.tableData}
             // remove={['published_to']}
@@ -204,7 +211,7 @@ const Index = () => {
             sorter={{ published_date: 'date' }}
             scroll={{
               x: 1000,
-              y: 350,
+              y: heightTable,
             }}
             styleHead={{
               id: { position: 'tb_start' },
