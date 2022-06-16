@@ -17,7 +17,7 @@ import {
   endPoint,
   requestSlice,
 } from '../../index'
-import { getErrorCount } from './handleErrorCount'
+import { getErrorCount, setErrorCount } from './handleErrorCount'
 import styles from './ForgetModal.module.scss'
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
@@ -69,7 +69,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
         'checkOutTime',
         dateTime.momentType(dateTime.formatTime(request?.check_out)),
       )
-      setValue('specialReason', request.special_reason || [])
+      setValue('specialReason', setErrorCount(request.error_count))
       setValue('reasonInput', request.reason)
       setRequestExists(true)
     }
