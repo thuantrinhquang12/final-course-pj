@@ -31,7 +31,6 @@ export const handleSubTime = (start, end) => {
     +hours2[1] - +hours1[1] > 0
       ? +hours2[1] - +hours1[1]
       : 60 + (+hours2[1] - +hours1[1])
-  console.log(start, end, hours)
   if (hours < 9 || !hours) {
     return null
   }
