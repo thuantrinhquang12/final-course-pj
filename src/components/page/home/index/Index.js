@@ -1,4 +1,4 @@
-/* disable eslint object-curly-spacing */
+/* eslint-disable object-curly-spacing */
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Modal } from 'antd'
 import styles from './Index.module.scss'
@@ -6,6 +6,7 @@ import './Index.scss'
 import { dateTime, CMTable } from '../../../index'
 import { getDataListNotice } from '../slice/slice'
 import { useDispatch, useSelector } from 'react-redux'
+import { saveAs } from 'file-saver'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
@@ -27,8 +28,8 @@ const Index = () => {
       title: <p className={styles.BlackColor}>No</p>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload) => {
-        return <p>{payload}</p>
+      render: (payload, recored) => {
+        return <p>{recored.key}</p>
       },
     },
     {
@@ -200,7 +201,7 @@ const Index = () => {
             data={stateNotice.tableData}
             // remove={['published_to']}
             columns={columns}
-            sorter={{ no: 'number', author: 'string', publishedDate: 'date' }}
+            sorter={{ published_date: 'date' }}
             scroll={{
               x: 1000,
               y: 350,
@@ -247,7 +248,7 @@ const Index = () => {
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
                     <p>Name:</p>
-                    <p>{stateUser.full_name}</p>
+                    <p>{stateUser?.full_name ? stateUser.full_name : ''}</p>
                   </div>
                 </div>
               </Col>
@@ -256,7 +257,7 @@ const Index = () => {
                   <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
                     <p>Email:</p>
-                    <p>{stateUser.email}</p>
+                    <p>{stateUser?.email ? stateUser.email : ''}</p>
                   </div>
                 </div>
               </Col>
@@ -265,7 +266,7 @@ const Index = () => {
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
                     <p>Nick name:</p>
-                    <p>{stateUser.nick_name}</p>
+                    <p>{stateUser?.nick_name ? stateUser.nick_name : ''}</p>
                   </div>
                 </div>
               </Col>
@@ -274,7 +275,7 @@ const Index = () => {
                   <i className="fa-solid fa-phone"></i>
                   <div className="formGroupText">
                     <p>Phone:</p>
-                    <p>{stateUser.phone}</p>
+                    <p>{stateUser?.phone ? stateUser.phone : ''}</p>
                   </div>
                 </div>
               </Col>
@@ -313,7 +314,12 @@ const Index = () => {
             <p style={{ fontWeight: 600 }}>Subject: {modal?.data?.subject}</p>
           </Col>
           <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>
+            <p
+              style={{ fontWeight: 600 }}
+              onClick={() => {
+                saveAs(`${modal.data.attachment}`, `${modal.data.attachment}`)
+              }}
+            >
               Attachment: {modal?.data?.attachment}
             </p>
           </Col>

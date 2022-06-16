@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Table } from 'antd'
 import './Table.scss'
+import PropTypes from 'prop-types'
 
 const CommonTable = ({
   data,
@@ -123,7 +124,7 @@ const CommonTable = ({
     })
   }, [data, columns, remove, sorter, styleHead, styleBody])
 
-  if ((data || []).length === 0) {
+  if ((data || []).length === 0 && columns.length === 0) {
     return null
   }
   return (
@@ -169,4 +170,17 @@ const CommonTable = ({
   )
 }
 
+CommonTable.propTypes = {
+  data: PropTypes.array,
+  remove: PropTypes.array,
+  columns: PropTypes.array,
+  page: PropTypes.number,
+  pagination: PropTypes.object,
+  sorter: PropTypes.object,
+  scroll: PropTypes.object,
+  styleHead: PropTypes.object,
+  styleBody: PropTypes.object,
+  className: PropTypes.string,
+  title: PropTypes.func,
+}
 export default CommonTable

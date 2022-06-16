@@ -32,9 +32,11 @@ const get = async (url, params = {}) => {
 const post = async (url, data = {}) => {
   try {
     const response = await instance.post(url, data)
+    // console.log(response)
     return response.data
   } catch (error) {
     console.log(error)
+    return error.response.data
   }
 }
 
