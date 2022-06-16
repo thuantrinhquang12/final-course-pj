@@ -11,7 +11,6 @@ export const handleTryCatch = async (value, message, closeModal) => {
       throw data.payload
     }
   } catch (error) {
-    console.log('err', error)
     typePopup.popupNotice(
       typePopup.ERROR_MESSAGE,
       'Message',
