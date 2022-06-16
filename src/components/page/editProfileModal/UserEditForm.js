@@ -37,7 +37,9 @@ const UserEditForm = () => {
       ...values,
       birth_date: dateTime.formatDate(values.birth_date),
       identity_card_date: dateTime.formatDate(values.identity_card_date),
-      passport_expiration: dateTime.formatDate(values.passport_expiration),
+      passport_expiration: values.passport_expiration
+        ? dateTime.formatDate(values.passport_expiration)
+        : '',
       nick_name: values.nickname,
       gender: values.gender,
       marital_status: values.marital_status,
