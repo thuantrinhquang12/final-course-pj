@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Modal, Button, Skeleton } from 'antd'
 import { typeStatusRequest } from '../../index'
 import './ModalRequest.scss'
-
 const Dialog = ({
   children,
   isOpen,

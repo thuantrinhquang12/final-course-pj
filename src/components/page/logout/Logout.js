@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { LOCAL_STORAGE } from '../../constant/localStorage'
 import { del } from '../../service/requestApi'
 
 const Logout = () => {

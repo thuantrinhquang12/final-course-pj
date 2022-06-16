@@ -2,15 +2,15 @@ import { Descriptions, Row, Col } from 'antd'
 import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { get } from '../../service/requestApi'
 
-const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
+const API = '/members'
 
 const UserDescription = () => {
   const [profileInfo, setProfileInfo] = useState([])
 
   useEffect(() => {
-    axios.get(API + 'user_info/1').then((res) => {
+    get(API + '/edit').then((res) => {
       setProfileInfo(res.data)
     })
   }, [])
@@ -34,13 +34,13 @@ const UserDescription = () => {
           <Row style={{ marginBottom: '20px' }}>
             <Col span={6}>Name:</Col>
             <Col span={12}>
-              <Descriptions.Item>{profileInfo.first_name}</Descriptions.Item>
+              <Descriptions.Item>{profileInfo.full_name}</Descriptions.Item>
             </Col>
           </Row>
           <Row>
             <Col span={6}>Phone Number:</Col>
             <Col span={12}>
-              <Descriptions.Item>{profileInfo.phone_number}</Descriptions.Item>
+              <Descriptions.Item>{profileInfo.phone}</Descriptions.Item>
             </Col>
           </Row>
         </Col>
