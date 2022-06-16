@@ -67,7 +67,7 @@ const requestsSlice = createSlice({
     [getRequestsOfDay.rejected]: (state) => {
       state.status = 'failed'
     },
-    [postRequests.pending]: (state) => {
+    [postRequests.pending]: (state, action) => {
       state.status = 'loadingRegister'
     },
     [postRequests.fulfilled]: (state) => {
