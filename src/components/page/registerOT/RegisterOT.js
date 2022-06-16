@@ -22,15 +22,13 @@ import moment from 'moment'
 const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const dispatch = useDispatch()
 
+  const [hours, minutes] = row.ot_time
+    ? row.ot_time?.split(':')
+    : '00:00'.split(':')
+
   const [requestExists, setRequestExists] = useState(false)
   const [errorTimeOT, setErrorTimeOT] = useState(false)
-  const dateIn = new Date(row.checkin_original).getTime()
-  const dateOut = new Date(row.checkout_original).getTime()
-  const DateOT = (dateOut - dateIn) / (1000 * 3600) - 10
-  const actualOvertime = new Date(DateOT * 60 * 60 * 1000)
-    .toISOString()
-    .slice(11, 16)
-
+  const DateOT = Number(+hours + minutes / 60)
   const schema = yup.object().shape({
     reasonInput: yup
       .string()
@@ -221,7 +219,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                 </div>
                 <div className={styles.groupCol}>
                   <Col flex="150px">Actual Overtime: </Col>
-                  <Col flex="auto">{actualOvertime}</Col>
+                  <Col flex="auto">{row.ot_time || '--:--'}</Col>
                 </div>
               </Row>
               <Row>
