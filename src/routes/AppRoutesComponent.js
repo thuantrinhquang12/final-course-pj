@@ -23,7 +23,6 @@ const AppRoutesComponent = () => {
   }
 
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
-
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   if (tokenAccess && !data) {
@@ -32,7 +31,10 @@ const AppRoutesComponent = () => {
       role: localStorage.getItem(LOCAL_STORAGE.ROLE),
     }
     dispatch(
-      loginAccess({ role: datatype.role, tokenAccess: datatype.tokenAccess }),
+      loginAccess({
+        role: datatype.role,
+        tokenAccess: datatype.tokenAccess,
+      }),
     )
   }
 

@@ -1,154 +1,39 @@
-import React, { useState } from 'react'
-import { Table, Row, Col } from 'antd'
-import { dateTime } from '../../../index'
+/* eslint-disable object-curly-spacing */
+import React, { useEffect, useState } from 'react'
+import { Row, Col, Modal } from 'antd'
 import styles from './Index.module.scss'
 import './Index.scss'
+import { dateTime, CMTable } from '../../../index'
+import { getDataListNotice } from '../slice/slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { saveAs } from 'file-saver'
 
 const Index = () => {
-  const [page, setPage] = useState(10)
+  const [modal, setModal] = useState({ open: false, data: {} })
+  const stateNotice = useSelector((state) => {
+    return state.noticeList
+  })
 
-  const dataSource = [
-    {
-      key: '1',
-      no: '1',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '2',
-      no: '2',
-      subject: 'Giới thiệu phúc lợi của công ty',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/03/20',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '3',
-      no: '3',
-      subject: 'Qui trình phỏng vấn',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'HRD',
-      publishedDate: '2022/04/20',
-      attchment: 'link Official Notice',
-      detail: 'View',
-    },
-    {
-      key: '4',
-      no: '4',
-      subject: 'Thông báo chuyển văn phòng',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/05/20',
-      attchment: 'link Official Notice',
-      detail: 'View',
-    },
-    {
-      key: '5',
-      no: '5',
-      subject: 'Hướng dẫn thủ tục thoi sản',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'BRC',
-      publishedDate: '2022/06/20',
-      attchment: 'link Official Notice',
-      detail: 'View',
-    },
-    {
-      key: '6',
-      no: '6',
-      subject: 'An toàn thông tin',
-      author: 'Đỗ Nam Hải',
-      toDepartment: 'All',
-      publishedDate: '2022/07/20',
-      attchment: 'link Official Notice',
-      detail: 'View',
-    },
-    {
-      key: '7',
-      no: '7',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '9',
-      no: '9',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '10',
-      no: '10',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '8',
-      no: '8',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '11',
-      no: '11',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-    {
-      key: '12',
-      no: '12',
-      subject: 'Chính sách bảo hiểm 2022',
-      author: 'Nguyễn Thị Hương',
-      toDepartment: 'All',
-      publishedDate: '2022/09/29',
-      attchment: 'link Official Notice',
-      detail: 'View',
-      fixed: 'left',
-    },
-  ]
+  const stateUser = useSelector((state) => {
+    return state.userInfo.currentUser.data
+  })
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getDataListNotice({ perPage: 10, page: 1 }))
+  }, [])
 
   const columns = [
     {
-      title: <p className={styles.whiteColor}>No</p>,
-      dataIndex: 'no',
-      key: 'no',
-      render: (payload) => {
-        return <p>{payload}</p>
+      title: <p className={styles.BlackColor}>No</p>,
+      dataIndex: 'id',
+      key: 'id',
+      render: (payload, recored) => {
+        return <p>{recored.key}</p>
       },
     },
     {
-      title: <p className={styles.whiteColor}>Subject</p>,
+      title: <p className={styles.BlackColor}>Subject</p>,
       dataIndex: 'subject',
       key: 'subject',
       render: (payload) => {
@@ -159,8 +44,8 @@ const Index = () => {
       title: (
         <p className={`${styles.tableHeader} ${styles.whiteColor}`}>Author</p>
       ),
-      dataIndex: 'author',
-      key: 'author',
+      dataIndex: 'created_by',
+      key: 'created_by',
       render: (payload) => {
         return <p className={styles.tableHeader}>{payload}</p>
       },
@@ -171,10 +56,10 @@ const Index = () => {
           Department
         </p>
       ),
-      dataIndex: 'toDepartment',
-      key: 'toDepartment',
+      dataIndex: 'published_to',
+      key: 'published_to',
       render: (payload) => {
-        return <p className={styles.tableHeader}>{payload}</p>
+        return <p className={styles.tableHeader}>{payload[0].division_name}</p>
       },
     },
     {
@@ -183,13 +68,8 @@ const Index = () => {
           Published Date
         </p>
       ),
-      dataIndex: 'publishedDate',
-      key: 'publishedDate',
-      sorter: (a, b) => {
-        const prevDate = new Date(a.publishedDate)
-        const NowDate = new Date(b.publishedDate)
-        return prevDate.getTime() - NowDate.getTime()
-      },
+      dataIndex: 'published_date',
+      key: 'published_date',
       render: (payload) => {
         const DATE = dateTime.formatDateTimes(new Date(payload))
         return <p className={styles.tableHeader}>{DATE}</p>
@@ -201,16 +81,14 @@ const Index = () => {
           Attachment
         </p>
       ),
-      dataIndex: 'attchment',
-      key: 'attchment',
+      dataIndex: 'attachment',
+      key: 'attachment',
       render: (payload) => {
+        const string =
+          payload && payload.length > 50 ? payload.slice(0, 50) : payload
         return (
-          <a
-            href="https://github.com/thanhliem26/SearchUserGitHub/blob/main/src/components/pages/UserSearch/UserList/UserInfo.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {payload}
+          <a href={`${payload}`} target="_blank" rel="noopener noreferrer">
+            {`${string}...`}
           </a>
         )
       },
@@ -219,80 +97,238 @@ const Index = () => {
       title: <p className={styles.whiteColor}>Detail</p>,
       dataIndex: 'detail',
       key: 'detail',
-      render: (payload) => {
+      render: (payload, record) => {
         return (
-          <a
-            href="https://github.com/thanhliem26/SearchUserGitHub/blob/main/src/components/pages/UserSearch/UserList/UserInfo.js"
-            target="_blank"
-            rel="noopener noreferrer"
+          <p
+            className="tb_center"
+            onClick={() => setModal({ open: true, data: record })}
           >
-            {payload}
-          </a>
+            View
+          </p>
         )
       },
     },
   ]
 
-  const handleStylePage = (number) => {
-    return number === page
-      ? {
-          color: '#1e72cf',
-        }
-      : null
+  const onShowSizeChange = (page, size) => {
+    dispatch(getDataListNotice({ perPage: size, page: page }))
+  }
+
+  const itemRender = (_, type, originalElement) => {
+    const style = {
+      width: 30,
+      height: 33,
+      marginLeft: 10,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: `#7d7d81`,
+      borderRadius: 5,
+    }
+    if (type === 'prev') {
+      return (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              dispatch(
+                getDataListNotice({
+                  perPage: stateNotice.per_page,
+                  page: 1,
+                }),
+              )
+            }}
+            style={style}
+          >
+            <i className="fa-solid fa-angles-left"></i>
+          </button>
+          <button style={style}>
+            <i className="fa-solid fa-angle-left"></i>
+          </button>
+        </>
+      )
+    }
+
+    if (type === 'next') {
+      return (
+        <>
+          <button style={style}>
+            <i className="fa-solid fa-angle-right"></i>
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              dispatch(
+                getDataListNotice({
+                  perPage: stateNotice.per_page,
+                  page: stateNotice.lastPage,
+                }),
+              )
+            }}
+            style={style}
+          >
+            <i className="fa-solid fa-angles-right"></i>
+          </button>
+        </>
+      )
+    }
+
+    return originalElement
+  }
+
+  const onChange = (size, page) => {
+    dispatch(getDataListNotice({ perPage: page, page: size }))
   }
 
   return (
-    <>
-      <div className={styles.listNotice} style={{ width: '100%' }}>
-        <Row style={{ height: '100%' }}>
-          <Col xs={24} md={12} xl={12}>
-            <div className={styles.titleNotice}>
-              <h1>Official Notice</h1>
-            </div>
-          </Col>
-          <Col xs={24} md={12} xl={12}>
-            <div className={styles.itemPage}>
-              <h3>
-                Item per page:
-                <span
-                  style={handleStylePage(10)}
-                  onClick={() => setPage((prev) => 10)}
-                >
-                  10,
-                </span>
-                <span
-                  style={handleStylePage(20)}
-                  onClick={() => setPage((prev) => 20)}
-                >
-                  20,
-                </span>
-                <span
-                  style={handleStylePage(50)}
-                  onClick={() => setPage((prev) => 50)}
-                >
-                  50.
-                </span>
-              </h3>
-            </div>
+    <div className={styles.Home}>
+      <Row
+        style={{
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '50px 0',
+          borderRadius: 5,
+          overflow: 'hidden',
+        }}
+      >
+        <Col xs={24} md={20} xl={20}>
+          <CMTable
+            title={(data) => {
+              return <h1>Official Notice</h1>
+            }}
+            // pagination={{ pageSize: page }}
+            className="tableNotice"
+            data={stateNotice.tableData}
+            // remove={['published_to']}
+            columns={columns}
+            sorter={{ published_date: 'date' }}
+            scroll={{
+              x: 1000,
+              y: 350,
+            }}
+            styleHead={{
+              id: { position: 'tb_start' },
+              subject: { position: 'tb_start' },
+              created_by: { position: 'tb_center' },
+              published_date: { position: 'tb_center' },
+              detail: { position: 'tb_center' },
+            }}
+            // styleBody={{ detail: { position: 'tb_center' } }}
+            pagination={{
+              current: stateNotice.currentPage,
+              total: stateNotice.total,
+              onShowSizeChange: onShowSizeChange,
+              itemRender: itemRender,
+              onChange: onChange,
+            }}
+          />
+        </Col>
+      </Row>
+      <Modal
+        wrapClassName="modalNotice"
+        title="Notice Detail"
+        visible={modal.open}
+        onCancel={() =>
+          setModal((prev) => {
+            return { ...prev, open: false }
+          })
+        }
+      >
+        <Row>
+          <Col
+            xs={24}
+            md={24}
+            xl={24}
+            style={{ display: 'flex', borderBottom: '2px solid #ab9f9f' }}
+          >
+            <Col xs={12} md={12} xl={12}>
+              <h3 style={{ marginBottom: '20px' }}>User Member</h3>
+              <Col xs={24} md={24} xl={24}>
+                <div className="formGroup">
+                  <i className="fa-solid fa-user"></i>
+                  <div className="formGroupText">
+                    <p>Name:</p>
+                    <p>{stateUser?.full_name ? stateUser.full_name : ''}</p>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} md={24} xl={24}>
+                <div className="formGroup">
+                  <i className="fa-solid fa-envelope"></i>
+                  <div className="formGroupText">
+                    <p>Email:</p>
+                    <p>{stateUser?.email ? stateUser.email : ''}</p>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} md={24} xl={24}>
+                <div className="formGroup">
+                  <i className="fa-solid fa-user"></i>
+                  <div className="formGroupText">
+                    <p>Nick name:</p>
+                    <p>{stateUser?.nick_name ? stateUser.nick_name : ''}</p>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} md={24} xl={24}>
+                <div className="formGroup">
+                  <i className="fa-solid fa-phone"></i>
+                  <div className="formGroupText">
+                    <p>Phone:</p>
+                    <p>{stateUser?.phone ? stateUser.phone : ''}</p>
+                  </div>
+                </div>
+              </Col>
+            </Col>
+            <Col xs={12} md={12} xl={12}>
+              <h3 style={{ marginBottom: '20px' }}>To Department</h3>
+              <Col xs={24} md={24} xl={24}>
+                <div className="formGroup">
+                  <i className="fa-solid fa-building"></i>
+                  <div className="formGroupText">
+                    <p>To department:</p>
+                    <p>
+                      {modal.data.published_to &&
+                        modal.data.published_to[0].division_name}
+                    </p>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={24} md={24} xl={24}>
+                <div className="formGroup">
+                  <i className="fa-solid fa-calendar"></i>
+                  <div className="formGroupText">
+                    <p>Published date: </p>
+                    <p>{modal?.data?.published_date}</p>
+                  </div>
+                </div>
+              </Col>
+            </Col>
           </Col>
         </Row>
-        <Table
-          pagination={{ pageSize: page }}
-          columns={columns}
-          dataSource={dataSource}
-        />
-      </div>
-      <Table
-        className="tableNotice"
-        pagination={{ pageSize: page }}
-        columns={columns}
-        dataSource={dataSource}
-        scroll={{
-          x: 1000,
-          y: 300,
-        }}
-      />
-    </>
+        <Row>
+          <Col xs={24} md={24} xl={24}>
+            <h3 style={{ marginBottom: '20px' }}>Detail</h3>
+          </Col>
+          <Col xs={24} md={24} xl={24}>
+            <p style={{ fontWeight: 600 }}>Subject: {modal?.data?.subject}</p>
+          </Col>
+          <Col xs={24} md={24} xl={24}>
+            <p
+              style={{ fontWeight: 600 }}
+              onClick={() => {
+                saveAs(`${modal.data.attachment}`, `${modal.data.attachment}`)
+              }}
+            >
+              Attachment: {modal?.data?.attachment}
+            </p>
+          </Col>
+          <Col xs={24} md={24} xl={24}>
+            <p style={{ fontWeight: 600 }}>Message: {modal?.data?.message}</p>
+          </Col>
+        </Row>
+      </Modal>
+    </div>
   )
 }
 

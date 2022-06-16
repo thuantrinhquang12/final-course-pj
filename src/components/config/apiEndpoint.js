@@ -8,4 +8,8 @@ export const PUT_REQUEST_FORGET = 'register-forget/update/'
 
 export const GET_REQUEST_OT = 'register-ot/show'
 export const POST_REQUEST_OT = 'register-ot/store'
-export const PUT_REQUEST_OT = 'register-ot/update/'
+export const PUT_REQUEST_OT = 'register-forget/update/'
+
+export const GET_REQUEST_LATE_EARLY_OF_DAY = 'register-late-early/show'
+export const POST_REQUEST_LATE_EARLY = 'register-late-early/store'
+export const PUT_REQUEST_LATE_EARLY = 'register-late-early/update/'

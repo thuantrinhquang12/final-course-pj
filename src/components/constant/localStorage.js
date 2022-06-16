@@ -3,5 +3,6 @@ export const LOCAL_STORAGE = {
   REFRESH_TOKEN: 'REFRESH_TOKEN',
   ROLE: 'role',
   INF_USER: 'INF_USER',
+  DATA: 'DATA',
   TIME_EXPIRED: 'TIME_EXPIRED',
 }
