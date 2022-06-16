@@ -29,7 +29,7 @@ const Index = () => {
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
-        return <p>{recored.key}</p>
+        return <p>{(stateNotice.page - 1) * 10 + Number(recored.key)}</p>
       },
     },
     {

@@ -15,7 +15,7 @@ export default function ModalLogTimesheet(date) {
   const worksheet = useSelector((state) => {
     return state.timesheet.worksheet.data
   })
-  console.log('asad', worksheet)
+
   const columns = [
     {
       title: 'No',

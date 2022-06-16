@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Table, Space, Button, Typography, Modal } from 'antd'
-import 'antd/dist/antd.min.css'
 import './table-timesheet.scss'
 import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
 import RegisterOT from '../../registerOT/RegisterOT'
+import LateEarlyModal from '../../lateEarlyModal/index/Index'
+
 import moment from 'moment'
 import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
 import PropTypes from 'prop-types'
@@ -15,6 +16,8 @@ export default function Timesheet({ row }) {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
+    isOpenOT: false,
+    isOpenLateEarly: false,
   })
   const [checkModal, setCheckModal] = useState({
     row: [],
@@ -44,6 +47,12 @@ export default function Timesheet({ row }) {
           isOpenOT: !isOpen.isOpenOT,
         })
         break
+      case 'LATE_EARLY':
+        setIsOpen({
+          ...isOpen,
+          isOpenLateEarly: !isOpen.isOpenLateEarly,
+        })
+        break
       default:
         throw new Error('err')
     }
@@ -54,11 +63,7 @@ export default function Timesheet({ row }) {
       title: 'No',
       dataIndex: 'id',
       key: 'id',
-      defaultSortOrder: 'ascend',
-      sorter: {
-        compare: (a, b) => b.id - a.id,
-        multiple: 1,
-      },
+
       render: (id, row) => {
         return (
           <Text
@@ -191,7 +196,6 @@ export default function Timesheet({ row }) {
       title: 'Action',
       key: 'action',
       width: 250,
-      fixed: 'right',
       render: (record) => (
         <Space>
           <Button
@@ -209,7 +213,20 @@ export default function Timesheet({ row }) {
             Forget
           </Button>
 
-          <Button size="small">Late/Early</Button>
+          <Button
+            size="small"
+            onClick={() => {
+              setCheckModal((prev) => {
+                return {
+                  row: record,
+                  name: 'late_early',
+                }
+              })
+              handleClickModal('late_early')
+            }}
+          >
+            Late/Early
+          </Button>
 
           <Button
             size="small"
@@ -284,6 +301,15 @@ export default function Timesheet({ row }) {
           }}
         ></ForgetModal>
       )}
+      {isOpen.isOpenLateEarly && (
+        <LateEarlyModal
+          isOpen={true}
+          row={checkModal.row}
+          handleCloseLateEarly={() => {
+            setIsOpen((isOpen.isOpenLateEarly = false))
+          }}
+        ></LateEarlyModal>
+      )}
       {isOpen.isOpenLeave && (
         <LeaveModal
           isOpen={true}
@@ -306,5 +332,5 @@ export default function Timesheet({ row }) {
   )
 }
 Timesheet.propTypes = {
-  row: PropTypes.object,
+  row: PropTypes.array,
 }
