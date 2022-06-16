@@ -1,4 +1,4 @@
-/* disable eslint object-curly-spacing */
+/* eslint-disable object-curly-spacing */
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Modal } from 'antd'
 import styles from './Index.module.scss'
