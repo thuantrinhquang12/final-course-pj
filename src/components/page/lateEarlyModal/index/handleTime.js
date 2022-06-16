@@ -1,29 +1,3 @@
-import moment from 'moment'
-
-const handleTime = (startTime, endTime) => {
-  const start = moment(startTime, 'HH:mm')
-  const end = moment(endTime, 'HH:mm')
-  if (start.isBefore(end)) {
-    const hours = Math.abs(start.diff(end, 'hours'))
-    const minutes = Math.abs(start.diff(end, 'minutes'))
-    if (hours !== 0) {
-      const minute =
-        (hours * 60 - minutes).toString().length > 1
-          ? Math.abs(hours * 60 - minutes)
-          : `0${hours * 60 - minutes}`
-      return hours.toString().length > 1
-        ? `${hours}:${minute}`
-        : `0${hours}:${minute}`
-    } else {
-      return minutes.toString().length > 1
-        ? `0${hours}:${minutes}`
-        : `0${hours}:0${minutes}`
-    }
-  } else {
-    return null
-  }
-}
-
 export const handlePlusTime = (start, end) => {
   const arr = [end ? end : '00:00', start ? start : '00:00']
   const result = arr.reduce((current, next) => {
@@ -46,6 +20,24 @@ export const handlePlusTime = (start, end) => {
   }
 }
 
+export const handleSubTime = (start, end) => {
+  const hours1 = start.split(':')
+  const hours2 = end.split(':')
+  const hours =
+    +hours2[1] - +hours1[1] > 0
+      ? +hours2[0] - +hours1[0]
+      : +hours2[0] - +hours1[0] - 1
+  const minutes =
+    +hours2[1] - +hours1[1] > 0
+      ? +hours2[1] - +hours1[1]
+      : 60 + (+hours2[1] - +hours1[1])
+  console.log(start, end, hours)
+  if (hours < 9 || !hours) {
+    return null
+  }
+  return handleFormat({ hours, minutes })
+}
+
 export const handleFormat = (times) => {
   const hours =
     times.hours.toString().length > 1 ? times.hours : `0${times.hours}`
@@ -53,5 +45,3 @@ export const handleFormat = (times) => {
     times.minutes.toString().length > 1 ? times.minutes : `0${times.minutes}`
   return `${hours}:${minutes}`
 }
-
-export default handleTime

@@ -3,12 +3,15 @@ import moment from 'moment'
 import ForgetModal from './forgetModal/ForgetModal'
 import LeaveModal from './leaveModal/LeaveModal'
 import RegisterOT from './registerOT/RegisterOT'
+import LateEarlyModal from './lateEarlyModal/index/Index'
+import PropTypes from 'prop-types'
 
 const ItemTimeSheet = ({ row }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
     isOpenOT: false,
+    isOpenLateEarly: false,
   })
 
   const handleClickModal = (type) => () => {
@@ -30,6 +33,12 @@ const ItemTimeSheet = ({ row }) => {
         setIsOpen({
           ...isOpen,
           isOpenForget: !isOpen.isOpenForget,
+        })
+        break
+      case 'LATE/EARLY':
+        setIsOpen({
+          ...isOpen,
+          isOpenLateEarly: !isOpen.isOpenLateEarly,
         })
         break
       default:
@@ -73,6 +82,9 @@ const ItemTimeSheet = ({ row }) => {
       <button type="button" onClick={handleClickModal('forget')}>
         Forget
       </button>
+      <button type="button" onClick={handleClickModal('late/early')}>
+        late/early
+      </button>
 
       {isOpen.isOpenForget && (
         <ForgetModal
@@ -101,8 +113,21 @@ const ItemTimeSheet = ({ row }) => {
           }}
         />
       )}
+      {isOpen.isOpenLateEarly && (
+        <LateEarlyModal
+          isOpen={isOpen.isOpenLateEarly}
+          row={row}
+          handleCloseLateEarly={() => {
+            setIsOpen((isOpen.isOpenLateEarly = false))
+          }}
+        />
+      )}
     </div>
   )
+}
+
+ItemTimeSheet.propTypes = {
+  row: PropTypes.object,
 }
 
 export default ItemTimeSheet

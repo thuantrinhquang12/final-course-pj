@@ -1,11 +1,14 @@
 .tableNotice {
+  .ant-table-title {
+    background-color: white;
+  }
   .ant-table-thead {
     th {
-      background-color: #2196f3;
+      background-color: #c9cccf;
 
       &.ant-table-column-has-sorters {
         &:hover {
-          background-color: #2196f3;
+          background-color: #c9cccf;
         }
       }
     }
@@ -21,6 +24,39 @@
       &:nth-child(even) {
         // background-color: #a8a0a0;
       }
+    }
+  }
+}
+
+.modalNotice {
+  .ant-modal-header {
+    background-color: #0599ef;
+
+    .ant-modal-title {
+      color: white;
+    }
+  }
+
+  .ant-modal-close-x {
+    color: white;
+  }
+
+  .ant-modal-footer {
+    display: none;
+  }
+
+  .formGroup {
+    display: flex;
+    align-items: baseline;
+    font-weight: 600;
+
+    i {
+      margin-right: 10px;
+    }
+
+    .formGroupText {
+      display: flex;
+      flex-wrap: wrap;
     }
   }
 }
