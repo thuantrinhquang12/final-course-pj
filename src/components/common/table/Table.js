@@ -18,7 +18,6 @@ const CommonTable = ({
 }) => {
   const [dataSource, setDataSource] = useState(null)
   const [columnS, setColumnS] = useState(null)
-  // console.log('data', data, columns)
   useEffect(() => {
     const DATAVALID = data
     const REMOVEKEY = remove
@@ -58,7 +57,6 @@ const CommonTable = ({
           switch (sorter[item.key]) {
             case 'string':
               item.sorter = (a, b) => {
-                console.log(a.subject)
                 return a[item.key].localeCompare(b[item.key])
               }
               break
