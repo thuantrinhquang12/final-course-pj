@@ -2,7 +2,9 @@
   align-content: center;
   width: 100%;
 }
-
+body {
+  overflow: scroll;
+}
 fieldset {
   margin-bottom: 30px !important;
   border: 1px solid black !important;
@@ -18,6 +20,7 @@ fieldset {
 .search-field {
   padding: 50px;
   width: 100%;
+  overflow: unset;
 }
 .search-form {
   display: flex;

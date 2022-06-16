@@ -11,7 +11,6 @@ import Timesheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTimesheet } from './slice/slice'
 
-const { RangePicker } = DatePicker
 const { Option } = Select
 const { Text, Title } = Typography
 const dateFormat = 'DD/MM/YYYY'
@@ -19,24 +18,44 @@ export default function SearchField() {
   const [choose, setChoose] = useState(1)
 
   const dispatch = useDispatch()
-
+  const [params, setParams] = useState({
+    page: 3,
+    sort: 'ascending',
+    start: '',
+    end: '',
+  })
   useEffect(() => {
-    dispatch(getTimesheet())
-  }, [])
+    dispatch(getTimesheet({ params }))
+  }, [params])
   const worksheet = useSelector((state) => {
     return state.timesheet.worksheet
   })
-  console.log(worksheet)
-  const OnchangeRange = (value, dateString) => {
-    setDateRange(dateString)
-  }
   const onFinish = (values) => {
-    console.log('Received values of form: ', values)
-    setValueForm(values)
+    if (values.sort === 'ascending') {
+      if (values.selected === 1) {
+        if (values.selecteddate === 1) {
+          setParams({ page: 3, sort: 'ascending', start: '', end: '' })
+        } else if (values.selecteddate === 2) {
+          setParams({ page: 2, sort: 'ascending', start: '', end: '' })
+        } else {
+          setParams({ page: 1, sort: 'ascending', start: '', end: '' })
+        }
+      }
+    } else {
+      if (values.selected === 2) {
+        setParams({
+          page: '',
+          sort: 'descending',
+          start: moment(values.startdate).format('YYYY-MM-DD'),
+          end: moment(values.enddate).format('YYYY-MM-DD'),
+        })
+      }
+    }
   }
 
   const handleReset = () => {
     form.resetFields()
+    setParams({ page: 3, sort: 'ascending', start: '', end: '' })
   }
   const [form] = Form.useForm()
   const onChangeChoose = (e) => {
@@ -57,13 +76,11 @@ export default function SearchField() {
             onFinish={onFinish}
             scrollToFirstError
             initialValues={{
-              selected_date: 'this month',
+              selecteddate: 3,
               selected: 1,
               sort: 'ascending',
-              dateRange: [
-                moment('26/05/2022', dateFormat),
-                moment('26/05/2022', dateFormat),
-              ],
+              startdate: moment('01/03/2022', dateFormat),
+              enddate: moment('30/03/2022', dateFormat),
               radioGroup: 2,
             }}
           >
@@ -82,26 +99,23 @@ export default function SearchField() {
                   </Radio.Group>
                 </Form.Item>
                 <div className="selected_data">
-                  <Form.Item name="selected_date">
+                  <Form.Item name="selecteddate">
                     <Select style={{ width: 150 }} disabled={choose === 2}>
-                      <Option value="this month">This month</Option>
-                      <Option value="last month">Last month</Option>
-                      <Option value="last year">Last year</Option>
+                      <Option value={3}>This month</Option>
+                      <Option value={2}>Last month</Option>
+                      <Option value={1}>Last year</Option>
                       <Option value="all">All</Option>
                     </Select>
                   </Form.Item>
-                  <Form.Item name="dateRange">
-                    <RangePicker
-                      onChange={OnchangeRange}
-                      format={dateFormat}
-                      disabled={choose === 1}
-                      disabledDate={(d) =>
-                        !d ||
-                        d.isAfter('2022-06-09') ||
-                        d.isSameOrBefore('1999-01-01')
-                      }
-                    />
-                  </Form.Item>
+                  <Space direction="horizontal" size={25} align="center">
+                    <Form.Item name="startdate">
+                      <DatePicker format={dateFormat} disabled={choose === 1} />
+                    </Form.Item>
+                    <span>To</span>
+                    <Form.Item name="enddate">
+                      <DatePicker format={dateFormat} disabled={choose === 1} />
+                    </Form.Item>
+                  </Space>
                 </div>
               </div>
 
@@ -131,7 +145,10 @@ export default function SearchField() {
           </Form>
         </fieldset>
         <>
-          <Title level={5}>Total number of record : {worksheet.per_page}</Title>
+          <Title level={5}>
+            Total number of record :{' '}
+            {worksheet.per_page ? worksheet.per_page : ''}
+          </Title>
         </>
         <>
           <Timesheet row={worksheet.data}></Timesheet>

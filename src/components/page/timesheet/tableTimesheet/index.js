@@ -10,7 +10,7 @@ import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
 
 const { Text } = Typography
 
-export default function Timesheet({ row }, sort) {
+export default function Timesheet({ row }) {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
@@ -53,27 +53,35 @@ export default function Timesheet({ row }, sort) {
       title: 'No',
       dataIndex: 'id',
       key: 'id',
-      fixed: 'left',
       defaultSortOrder: 'ascend',
       sorter: {
         compare: (a, b) => b.id - a.id,
         multiple: 1,
+      },
+      render: (id, row) => {
+        return (
+          <Text
+            onClick={() => {
+              setVisible(true)
+              setDateTimelog(row.work_date)
+            }}
+          >
+            {id}
+          </Text>
+        )
       },
     },
     {
       title: 'Date',
       dataIndex: 'work_date',
       key: 'work_date',
-      fixed: 'left',
       width: 110,
       render: (date) => {
         return (
           <Text
             onClick={() => {
               setVisible(true)
-
               setDateTimelog(date)
-              console.log(dateTimelog)
             }}
           >
             {moment(date).format('DD/MM/YYYY ddd')}{' '}
@@ -238,12 +246,22 @@ export default function Timesheet({ row }, sort) {
   return (
     <>
       <Table
-        scroll={{ x: 1300, y: 150 }}
+        rowClassName={(record, index) => {
+          return record.checkin_original === null &&
+            record.checkout_original === null
+            ? 'row-null'
+            : ''
+        }}
+        onRow={(record) => {
+          return () => {
+            onClick: (e) => {
+              setVisible(true)
+              setDateTimelog(record.work_date)
+            }
+          }
+        }}
         columns={columns}
         dataSource={row}
-        rowClassName={(record, index) =>
-          index % 2 === 0 ? 'table-row-light' : 'table-row-dark'
-        }
         sx={{ align: 'center', width: '100%' }}
       />
       <Modal

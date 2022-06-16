@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import 'antd/dist/antd.min.css'
 import { Table, Typography } from 'antd'
-import axios from 'axios'
 import moment from 'moment'
-// import { get } from '../../../service/requestApi'
+import { useDispatch, useSelector } from 'react-redux'
+import { getModalTimelog } from '../slice/sliceModal'
+
 const { Text } = Typography
-export default function ModalLogTimesheet({ date }) {
+export default function ModalLogTimesheet(date) {
   console.log(date)
-  const [dateTimeLog, setDateTimeLog] = useState([])
-  const getDataTimeLog = async () => {
-    const res = await axios(
-      `http://54.179.42.101/api/time-log/?work_date=${moment(date).format(
-        'YYYY-DD-MM ',
-      )}`,
-    )
-    setDateTimeLog(res.data)
-  }
+  const dispatch = useDispatch()
   useEffect(() => {
-    getDataTimeLog()
-  }, [])
+    dispatch(getModalTimelog(date))
+  }, [date])
+  const worksheet = useSelector((state) => {
+    return state.timesheet.worksheet.data
+  })
+  console.log('asad', worksheet)
   const columns = [
     {
       title: 'No',
@@ -46,7 +43,7 @@ export default function ModalLogTimesheet({ date }) {
     <>
       <Table
         columns={columns}
-        dataSource={dateTimeLog}
+        dataSource={worksheet}
         pagination={{ position: ['none'] }}
       ></Table>
     </>

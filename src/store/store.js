@@ -7,7 +7,6 @@ const store = configureStore({
   },
 })
 
-console.log(store.getState())
 reducerRegister.setChangeListener((reducers) => {
   store.replaceReducer(
     combineReducers({

@@ -1,15 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { get, post } from '../../../service/requestApi'
+import { get } from '../../../service/requestApi'
 import reducerRegistry from '../../../../store/reducerRegister'
 
-export const getTimesheet = createAsyncThunk('getTimesheet', async () => {
-  const res = await get('/worksheet')
-  return res
-})
-export const postTimesheet = createAsyncThunk('postTimesheet', async (data) => {
-  const { url, requestForm } = data
-  return await post(url, requestForm)
-})
+export const getTimesheet = createAsyncThunk(
+  'getTimesheet',
+  async ({ params }) => {
+    const { page, sort, start, end } = params
+    if (sort == 'ascending') {
+      const res = await get(`/worksheet?page=${page}`)
+      return res
+    } else {
+      const res = await get(
+        `/worksheet?sort=desc&start_date=${start}&end_date=${end}&per_page=30`,
+      )
+      return res
+    }
+  },
+)
+
 const timeSheetSlice = createSlice({
   name: 'timesheet',
   initialState: {
@@ -27,12 +35,6 @@ const timeSheetSlice = createSlice({
 
     [getTimesheet.rejected]: (state) => {
       state.isLoading = false
-    },
-    [postTimesheet.pending]: (state) => {
-      state.isLoading = true
-    },
-    [postTimesheet.fulfilled]: (state, action) => {
-      ;(state.worksheet = action.payload), (state.isLoading = false)
     },
   },
 })
