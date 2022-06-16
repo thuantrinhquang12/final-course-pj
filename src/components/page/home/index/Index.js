@@ -25,7 +25,7 @@ const Index = () => {
 
   const columns = [
     {
-      title: <p className={styles.BlackColor}>No</p>,
+      title: <p className={styles.whiteColor}>No</p>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
@@ -33,7 +33,7 @@ const Index = () => {
       },
     },
     {
-      title: <p className={styles.BlackColor}>Subject</p>,
+      title: <p className={styles.whiteColor}>Subject</p>,
       dataIndex: 'subject',
       key: 'subject',
       render: (payload) => {
@@ -100,6 +100,7 @@ const Index = () => {
       render: (payload, record) => {
         return (
           <p
+            style={{ color: '#57affe' }}
             className="tb_center"
             onClick={() => setModal({ open: true, data: record })}
           >

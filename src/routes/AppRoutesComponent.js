@@ -5,12 +5,12 @@ import PrivateRoute from './PrivateRoute'
 import Manager from '../components/page/manager/Manager'
 import Home from '../components/page/home/index/Index'
 import SearchField from '../components/page/timesheet'
-import Unauthorized from '../components/page/unauthorized/Unauthorized'
 import Admin from '../components/page/admin/Admin'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
+import { NotFound, AuthorError } from '../components'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -42,8 +42,8 @@ const AppRoutesComponent = () => {
       <Routes>
         {/* public routes no layout */}
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/unauthorized" element={<AuthorError />} />
-        <Route path="*" element={<NotFound />} /> */}
+        <Route path="/unauthorized" element={<AuthorError />} />
+        <Route path="*" element={<NotFound />} />
 
         <Route element={<Header />}>
           {/* public routes with layout */}
@@ -54,7 +54,6 @@ const AppRoutesComponent = () => {
               />
             }
           >
-            <Route path="/member" element={<Unauthorized />} />
             <Route path="/timesheet" element={<SearchField />} />
           </Route>
 
