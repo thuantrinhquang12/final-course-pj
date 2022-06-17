@@ -73,7 +73,8 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
 
   const onSubmit = async (values, e) => {
     if (
-      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) > DateOT
+      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) >=
+      DateOT
     ) {
       setErrorTimeOT(true)
       return null

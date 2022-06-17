@@ -64,7 +64,7 @@ const Login = () => {
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
-          <h1 style={{ textAlign: 'center' }}>LOG IN</h1>
+          <h1 style={{ textAlign: 'center' }}>Log In</h1>
           <Form.Item
             name="email"
             className={styles.InputField}
