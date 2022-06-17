@@ -10,12 +10,9 @@ import { saveAs } from 'file-saver'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
+  // const [heightTable, setHeightTable] = useState(0)
   const stateNotice = useSelector((state) => {
     return state.noticeList
-  })
-
-  const stateUser = useSelector((state) => {
-    return state.userInfo.currentUser.data
   })
 
   const dispatch = useDispatch()
@@ -23,26 +20,39 @@ const Index = () => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
   }, [])
 
+  // useEffect(() => {
+  //   const Screen = screen.height
+  //   const Header = document.querySelector('#Header').offsetHeight
+  //   const HomeTable = document.querySelector('#HomeTable')
+  //   ;(HomeTable.style.height = `${Screen - Header}px`),
+  //     setHeightTable(HomeTable.offsetHeight - 450)
+  // }, [])
+
   const columns = [
     {
-      title: <p className={styles.whiteColor}>No</p>,
+      title: <p className={styles.BlackColor}>NO</p>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
-        return <p>{(stateNotice.page - 1) * 10 + Number(recored.key)}</p>
+        return (
+          <p className="tb_center">
+            {(stateNotice.page - 1) * 10 + Number(recored.key)}
+          </p>
+        )
       },
     },
     {
-      title: <p className={styles.whiteColor}>Subject</p>,
+      title: <p className={styles.BlackColor}>SUBJECT</p>,
       dataIndex: 'subject',
       key: 'subject',
+      width: '20%',
       render: (payload) => {
-        return <p>{payload}</p>
+        return <p className="textOverFlow">{payload}</p>
       },
     },
     {
       title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>Author</p>
+        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>AUTHOR</p>
       ),
       dataIndex: 'created_by',
       key: 'created_by',
@@ -53,19 +63,22 @@ const Index = () => {
     {
       title: (
         <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          Department
+          TO DEPARTMENT
         </p>
       ),
       dataIndex: 'published_to',
       key: 'published_to',
       render: (payload) => {
-        return <p className={styles.tableHeader}>{payload[0].division_name}</p>
+        const department = Array.isArray(payload)
+          ? payload[0].division_name
+          : 'ALL'
+        return <p className={styles.tableHeader}>{department}</p>
       },
     },
     {
       title: (
         <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          Published Date
+          PUBLISHED DATE
         </p>
       ),
       dataIndex: 'published_date',
@@ -78,33 +91,27 @@ const Index = () => {
     {
       title: (
         <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          Attachment
+          ATTACHMENT
         </p>
       ),
       dataIndex: 'attachment',
       key: 'attachment',
       render: (payload) => {
-        const string =
-          payload && payload.length > 50 ? payload.slice(0, 50) : payload
-        return (
-          <a href={`${payload}`} target="_blank" rel="noopener noreferrer">
-            {`${string}...`}
-          </a>
-        )
+        return <p className="textOverFlow colorBlue">{payload}</p>
       },
     },
     {
       title: <p className={styles.whiteColor}>Detail</p>,
       dataIndex: 'detail',
       key: 'detail',
+      width: '10%',
       render: (payload, record) => {
         return (
           <p
-            style={{ color: '#57affe' }}
-            className="tb_center"
+            className="tb_center colorBlue"
             onClick={() => setModal({ open: true, data: record })}
           >
-            View
+            view
           </p>
         )
       },
@@ -116,19 +123,13 @@ const Index = () => {
   }
 
   const itemRender = (_, type, originalElement) => {
-    const style = {
-      width: 30,
-      height: 33,
-      marginLeft: 10,
-      borderWidth: 1,
-      borderStyle: 'solid',
-      borderColor: `#7d7d81`,
-      borderRadius: 5,
-    }
     if (type === 'prev') {
       return (
         <>
           <button
+            style={
+              stateNotice.currentPage === 1 ? { cursor: 'not-allowed' } : {}
+            }
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -138,11 +139,16 @@ const Index = () => {
                 }),
               )
             }}
-            style={style}
+            className="ant-pagination-item"
           >
             <i className="fa-solid fa-angles-left"></i>
           </button>
-          <button style={style}>
+          <button
+            className="ant-pagination-item"
+            style={
+              stateNotice.currentPage === 1 ? { cursor: 'not-allowed' } : {}
+            }
+          >
             <i className="fa-solid fa-angle-left"></i>
           </button>
         </>
@@ -152,10 +158,22 @@ const Index = () => {
     if (type === 'next') {
       return (
         <>
-          <button style={style}>
+          <button
+            className="ant-pagination-item"
+            style={
+              stateNotice.currentPage === stateNotice.lastPage
+                ? { cursor: 'not-allowed' }
+                : {}
+            }
+          >
             <i className="fa-solid fa-angle-right"></i>
           </button>
           <button
+            style={
+              stateNotice.currentPage === stateNotice.lastPage
+                ? { cursor: 'not-allowed' }
+                : {}
+            }
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -165,7 +183,7 @@ const Index = () => {
                 }),
               )
             }}
-            style={style}
+            className="ant-pagination-item"
           >
             <i className="fa-solid fa-angles-right"></i>
           </button>
@@ -181,7 +199,7 @@ const Index = () => {
   }
 
   return (
-    <div className={styles.Home}>
+    <div className={styles.Home} id="HomeTable">
       <Row
         style={{
           height: '100%',
@@ -189,18 +207,17 @@ const Index = () => {
           justifyContent: 'center',
           padding: '50px 0',
           borderRadius: 5,
-          overflow: 'hidden',
         }}
       >
-        <Col xs={24} md={20} xl={20}>
+        <Col xs={24} md={22} xl={22}>
           <CMTable
-            title={(data) => {
+            title={() => {
               return <h1>Official Notice</h1>
             }}
-            // pagination={{ pageSize: page }}
             className="tableNotice"
             data={stateNotice.tableData}
             // remove={['published_to']}
+            width={{ id: '5%' }}
             columns={columns}
             sorter={{ published_date: 'date' }}
             scroll={{
@@ -229,6 +246,7 @@ const Index = () => {
         wrapClassName="modalNotice"
         title="Notice Detail"
         visible={modal.open}
+        width={1000}
         onCancel={() =>
           setModal((prev) => {
             return { ...prev, open: false }
@@ -243,13 +261,19 @@ const Index = () => {
             style={{ display: 'flex', borderBottom: '2px solid #ab9f9f' }}
           >
             <Col xs={12} md={12} xl={12}>
-              <h3 style={{ marginBottom: '20px' }}>User Member</h3>
+              <h3
+                style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
+              >
+                Author
+              </h3>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
-                    <p>Name:</p>
-                    <p>{stateUser?.full_name ? stateUser.full_name : ''}</p>
+                    <p>Name: </p>
+                    <p>
+                      {modal?.data?.created_by ? modal?.data?.created_by : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
@@ -257,17 +281,25 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
-                    <p>Email:</p>
-                    <p>{stateUser?.email ? stateUser.email : ''}</p>
+                    <p>Email: </p>
+                    <p>
+                      {modal?.data?.author_email
+                        ? modal?.data?.author_email
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
-                  <i className="fa-solid fa-user"></i>
+                  <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
-                    <p>Nick name:</p>
-                    <p>{stateUser?.nick_name ? stateUser.nick_name : ''}</p>
+                    <p>Other Email: </p>
+                    <p>
+                      {modal?.data?.author_other_email
+                        ? modal?.data?.author_other_email
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
@@ -275,22 +307,31 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-phone"></i>
                   <div className="formGroupText">
-                    <p>Phone:</p>
-                    <p>{stateUser?.phone ? stateUser.phone : ''}</p>
+                    <p>Phone: </p>
+                    <p>
+                      {modal?.data?.author_phone
+                        ? modal?.data?.author_phone
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
             </Col>
             <Col xs={12} md={12} xl={12}>
-              <h3 style={{ marginBottom: '20px' }}>To Department</h3>
+              <h3
+                style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
+              >
+                To Department
+              </h3>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
                   <i className="fa-solid fa-building"></i>
                   <div className="formGroupText">
                     <p>To department:</p>
                     <p>
-                      {modal.data.published_to &&
-                        modal.data.published_to[0].division_name}
+                      {Array.isArray(modal?.data?.published_to)
+                        ? modal?.data?.published_to[0].division_name
+                        : 'ALL'}
                     </p>
                   </div>
                 </div>
@@ -309,23 +350,36 @@ const Index = () => {
         </Row>
         <Row>
           <Col xs={24} md={24} xl={24}>
-            <h3 style={{ marginBottom: '20px' }}>Detail</h3>
+            <h3 style={{ margin: '20px 0', color: 'black', fontSize: 20 }}>
+              Detail
+            </h3>
           </Col>
           <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>Subject: {modal?.data?.subject}</p>
+            <p style={{ fontWeight: 600 }}>
+              <span style={{ fontWeight: 700, fontSize: 16 }}>Subject: </span>
+              {modal?.data?.subject}
+            </p>
           </Col>
           <Col xs={24} md={24} xl={24}>
             <p
+              className="colorBlue"
               style={{ fontWeight: 600 }}
               onClick={() => {
                 saveAs(`${modal.data.attachment}`, `${modal.data.attachment}`)
               }}
             >
-              Attachment: {modal?.data?.attachment}
+              <span style={{ fontWeight: 700, color: 'black' }}>
+                {' '}
+                Attachment:{' '}
+              </span>
+              {modal?.data?.attachment}
             </p>
           </Col>
           <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>Message: {modal?.data?.message}</p>
+            <p style={{ fontWeight: 600 }}>
+              <span style={{ fontWeight: 700 }}>Message: </span>
+              {modal?.data?.message}
+            </p>
           </Col>
         </Row>
       </Modal>

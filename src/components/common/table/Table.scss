@@ -5,9 +5,11 @@
 }
 
 .ant-pagination-total-text {
-  font-weight: 600;
   position: absolute;
   left: 0;
+  span {
+    font-weight: 600;
+  }
 }
 
 .ant-pagination-options {
@@ -17,10 +19,11 @@
   &::after {
     font-weight: 600;
     position: absolute;
-    content: 'Item Perpage';
+    content: 'Items per page';
     display: block;
-    top: 0;
     left: -100%;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -35,4 +38,16 @@
 .tb_center {
   @include addFlex;
   justify-content: center;
+}
+
+.textOverFlow {
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.colorBlue {
+  color: #2892ff;
+  cursor: pointer;
 }
