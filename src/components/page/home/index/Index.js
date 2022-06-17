@@ -30,7 +30,7 @@ const Index = () => {
 
   const columns = [
     {
-      title: <p className={styles.BlackColor}>NO</p>,
+      title: <p className={styles.whiteColor}>NO</p>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
@@ -42,7 +42,7 @@ const Index = () => {
       },
     },
     {
-      title: <p className={styles.BlackColor}>SUBJECT</p>,
+      title: <p className={styles.whiteColor}>SUBJECT</p>,
       dataIndex: 'subject',
       key: 'subject',
       width: '20%',
@@ -214,6 +214,7 @@ const Index = () => {
             title={() => {
               return <h1>Official Notice</h1>
             }}
+            loading={stateNotice.loading}
             className="tableNotice"
             data={stateNotice.tableData}
             // remove={['published_to']}
