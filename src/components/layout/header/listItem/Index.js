@@ -11,7 +11,7 @@ const Index = () => {
   return (
     <div className={styles.ListItem}>
       <Row style={{ width: '100%', height: '100%' }}>
-        {(role === 'Admin' || 'Manager') && (
+        {(role === 'Admin' || role === 'Manager') && (
           <>
             <Col xs={24} md={1} xl={3}></Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>

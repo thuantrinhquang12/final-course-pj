@@ -4,14 +4,13 @@ import Login from '../components/page/login/Login'
 import PrivateRoute from './PrivateRoute'
 import Manager from '../components/page/manager/Manager'
 import Home from '../components/page/home/index/Index'
-import Unauthorized from '../components/page/unauthorized/Unauthorized'
+import SearchField from '../components/page/timesheet'
 import Admin from '../components/page/admin/Admin'
-import { NotFound, AuthorError } from '../components'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
-import Worksheet from '../components/page/Index'
 import Header from '../components/layout/header/index/Index'
+import { NotFound, AuthorError } from '../components'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -22,8 +21,9 @@ const AppRoutesComponent = () => {
     Admin: 3,
   }
 
-  const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
+
+  const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
 
   if (tokenAccess && !data) {
     const datatype = {
@@ -55,12 +55,12 @@ const AppRoutesComponent = () => {
               />
             }
           >
-            <Route path="/member" element={<Unauthorized />} />
-            <Route path="/timesheet" element={<Worksheet />} />
+            <Route path="/timesheet" element={<SearchField />} />
           </Route>
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
+            <Route path="/timesheet" element={<SearchField />} />
             <Route path="/" element={<Home />} />
           </Route>
 

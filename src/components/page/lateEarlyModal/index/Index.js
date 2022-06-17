@@ -375,7 +375,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           render={({ field }) => (
                             <>
                               <Input.TextArea
-                                placeholder="Controlled autosize"
                                 autoSize={{
                                   minRows: 4,
                                   maxRows: 7,
