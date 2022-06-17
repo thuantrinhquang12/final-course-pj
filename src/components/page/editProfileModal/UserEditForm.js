@@ -2,16 +2,16 @@ import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import axios from 'axios'
-
+import { get, put } from '../../service/requestApi'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
 import './Index.scss'
 import Dialog from '../../common/createModal/Modal'
-import { tryCatch, messageRequest } from '../../index'
+import { messageRequest } from '../../index'
+import { dateTime, typePopup } from '../../index'
 
-const API = 'https://6295d111810c00c1cb685f53.mockapi.io/'
+const API = '/members'
 const dateFormat = 'DD-MM-YYYY'
 
 const disabledDate = (current) => {
@@ -25,28 +25,46 @@ const UserEditForm = () => {
   }
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
+
   useEffect(() => {
-    axios.get(API + 'user_info/1').then((res) => {
+    get(API + '/edit').then((res) => {
       setProfileInfo(res.data)
     })
-  }, [])
+  }, [modalVisible])
 
   const onSubmit = async (values) => {
     const valueEdit = {
       ...values,
-      birth_date: moment(values.birth_date).format('DD-MM-YYYY'),
-      date_of_issue: moment(values.date_of_issue).format('DD-MM-YYYY'),
-      passport_expiration: moment(values.passport_expiration).format(
-        'DD-MM-YYYY',
-      ),
+      birth_date: dateTime.formatDate(values.birth_date),
+      identity_card_date: dateTime.formatDate(values.identity_card_date),
+      passport_expiration: values.passport_expiration
+        ? dateTime.formatDate(values.passport_expiration)
+        : '',
+      nick_name: values.nickname,
+      gender: values.gender,
+      marital_status: values.marital_status,
+      start_date: dateTime.formatDate(values.start_date),
     }
-    await tryCatch.handleTryCatch(
-      axios.put(API + 'user_info/1', valueEdit),
-      messageRequest.UPDATE,
-      () => {
+
+    try {
+      const data = await put(API + '/update', valueEdit)
+      if (data.status) {
+        typePopup.popupNotice(
+          typePopup.SUCCESS_MESSAGE,
+          'Message',
+          messageRequest.UPDATE,
+          1,
+        )
         setModalVisible(false)
-      },
-    )
+      }
+    } catch (error) {
+      typePopup.popupNotice(
+        typePopup.ERROR_MESSAGE,
+        'Message',
+        'An error occurred',
+        1,
+      )
+    }
   }
 
   return (
@@ -61,24 +79,46 @@ const UserEditForm = () => {
           <Form
             layout="horizontal"
             initialValues={{
-              gender: profileInfo.gender,
-              nickname: profileInfo.nickname,
+              gender:
+                profileInfo.gender == 1 ? 1 : profileInfo.gender == 0 ? 0 : '',
+              nickname: profileInfo.nick_name,
               identity_number: profileInfo.identity_number,
-              place_of_issue: profileInfo.place_of_issue,
-              birth_date: moment(profileInfo.birth_date, 'DD-MM-YYYY'),
-              date_of_issue: moment(profileInfo.date_of_issue, 'DD-MM-YYYY'),
+              identity_card_place: profileInfo.identity_card_place,
+              birth_date: profileInfo.birth_date
+                ? moment(
+                    moment(profileInfo.birth_date).format('DD-MM-YYYY'),
+                    'DD-MM-YYYY',
+                  )
+                : '',
+              identity_card_date: profileInfo.identity_card_date
+                ? moment(
+                    moment(profileInfo.identity_card_date).format('DD-MM-YYYY'),
+                    'DD-MM-YYYY',
+                  )
+                : '',
               passport_number: profileInfo.passport_number,
-              passport_expiration: moment(
-                profileInfo.passport_expiration,
-                'DD-MM-YYYY',
-              ),
+              passport_expiration: profileInfo.passport_expiration
+                ? moment(
+                    moment(profileInfo.passport_expiration).format(
+                      'DD-MM-YYYY',
+                    ),
+                    'DD-MM-YYYY',
+                  )
+                : '',
               nationality: profileInfo.nationality,
               other_email: profileInfo.other_email,
               skype: profileInfo.skype,
               facebook: profileInfo.facebook,
               bank_name: profileInfo.bank_name,
               bank_account: profileInfo.bank_account,
-              marital_status: profileInfo.marial_status,
+              marital_status:
+                profileInfo.marital_status == 1
+                  ? 1
+                  : profileInfo.marital_status == 2
+                  ? 2
+                  : profileInfo.marital_status == 3
+                  ? 3
+                  : 4,
               academic_level: profileInfo.academic_level,
               permanent_address: profileInfo.permanent_address,
               temporary_address: profileInfo.temporary_address,
@@ -128,10 +168,8 @@ const UserEditForm = () => {
                             <Col span={10}>
                               <Form.Item labelAlign="left" name="gender">
                                 <Select>
-                                  <Select.Option value="Male">
-                                    Male
-                                  </Select.Option>
-                                  <Select.Option value="Female">
+                                  <Select.Option value={1}>Male</Select.Option>
+                                  <Select.Option value={0}>
                                     Female
                                   </Select.Option>
                                 </Select>
@@ -212,7 +250,7 @@ const UserEditForm = () => {
                               <Form.Item
                                 label=""
                                 labelAlign="left"
-                                name="date_of_issue"
+                                name="identity_card_date"
                                 rules={[
                                   {
                                     required: true,
@@ -237,7 +275,7 @@ const UserEditForm = () => {
                               <Form.Item
                                 label=""
                                 labelAlign="left"
-                                name="place_of_issue"
+                                name="identity_card_place"
                                 rules={[
                                   {
                                     required: true,
@@ -480,18 +518,16 @@ const UserEditForm = () => {
                                 name="marital_status"
                               >
                                 <Select>
-                                  <Select.Option value="Married">
+                                  <Select.Option value={1}>
                                     Married
                                   </Select.Option>
-                                  <Select.Option value="Single">
+                                  <Select.Option value={2}>
                                     Single
                                   </Select.Option>
-                                  <Select.Option value="Divorced">
+                                  <Select.Option value={3}>
                                     Divorced
                                   </Select.Option>
-                                  <Select.Option value="Other">
-                                    Other
-                                  </Select.Option>
+                                  <Select.Option value={4}>Other</Select.Option>
                                 </Select>
                               </Form.Item>
                             </Col>

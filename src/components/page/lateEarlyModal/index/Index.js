@@ -15,7 +15,6 @@ import {
   dateTime,
   typeStatusRequest,
   typeRequest,
-  // handleField,
   handleDateTime,
   buttonForm,
   tryCatch,
@@ -27,12 +26,12 @@ import {
 const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   const [requestExists, setRequestExists] = useState(false)
   const { request, status } = useSelector((state) => state.requests)
-
   const [overTime, setOverTime] = useState(null)
+  const [validateTime, setValidateTime] = useState(false)
   const timeRequest = handleFormat(handlePlusTime(row.late, row.early))
 
   const getCompensation = async (date) => {
-    const respon = await get(
+    const response = await get(
       `worksheet/show-date?work_date=${dateTime.formatDate(date)}`,
     )
       .then((res) => {
@@ -43,8 +42,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       .catch(() => {
         return null
       })
-
-    return respon
+    return response
   }
 
   const dispatch = useDispatch()
@@ -89,9 +87,25 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
     }
   }, [request])
 
+  useEffect(() => {
+    let dateTime = moment().subtract(1, 'days')
+    if (requestExists) {
+      dateTime = new Date(request.compensation_date)
+    }
+    const getTimeOver = async () => {
+      const response = await getCompensation(dateTime)
+      setOverTime(response)
+    }
+    getTimeOver()
+  }, [requestExists])
+
   const onSubmit = async (values, e) => {
     const overTM = +(overTime ? overTime : '00:00').replace(':', '')
     const timeRq = +(timeRequest ? timeRequest : '00:00').replace(':', '')
+
+    if (!overTime) {
+      setValidateTime(true)
+    }
 
     if (overTM < timeRq) {
       return null
@@ -101,8 +115,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_LATE_EARLY,
-          check_in: dateTime.formatTime(values.checkInTime),
-          check_out: dateTime.formatTime(values.checkOutTime),
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
           request_for_date: dateTime.formatDate(row.work_date),
           reason: values.reasonInput,
           compensation_time: overTime,
@@ -277,11 +291,16 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                       const res = async () => {
                                         const respon = await getCompensation(e)
                                         setOverTime(respon)
+                                        setValidateTime(false)
                                       }
                                       res()
                                       return field.onChange(e)
                                     }}
-                                    defaultValue={moment().subtract(1, 'days')}
+                                    defaultValue={
+                                      request.compensation_date
+                                        ? moment(request.compensation_date)
+                                        : moment().subtract(1, 'days')
+                                    }
                                   />
                                   {errors.checkDateTime && (
                                     <span className={styles.requiredField}>
@@ -311,6 +330,11 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                             Overtime:
                           </Col>
                           <Col xs={12} md={14} xl={16}>
+                            {validateTime && (
+                              <span className={styles.requiredField}>
+                                Time is not valid
+                              </span>
+                            )}
                             {overTime}
                           </Col>
                         </Col>

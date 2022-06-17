@@ -7,14 +7,12 @@ import { Link } from 'react-router-dom'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
 import UserEditForm from '../../../page/editProfileModal/UserEditForm'
-import { LOCAL_STORAGE } from '../../../constant/localStorage'
 import { useSelector } from 'react-redux'
 
 const UserListBar = ({ open, onClick }) => {
   const refChildren = useRef(null)
   const remove = useRef(null)
 
-  const { name } = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
 
   useEffect(() => {
@@ -46,7 +44,7 @@ const UserListBar = ({ open, onClick }) => {
             <div className={styles.NavHeader}>
               <div className={styles.NavImage}>
                 <img src={Cat} alt="CatCrazy" />
-                <h3>{name}</h3>
+                <h3>Cat Crazy </h3>
               </div>
               <i
                 className="fa-solid fa-xmark"

@@ -8,7 +8,6 @@ export const getDataListNotice = createAsyncThunk(
     const response = await get(
       `/notification?per_page=${item.perPage}&page=${item.page}&sort=asc`,
     )
-    // console.log('res', response)
     return response
   },
 )

@@ -16,10 +16,11 @@ const CommonTable = ({
   className,
   title,
   onRow,
+  width,
 }) => {
   const [dataSource, setDataSource] = useState(null)
   const [columnS, setColumnS] = useState(null)
-  // console.log('data', data, columns)
+
   useEffect(() => {
     const DATAVALID = data
     const REMOVEKEY = remove
@@ -59,7 +60,6 @@ const CommonTable = ({
           switch (sorter[item.key]) {
             case 'string':
               item.sorter = (a, b) => {
-                console.log(a.subject)
                 return a[item.key].localeCompare(b[item.key])
               }
               break
@@ -117,6 +117,17 @@ const CommonTable = ({
       })
     }
 
+    if (width) {
+      const key = Object.keys(width)
+      COLUMNS.map((item) => {
+        if (key.includes(item.key)) {
+          // console.log('co roi', item, width[item.key])
+          item.width = width[item.key]
+          return item
+        }
+      })
+    }
+
     setColumnS(COLUMNS)
     setDataSource(() => {
       return DATAVALID.map((item, index) => {
@@ -131,6 +142,7 @@ const CommonTable = ({
   return (
     <>
       <Table
+        bordered={true}
         onRow={
           onRow
             ? onRow
@@ -153,14 +165,28 @@ const CommonTable = ({
                 position: ['bottomCenter'],
                 showTotal: pagination?.showTotal
                   ? pagination?.showTotal
-                  : (total) => `Total Number of ${total} records`,
+                  : (total) => {
+                      return (
+                        <>
+                          Total number of records: <span>{total}</span>
+                        </>
+                      )
+                    },
+                showSizeChanger: true,
               }
             : {
                 pageSize: page ? page : 10,
                 position: ['bottomCenter'],
                 showTotal: pagination?.showTotal
                   ? pagination?.showTotal
-                  : (total) => `Total Number of ${total} records`,
+                  : (total) => {
+                      return (
+                        <>
+                          Total number of records: <span>{total}</span>
+                        </>
+                      )
+                    },
+                showSizeChanger: true,
               }
         }
         columns={columnS}
@@ -191,5 +217,6 @@ CommonTable.propTypes = {
   className: PropTypes.string,
   title: PropTypes.func,
   onRow: PropTypes.func,
+  width: PropTypes.object,
 }
 export default CommonTable
