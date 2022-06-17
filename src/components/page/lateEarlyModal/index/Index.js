@@ -137,8 +137,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       case 'UPDATE':
         const updateRequest = {
           request_type: typeRequest.REQUEST_LATE_EARLY,
-          check_in: dateTime.formatTime(values.checkInTime),
-          check_out: dateTime.formatTime(values.checkOutTime),
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
           request_for_date: dateTime.formatDate(row.work_date),
           reason: values.reasonInput,
           compensation_time: overTime,

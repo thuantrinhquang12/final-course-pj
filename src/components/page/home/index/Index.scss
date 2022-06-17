@@ -89,7 +89,9 @@
     background-color: #0599ef;
 
     .ant-modal-title {
-      color: white;
+      h2 {
+        color: white;
+      }
     }
   }
 

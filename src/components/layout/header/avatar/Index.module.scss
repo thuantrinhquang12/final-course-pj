@@ -11,17 +11,6 @@
     height: 40px;
     position: relative;
 
-    &::after {
-      display: block;
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: 0;
-      height: 35px;
-      background-color: transparent;
-      width: 200px;
-    }
-
     &:hover {
       .UserList {
         display: block;
@@ -58,6 +47,17 @@
       animation-name: example;
       animation-duration: 0.3s;
       display: none;
+
+      &::after {
+        display: block;
+        content: '';
+        position: absolute;
+        top: -5%;
+        right: 0;
+        height: 35px;
+        background-color: transparent;
+        width: 200px;
+      }
 
       .UserHeader {
         display: flex;
