@@ -102,14 +102,14 @@ export default function SearchField() {
                       <Option value={3}>This month</Option>
                       <Option value={2}>Last month</Option>
                       <Option value={1}>Last year</Option>
-                      <Option value="all">All</Option>
                     </Select>
                   </Form.Item>
                   <Space direction="horizontal" size={25} align="center">
                     <Form.Item name="startdate">
                       <DatePicker format={dateFormat} disabled={choose === 1} />
+                      <span style={{ marginLeft: 20 }}>To</span>
                     </Form.Item>
-                    <span>To</span>
+
                     <Form.Item name="enddate">
                       <DatePicker format={dateFormat} disabled={choose === 1} />
                     </Form.Item>
