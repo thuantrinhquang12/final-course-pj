@@ -2,8 +2,9 @@ import React from 'react'
 import styles from './Index.module.scss'
 import { Row, Col } from 'antd'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { LOCAL_STORAGE } from '../../../constant/localStorage'
+import './index.scss'
 
 const Index = () => {
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
@@ -15,23 +16,30 @@ const Index = () => {
           <>
             <Col xs={24} md={1} xl={3}></Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <Link to="/" className={styles.formGroup}>
+              <NavLink
+                to="/"
+                className={styles.formGroup}
+                activeclassname="active"
+              >
                 <i className="fa-solid fa-house-chimney"></i>
-                <h4 style={{ color: 'white' }}>HOME</h4>
-              </Link>
+                <h4>HOME</h4>
+                <div className={styles.progress} id="progress"></div>
+              </NavLink>
             </Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <Link to="/timesheet" className={styles.formGroup}>
+              <NavLink to="/timesheet" className={styles.formGroup}>
                 <i className="fa-solid fa-business-time"></i>
-                <h4 style={{ color: 'white' }}>TIMESHEET</h4>
-              </Link>
+                <h4>TIMESHEET</h4>
+                <div className={styles.progress} id="progress"></div>
+              </NavLink>
             </Col>
 
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <Link to={data || '/'} className={styles.formGroup}>
+              <NavLink to={data || '/'} className={styles.formGroup}>
                 <i className="fa-solid fa-bars-progress"></i>
-                <h4 style={{ color: 'white' }}>MANAGER</h4>
-              </Link>
+                <h4>MANAGER</h4>
+                <div className={styles.progress} id="progress"></div>
+              </NavLink>
             </Col>
           </>
         )}
@@ -39,16 +47,18 @@ const Index = () => {
           <>
             <Col xs={24} md={8} xl={10}></Col>
             <Col xs={24} md={8} xl={6} className={styles.column}>
-              <Link to="/" className={styles.formGroup}>
+              <NavLink to="/" className={styles.formGroup}>
                 <i className="fa-solid fa-house-chimney"></i>
                 <h4 style={{ color: 'white' }}>HOME</h4>
-              </Link>
+                <div className={styles.progress} id="progress"></div>
+              </NavLink>
             </Col>
             <Col xs={24} md={8} xl={6} className={styles.column}>
-              <Link to="/timesheet" className={styles.formGroup}>
+              <NavLink to="/timesheet" className={styles.formGroup}>
                 <i className="fa-solid fa-business-time"></i>
                 <h4 style={{ color: 'white' }}>TIMESHEET</h4>
-              </Link>
+                <div className={styles.progress} id="progress"></div>
+              </NavLink>
             </Col>
             <Col xs={24} md={8} xl={2}></Col>
           </>

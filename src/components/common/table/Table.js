@@ -17,6 +17,7 @@ const CommonTable = ({
   title,
   onRow,
   width,
+  loading,
 }) => {
   const [dataSource, setDataSource] = useState(null)
   const [columnS, setColumnS] = useState(null)
@@ -142,6 +143,7 @@ const CommonTable = ({
   return (
     <>
       <Table
+        loading={loading ? loading : false}
         bordered={true}
         onRow={
           onRow
@@ -218,5 +220,6 @@ CommonTable.propTypes = {
   title: PropTypes.func,
   onRow: PropTypes.func,
   width: PropTypes.object,
+  loading: PropTypes.bool,
 }
 export default CommonTable
