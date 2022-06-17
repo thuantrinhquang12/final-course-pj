@@ -97,7 +97,21 @@ const Index = () => {
       dataIndex: 'attachment',
       key: 'attachment',
       render: (payload) => {
-        return <p className="textOverFlow colorBlue">{payload}</p>
+        const test = () => {
+          const indexofDot = payload.lastIndexOf('.')
+          const pathFile = payload.slice(indexofDot, payload.length)
+          console.log('payload', payload)
+          if (pathFile === '.zip' || pathFile === '.rar') {
+            saveAs(`${payload}`, `${payload}`)
+            return null
+          }
+        }
+
+        return (
+          <p className="textOverFlow colorBlue" onClick={test}>
+            {payload}
+          </p>
+        )
       },
     },
     {
@@ -212,7 +226,11 @@ const Index = () => {
         <Col xs={24} md={22} xl={22}>
           <CMTable
             title={() => {
-              return <h1>Official Notice</h1>
+              return (
+                <>
+                  <h1>Official Notice</h1>
+                </>
+              )
             }}
             loading={stateNotice.loading}
             className="tableNotice"
@@ -245,7 +263,7 @@ const Index = () => {
       </Row>
       <Modal
         wrapClassName="modalNotice"
-        title="Notice Detail"
+        title={<h2>Notice Detail</h2>}
         visible={modal.open}
         width={1000}
         onCancel={() =>
@@ -271,7 +289,7 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
-                    <p>Name: </p>
+                    <p>Name: &nbsp;</p>
                     <p>
                       {modal?.data?.created_by ? modal?.data?.created_by : ''}
                     </p>
@@ -282,7 +300,7 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
-                    <p>Email: </p>
+                    <p>Email: &nbsp;</p>
                     <p>
                       {modal?.data?.author_email
                         ? modal?.data?.author_email
@@ -295,7 +313,7 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
-                    <p>Other Email: </p>
+                    <p>Other Email: &nbsp;</p>
                     <p>
                       {modal?.data?.author_other_email
                         ? modal?.data?.author_other_email
@@ -308,7 +326,7 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-phone"></i>
                   <div className="formGroupText">
-                    <p>Phone: </p>
+                    <p>Phone: &nbsp;</p>
                     <p>
                       {modal?.data?.author_phone
                         ? modal?.data?.author_phone
@@ -322,13 +340,13 @@ const Index = () => {
               <h3
                 style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
               >
-                To Department
+                To Department &nbsp;
               </h3>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
                   <i className="fa-solid fa-building"></i>
                   <div className="formGroupText">
-                    <p>To department:</p>
+                    <p>To department: &nbsp;</p>
                     <p>
                       {Array.isArray(modal?.data?.published_to)
                         ? modal?.data?.published_to[0].division_name

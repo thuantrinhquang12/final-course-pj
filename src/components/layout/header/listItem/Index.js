@@ -19,7 +19,7 @@ const Index = () => {
               <NavLink
                 to="/"
                 className={styles.formGroup}
-                activeClassName="active"
+                activeclassname="active"
               >
                 <i className="fa-solid fa-house-chimney"></i>
                 <h4>HOME</h4>
