@@ -12,8 +12,10 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 const Login = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  const [form] = Form.useForm()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
   const onSubmit = async (values) => {
     try {
       setLoading(true)
@@ -45,6 +47,7 @@ const Login = () => {
       )
       navigate('/', { replace: true })
     } catch (e) {
+      form.resetFields(['password'])
       setError(true)
       typePopup.popupNotice(typePopup.ERROR_MESSAGE, 'Failed', 'Login Failed')
       setLoading(false)
@@ -55,12 +58,13 @@ const Login = () => {
     <>
       <div className={styles.LoginContainer}>
         <Form
+          form={form}
           name="basic"
           initialValues={{}}
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
-          <h1 style={{ textAlign: 'center' }}>LOGIN</h1>
+          <h1 style={{ textAlign: 'center' }}>LOG IN</h1>
           <Form.Item
             name="email"
             className={styles.InputField}

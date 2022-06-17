@@ -21,8 +21,9 @@ const AppRoutesComponent = () => {
     Admin: 3,
   }
 
-  const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
   const data = useSelector((state) => state.userInfo?.currentUser?.role)
+
+  const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
 
   if (tokenAccess && !data) {
     const datatype = {
