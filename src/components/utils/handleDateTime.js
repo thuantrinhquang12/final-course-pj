@@ -6,6 +6,6 @@ export const compareTime = (valueOne, valueTwo) => {
   return valueOne &&
     valueTwo &&
     +valueOne.replace(':', '') < +valueTwo.replace(':', '')
-    ? { color: 'red' }
-    : null
+    ? { color: 'red', marginLeft: '5px' }
+    : { marginLeft: '5px' }
 }

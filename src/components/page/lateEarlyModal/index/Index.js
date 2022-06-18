@@ -1,45 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Col, DatePicker, Space, Input, Skeleton } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import styles from './Index.module.scss'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
-import handleTime, { handlePlusTime, handleFormat } from './handleTime'
+import { handlePlusTime, handleFormat, handleSubTime } from './handleTime'
+import { get } from '../../../service/requestApi'
 import moment from 'moment'
+import PropTypes from 'prop-types'
+
 import {
   DialogRequest,
   dateTime,
   typeStatusRequest,
   typeRequest,
-  // handleField,
   handleDateTime,
   buttonForm,
   tryCatch,
   messageRequest,
   requestSlice,
+  endPoint,
 } from '../../../index'
 
 const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   const [requestExists, setRequestExists] = useState(false)
   const { request, status } = useSelector((state) => state.requests)
-  const currentTime = useRef(handleDateTime.getCurrentTime())
-  const lateTime = handleTime('08:00', row.late)
-  const earlyTime = handleTime(row.early, '17:00')
-  const overTime = '01:00'
-  const timeRequest = handleFormat(handlePlusTime(lateTime, earlyTime))
+  const [overTime, setOverTime] = useState(null)
+  const [validateTime, setValidateTime] = useState(false)
+  const timeRequest = handleFormat(handlePlusTime(row.late, row.early))
+
+  const getCompensation = async (date) => {
+    const response = await get(
+      `worksheet/show-date?work_date=${dateTime.formatDate(date)}`,
+    )
+      .then((res) => {
+        const checkOut = dateTime.formatTime(res.checkout_original)
+        const checkIn = dateTime.formatTime(res.checkin_original)
+        return handleSubTime(checkIn, checkOut)
+      })
+      .catch(() => {
+        return null
+      })
+    return response
+  }
+
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (row.requests.length !== 0) {
-      for (const request of row.requests) {
-        if (request.request_type === typeRequest.REQUEST_LATE_EARLY) {
-          setRequestExists(true)
-          dispatch(requestSlice.getRequests(request.request_id))
-          break
-        }
-      }
+    const checkRequestExists = async () => {
+      await dispatch(
+        requestSlice.getRequestsOfDay({
+          url: endPoint.GET_REQUEST_LATE_EARLY_OF_DAY,
+          date: row.work_date,
+        }),
+      )
     }
+    checkRequestExists()
   }, [])
 
   const schema = yup.object().shape({
@@ -66,50 +83,85 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   useEffect(() => {
     if (Object.keys(request).length !== 0) {
       setValue('reasonInput', request.reason)
+      setRequestExists(true)
     }
   }, [request])
+
+  useEffect(() => {
+    let dateTime = moment().subtract(1, 'days')
+    if (requestExists) {
+      dateTime = new Date(request.compensation_date)
+    }
+    const getTimeOver = async () => {
+      const response = await getCompensation(dateTime)
+      setOverTime(response)
+    }
+    getTimeOver()
+  }, [requestExists])
+
   const onSubmit = async (values, e) => {
+    const overTM = +(overTime ? overTime : '00:00').replace(':', '')
+    const timeRq = +(timeRequest ? timeRequest : '00:00').replace(':', '')
+
+    if (!overTime) {
+      setValidateTime(true)
+    }
+
+    if (overTM < timeRq) {
+      return null
+    }
     const buttonSubmit = e.nativeEvent.submitter.name.toUpperCase()
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_LATE_EARLY,
-          check_in: dateTime.formatTime(values.checkInTime),
-          check_out: dateTime.formatTime(values.checkOutTime),
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
           request_for_date: dateTime.formatDate(row.work_date),
           reason: values.reasonInput,
+          compensation_time: overTime,
+          compensation_date: dateTime.formatDate(values.checkDateTime),
           status: typeStatusRequest.SEND,
-          created_at: currentTime.current,
         }
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.postRequests(newRequest)),
+          dispatch(
+            requestSlice.postRequests({
+              url: endPoint.POST_REQUEST_LATE_EARLY,
+              requestData: newRequest,
+            }),
+          ),
           messageRequest.CREATE,
-          handleCloseLateEarly,
+          handleCloseModal,
         )
         break
       case 'UPDATE':
         const updateRequest = {
-          check_in: dateTime.formatTime(values.checkInTime),
-          check_out: dateTime.formatTime(values.checkOutTime),
+          request_type: typeRequest.REQUEST_LATE_EARLY,
+          check_in: dateTime.formatTime(row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout_original),
+          request_for_date: dateTime.formatDate(row.work_date),
           reason: values.reasonInput,
-          update_at: currentTime.current,
+          compensation_time: overTime,
+          compensation_date: dateTime.formatDate(values.checkDateTime),
+          status: typeStatusRequest.SEND,
         }
         await tryCatch.handleTryCatch(
           dispatch(
             requestSlice.putRequests({
               id: request.id,
               requestData: updateRequest,
+              url: endPoint.PUT_REQUEST_LATE_EARLY,
             }),
           ),
           messageRequest.UPDATE,
-          handleCloseLateEarly,
+          handleCloseModal,
         )
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
           dispatch(requestSlice.deleteRequests(request.id)),
           messageRequest.DELETE,
-          handleCloseLateEarly,
+          handleCloseModal,
         )
         break
       default:
@@ -117,11 +169,21 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
     }
   }
 
+  const handleCloseModal = () => {
+    handleCloseLateEarly()
+    dispatch(
+      requestSlice.getRequestsOfDay({
+        url: endPoint.GET_REQUEST_LATE_EARLY_OF_DAY,
+        date: -1,
+      }),
+    )
+  }
+
   return (
     <>
       <DialogRequest
         title="Register Late/Early"
-        handleModal={handleCloseLateEarly}
+        handleModal={handleCloseModal}
         isOpen={isOpen}
         listButton={buttonForm.formRequestButton}
         statusRequest={request.status}
@@ -139,10 +201,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <Col xs={24} md={24} xl={24}>
                       <div className={styles.formGroup}>
                         <Col xs={6} md={6} xl={4}>
-                          <h3>Registration date::</h3>
+                          Registration date:
                         </Col>
                         <Col xs={20} md={20} xl={20}>
-                          <h3>{request?.create_at}</h3>
+                          {dateTime.formatDateTime(request?.create_at)}
                         </Col>
                       </div>
                     </Col>
@@ -152,10 +214,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
                       <Col xs={6} md={6} xl={4}>
-                        <h3>Register for date:</h3>
+                        Register for date:
                       </Col>
                       <Col xs={20} md={20} xl={20}>
-                        <h3>{row.work_date}</h3>
+                        {row.work_date}
                       </Col>
                     </div>
                   </Col>
@@ -164,18 +226,18 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Check-in:</h3>
+                          Check-in:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
-                          <h3>{dateTime.formatTime(row?.checkin_original)}</h3>
+                          {dateTime.formatTime(row?.checkin_original)}
                         </Col>
                       </Col>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Check-out:</h3>
+                          Check-out:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
-                          <h3>{dateTime.formatTime(row?.checkout_original)}</h3>
+                          {dateTime.formatTime(row?.checkout_original)}
                         </Col>
                       </Col>
                     </div>
@@ -185,21 +247,21 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Late time:</h3>
+                          Late time:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
                           <h3 style={{ color: 'red' }}>
-                            {lateTime !== null ? lateTime : ''}
+                            {row.late ? row.late : ''}
                           </h3>
                         </Col>
                       </Col>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={12} md={12} xl={8}>
-                          <h3>Early:</h3>
+                          Early:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
                           <h3 style={{ color: 'red' }}>
-                            {earlyTime !== null ? earlyTime : ''}
+                            {row.early ? row.early : ''}
                           </h3>
                         </Col>
                       </Col>
@@ -210,10 +272,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={24} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={6} md={12} xl={8}>
-                          <h3>
-                            Date cover up:{' '}
-                            <span className={styles.requiredField}>(*)</span>
-                          </h3>
+                          Date cover up:{' '}
+                          <span className={styles.requiredField}>(*)</span>
                         </Col>
                         <Col xs={18} md={12} xl={16}>
                           <Controller
@@ -228,9 +288,19 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                     }
                                     format={dateTime.formatDateTypeYear}
                                     onChange={(e) => {
+                                      const res = async () => {
+                                        const respon = await getCompensation(e)
+                                        setOverTime(respon)
+                                        setValidateTime(false)
+                                      }
+                                      res()
                                       return field.onChange(e)
                                     }}
-                                    defaultValue={moment().subtract(1, 'days')}
+                                    defaultValue={
+                                      request.compensation_date
+                                        ? moment(request.compensation_date)
+                                        : moment().subtract(1, 'days')
+                                    }
                                   />
                                   {errors.checkDateTime && (
                                     <span className={styles.requiredField}>
@@ -257,10 +327,15 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           style={{ display: 'flex' }}
                         >
                           <Col xs={12} md={10} xl={8}>
-                            <h3>Overtime:</h3>
+                            Overtime:
                           </Col>
                           <Col xs={12} md={14} xl={16}>
-                            <h3>{overTime}</h3>
+                            {validateTime && (
+                              <span className={styles.requiredField}>
+                                Time is not valid
+                              </span>
+                            )}
+                            {overTime}
                           </Col>
                         </Col>
                         <Col
@@ -270,12 +345,12 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           style={{ display: 'flex' }}
                         >
                           <Col xs={12} md={14} xl={11}>
-                            <h3>Time request:</h3>
+                            Time request:
                           </Col>
                           <Col xs={12} md={10} xl={13}>
                             <h3
                               style={handleDateTime.compareTime(
-                                overTime,
+                                overTime ? overTime : '00:00',
                                 timeRequest,
                               )}
                             >
@@ -290,10 +365,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
                       <Col xs={6} md={6} xl={4} style={{ display: 'flex' }}>
-                        <h3>
-                          Reason:{' '}
-                          <span className={styles.requiredField}>(*)</span>
-                        </h3>
+                        Reason:
+                        <span className={styles.requiredField}>(*)</span>
                       </Col>
                       <Col xs={18} md={18} xl={20}>
                         <Controller
@@ -302,7 +375,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           render={({ field }) => (
                             <>
                               <Input.TextArea
-                                placeholder="Controlled autosize"
                                 autoSize={{
                                   minRows: 4,
                                   maxRows: 7,
@@ -328,6 +400,12 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       </DialogRequest>
     </>
   )
+}
+
+Index.propTypes = {
+  handleCloseLateEarly: PropTypes.func,
+  isOpen: PropTypes.bool,
+  row: PropTypes.object,
 }
 
 export default Index

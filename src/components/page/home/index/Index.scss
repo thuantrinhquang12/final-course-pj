@@ -1,26 +1,120 @@
 .tableNotice {
+  .ant-pagination-prev {
+    button.ant-pagination-item {
+      border-color: grey;
+      &:hover {
+        border-color: #1890ff;
+        transition: all 0.3s;
+      }
+    }
+  }
+
+  .ant-pagination-next {
+    button.ant-pagination-item {
+      border-color: grey;
+      &:hover {
+        border-color: #1890ff;
+        transition: all 0.3s;
+      }
+    }
+  }
+
+  .ant-pagination-item {
+    border-color: grey;
+
+    &.ant-pagination-item-active {
+      border-color: #1890ff;
+    }
+  }
+
+  .ant-table-title {
+    box-shadow: rgb(0 0 0 / 20%) 0px 5px 15px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    overflow: hidden;
+  }
+  // .ant-table-container {
+  //   border-top-left-radius: 10px !important;
+  //   border-top-right-radius: 10px !important;
+  //   border-bottom-left-radius: 10px !important;
+  //   border-bottom-right-radius: 10px !important;
+  //   overflow: hidden;
+  // }
+
+  .ant-table-title {
+    background-color: white;
+  }
   .ant-table-thead {
     th {
-      background-color: #2196f3;
+      background-color: #a4a4ac;
 
       &.ant-table-column-has-sorters {
         &:hover {
-          background-color: #2196f3;
+          background-color: #a4a4ac;
         }
+      }
+
+      &.ant-table-column-sort {
+        background-color: #a4a4ac;
       }
     }
   }
 
   .ant-table-tbody {
     tr {
+      td {
+        border-right: 1px solid #979292 !important;
+      }
       &:hover {
         td {
           background-color: #e5e2e2;
         }
       }
-      &:nth-child(even) {
-        // background-color: #a8a0a0;
+      &:nth-child(odd) {
+        background-color: #bbbfbf;
+        .ant-table-cell-row-hover {
+          background-color: #bbbfbf;
+        }
+
+        .ant-table-column-sort {
+          background-color: #bbbfbf;
+        }
       }
+    }
+  }
+}
+
+.modalNotice {
+  .ant-modal-header {
+    background-color: #0599ef;
+
+    .ant-modal-title {
+      h2 {
+        color: white;
+      }
+    }
+  }
+
+  .ant-modal-close-x {
+    color: white;
+  }
+
+  .ant-modal-footer {
+    display: none;
+  }
+
+  .formGroup {
+    display: flex;
+    align-items: baseline;
+    font-weight: 600;
+
+    i {
+      margin-right: 10px;
+    }
+
+    .formGroupText {
+      display: flex;
+      flex-wrap: wrap;
     }
   }
 }

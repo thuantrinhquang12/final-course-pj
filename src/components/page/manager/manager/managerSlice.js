@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import reducerRegistry from '../../../store/reducerRegister'
-import { get, put } from '../../service/requestApi'
+import reducerRegistry from '../../../../store/reducerRegister'
+import { get, put } from '../../../service/requestApi'
 
 export const getRequests = createAsyncThunk(
   'requests/getRequests',
@@ -38,7 +38,7 @@ const managerSlice = createSlice({
     },
     [getRequests.fulfilled]: (state, action) => {
       state.status = 'success'
-      state.requests = action.payload
+      state.requests = action.payload.data
     },
     [getRequests.rejected]: (state) => {
       state.status = 'failed'
@@ -46,7 +46,7 @@ const managerSlice = createSlice({
     [putRequestsManager.pending]: (state) => {
       state.status = 'loadingManagerUpdate'
     },
-    [putRequestsManager.fulfilled]: (state) => {
+    [putRequestsManager.fulfilled]: (state, action) => {
       state.status = 'successManagerUpdate'
     },
     [putRequestsReject.pending]: (state) => {

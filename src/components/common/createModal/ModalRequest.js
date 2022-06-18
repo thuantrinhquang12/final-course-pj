@@ -4,7 +4,6 @@ import { Modal, Button, Skeleton } from 'antd'
 import { CloseCircleOutlined } from '@ant-design/icons'
 import { typeStatusRequest } from '../../index'
 import './ModalRequest.scss'
-
 const Dialog = ({
   children,
   isOpen,

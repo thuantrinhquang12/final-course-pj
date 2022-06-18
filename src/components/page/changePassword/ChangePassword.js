@@ -32,6 +32,7 @@ const ChangePassword = () => {
       } else return false
     } catch (e) {
       setError(true)
+      form.resetFields()
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
         'Failed',
@@ -49,6 +50,24 @@ const ChangePassword = () => {
     form.resetFields()
     setError(false)
   }
+  const confirmCancel = () => {
+    Modal.confirm({
+      title: 'CLOSE MODAL',
+      content: 'Are you sure ?',
+      okText: 'Cancel',
+      cancelText: 'OK',
+      okButtonProps: {
+        type: 'default',
+      },
+      cancelButtonProps: {
+        style: { padding: '0 28px' },
+        type: 'primary',
+      },
+      onCancel() {
+        handleCancel()
+      },
+    })
+  }
 
   return (
     <div>
@@ -57,11 +76,23 @@ const ChangePassword = () => {
         title={<h3 style={{ color: 'white', margin: '0' }}>Change Password</h3>}
         className="ChangePassword"
         visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={[]}
+        onCancel={confirmCancel}
+        footer={[
+          <Button type="primary" htmlType="submit" key="submit" form="myForm">
+            Submit
+          </Button>,
+          <Button
+            style={{ marginLeft: 20 }}
+            onClick={confirmCancel}
+            key="cancel"
+          >
+            Cancel
+          </Button>,
+        ]}
       >
         <Form
           form={form}
+          id="myForm"
           name="basic"
           labelAlign="left"
           labelCol={{
@@ -81,7 +112,7 @@ const ChangePassword = () => {
           </Form.Item>
 
           <Form.Item
-            label="Old Password:"
+            label="Old Password: "
             name="old_password"
             rules={[
               {
@@ -92,6 +123,11 @@ const ChangePassword = () => {
           >
             <Input.Password />
           </Form.Item>
+          {error && (
+            <p style={{ color: 'red', paddingLeft: '29.16666667%' }}>
+              Wrong old password !!!
+            </p>
+          )}
 
           <Form.Item
             label="Password:"
@@ -136,20 +172,6 @@ const ChangePassword = () => {
           >
             <Input.Password />
           </Form.Item>
-
-          <Form.Item className="buttonConfirmpass">
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-            <Button style={{ marginLeft: 20 }} onClick={handleCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
-          {error && (
-            <p style={{ color: 'red', textAlign: 'center' }}>
-              Wrong old password !!!
-            </p>
-          )}
         </Form>
       </Modal>
     </div>

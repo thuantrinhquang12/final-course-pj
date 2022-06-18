@@ -28,7 +28,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
-  console.log(request)
   const schema = yup.object().shape({
     reasonInput: yup
       .string()
@@ -270,7 +269,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     Lack time:
                   </Col>
                   <Col xl={12} md={12} xs={12}>
-                    {row?.lack_time}
+                    {row?.lack}
                   </Col>
                 </Col>
               </Row>
@@ -372,7 +371,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                             <span
                               style={handleDateTime.compareTime(
                                 timeCount,
-                                row.lack_time,
+                                row?.lack,
                               )}
                             >
                               {!leaveAllDayCheck && <span> {timeCount}</span>}
