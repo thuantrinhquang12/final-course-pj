@@ -11,6 +11,7 @@ import {
   typeStatusRequest,
   typeRequest,
   handleField,
+  handleDateTime,
   buttonForm,
   tryCatch,
   messageRequest,
@@ -201,7 +202,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.checkin_original)})
+                    ({handleDateTime.checkInvalidTime(row.checkin_original)})
                   </span>
                 </Col>
               </Row>
@@ -230,7 +231,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     )}
                   />
                   <span className="ant-form-text">
-                    ({dateTime.formatTime(row.checkout_original)})
+                    ({handleDateTime.checkInvalidTime(row.checkout_original)})
                   </span>
                 </Col>
               </Row>
