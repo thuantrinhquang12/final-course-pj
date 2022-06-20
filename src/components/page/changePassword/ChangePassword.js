@@ -172,15 +172,6 @@ const ChangePassword = () => {
           >
             <Input.Password />
           </Form.Item>
-
-          {/* <Form.Item className="buttonConfirmpass">
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-            <Button style={{ marginLeft: 20 }} onClick={handleCancel}>
-              Cancel
-            </Button>
-          </Form.Item> */}
         </Form>
       </Modal>
     </div>
