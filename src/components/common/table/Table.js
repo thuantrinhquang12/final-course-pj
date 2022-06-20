@@ -122,7 +122,6 @@ const CommonTable = ({
       const key = Object.keys(width)
       COLUMNS.map((item) => {
         if (key.includes(item.key)) {
-          // console.log('co roi', item, width[item.key])
           item.width = width[item.key]
           return item
         }

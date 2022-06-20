@@ -147,7 +147,7 @@ const Index = () => {
             }}
             className="ant-pagination-item"
           >
-            <i className="fa-solid fa-angles-left"></i>
+            <i className="fa-solid fa-angles-left" />
           </button>
           <button
             className="ant-pagination-item"
@@ -155,7 +155,7 @@ const Index = () => {
               stateNotice.currentPage === 1 ? { cursor: 'not-allowed' } : {}
             }
           >
-            <i className="fa-solid fa-angle-left"></i>
+            <i className="fa-solid fa-angle-left" />
           </button>
         </>
       )
@@ -172,7 +172,7 @@ const Index = () => {
                 : {}
             }
           >
-            <i className="fa-solid fa-angle-right"></i>
+            <i className="fa-solid fa-angle-right" />
           </button>
           <button
             style={
@@ -191,7 +191,7 @@ const Index = () => {
             }}
             className="ant-pagination-item"
           >
-            <i className="fa-solid fa-angles-right"></i>
+            <i className="fa-solid fa-angles-right" />
           </button>
         </>
       )
@@ -227,7 +227,6 @@ const Index = () => {
             loading={stateNotice.loading}
             className="tableNotice"
             data={stateNotice.tableData}
-            // remove={['published_to']}
             width={{ id: '5%' }}
             columns={columns}
             sorter={{ published_date: 'date' }}
@@ -242,7 +241,6 @@ const Index = () => {
               published_date: { position: 'tb_center' },
               detail: { position: 'tb_center' },
             }}
-            // styleBody={{ detail: { position: 'tb_center' } }}
             pagination={{
               current: stateNotice.currentPage,
               total: stateNotice.total,
