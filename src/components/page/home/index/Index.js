@@ -10,7 +10,6 @@ import { saveAs } from 'file-saver'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
-  // const [heightTable, setHeightTable] = useState(0)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
@@ -19,14 +18,6 @@ const Index = () => {
   useEffect(() => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
   }, [])
-
-  // useEffect(() => {
-  //   const Screen = screen.height
-  //   const Header = document.querySelector('#Header').offsetHeight
-  //   const HomeTable = document.querySelector('#HomeTable')
-  //   ;(HomeTable.style.height = `${Screen - Header}px`),
-  //     setHeightTable(HomeTable.offsetHeight - 450)
-  // }, [])
 
   const columns = [
     {
@@ -103,7 +94,8 @@ const Index = () => {
           console.log('payload', payload)
           if (pathFile === '.zip' || pathFile === '.rar') {
             saveAs(`${payload}`, `${payload}`)
-            return null
+          } else {
+            window.open(payload)
           }
         }
 
@@ -115,7 +107,7 @@ const Index = () => {
       },
     },
     {
-      title: <p className={styles.whiteColor}>Detail</p>,
+      title: <p className={styles.whiteColor}>DETAIL</p>,
       dataIndex: 'detail',
       key: 'detail',
       width: '10%',
