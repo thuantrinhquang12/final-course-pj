@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
-import { Table, Space, Button, Typography, Modal } from 'antd'
+import { Space, Button, Typography, Modal } from 'antd'
 import './table-timesheet.scss'
 import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
 import RegisterOT from '../../registerOT/RegisterOT'
 import LateEarlyModal from '../../lateEarlyModal/index/Index'
-
 import moment from 'moment'
 import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
 import PropTypes from 'prop-types'
+import TableCS from '../../../common/table/Table'
 
 const { Text } = Typography
 
@@ -263,7 +263,11 @@ export default function Timesheet({ row }) {
 
   return (
     <>
-      <Table
+      <TableCS
+        scroll={{
+          x: 1000,
+          y: 'auto',
+        }}
         rowClassName={(record, index) => {
           return record.checkin_original === null &&
             record.checkout_original === null
@@ -279,8 +283,7 @@ export default function Timesheet({ row }) {
           }
         }}
         columns={columns}
-        dataSource={row}
-        sx={{ align: 'center', width: '100%' }}
+        data={row ? row : []}
       />
       <Modal
         date={dateTimelog}

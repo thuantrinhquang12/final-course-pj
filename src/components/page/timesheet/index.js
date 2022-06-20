@@ -28,7 +28,9 @@ export default function SearchField() {
   const worksheet = useSelector((state) => {
     return state.timesheet.worksheet
   })
+
   const onFinish = (values) => {
+    console.log('search', values)
     if (values.sort === 'ascending') {
       if (values.selected === 1) {
         if (values.selecteddate === 1) {
@@ -53,14 +55,14 @@ export default function SearchField() {
 
   const handleReset = () => {
     form.resetFields()
+    setChoose(1)
     setParams({ page: 3, sort: 'ascending', start: '', end: '' })
   }
+
   const [form] = Form.useForm()
   const onChangeChoose = (e) => {
     setChoose(e.target.value)
-    console.log(choose)
   }
-
   return (
     <>
       <div className="search-field">
@@ -77,8 +79,8 @@ export default function SearchField() {
               selecteddate: 3,
               selected: 1,
               sort: 'ascending',
-              startdate: moment('01/03/2022', dateFormat),
-              enddate: moment('30/03/2022', dateFormat),
+              // startdate: moment('01/03/2022', dateFormat),
+              // enddate: moment('30/03/2022', dateFormat),
               radioGroup: 2,
             }}
           >
@@ -106,12 +108,20 @@ export default function SearchField() {
                   </Form.Item>
                   <Space direction="horizontal" size={25} align="center">
                     <Form.Item name="startdate">
-                      <DatePicker format={dateFormat} disabled={choose === 1} />
+                      <DatePicker
+                        value={moment()}
+                        format={dateFormat}
+                        disabled={choose === 1}
+                      />
                       <span style={{ marginLeft: 20 }}>To</span>
                     </Form.Item>
 
                     <Form.Item name="enddate">
-                      <DatePicker format={dateFormat} disabled={choose === 1} />
+                      <DatePicker
+                        value={moment()}
+                        format={dateFormat}
+                        disabled={choose === 1}
+                      />
                     </Form.Item>
                   </Space>
                 </div>
