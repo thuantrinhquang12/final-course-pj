@@ -1,4 +1,16 @@
 .tableNotice {
+  .ant-table {
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .ant-pagination-prev {
+    .ant-pagination-item {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+  }
+
   .ant-pagination-prev {
     button.ant-pagination-item {
       border-color: grey;
@@ -8,7 +20,12 @@
       }
     }
   }
-
+  .ant-pagination-total-text {
+    color: white;
+  }
+  .ant-pagination-options {
+    color: white;
+  }
   .ant-pagination-next {
     button.ant-pagination-item {
       border-color: grey;
@@ -33,29 +50,27 @@
     border-top-left-radius: 10px;
     overflow: hidden;
   }
-  // .ant-table-container {
-  //   border-top-left-radius: 10px !important;
-  //   border-top-right-radius: 10px !important;
-  //   border-bottom-left-radius: 10px !important;
-  //   border-bottom-right-radius: 10px !important;
-  //   overflow: hidden;
-  // }
 
   .ant-table-title {
     background-color: white;
   }
   .ant-table-thead {
-    th {
-      background-color: #a4a4ac;
+    tr {
+      $color-background: #36304a;
+      th {
+        background-color: $color-background !important;
 
-      &.ant-table-column-has-sorters {
-        &:hover {
-          background-color: #a4a4ac;
+        &.ant-table-cell-scrollbar {
+          position: relative;
+          &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            inset: 0;
+            background-color: $color-background;
+            transform: translateX(-2px);
+          }
         }
-      }
-
-      &.ant-table-column-sort {
-        background-color: #a4a4ac;
       }
     }
   }
@@ -64,21 +79,17 @@
     tr {
       td {
         border-right: 1px solid #979292 !important;
-      }
-      &:hover {
-        td {
-          background-color: #e5e2e2;
+        &.ant-table-cell-row-hover {
+          cursor: pointer;
+          background-color: #95bcf2 !important;
+        }
+        &:last-child {
+          border-right: none !important;
         }
       }
-      &:nth-child(odd) {
-        background-color: #bbbfbf;
-        .ant-table-cell-row-hover {
-          background-color: #bbbfbf;
-        }
 
-        .ant-table-column-sort {
-          background-color: #bbbfbf;
-        }
+      &:nth-child(odd) {
+        background-color: #eeeeee;
       }
     }
   }
