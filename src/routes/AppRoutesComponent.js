@@ -44,6 +44,7 @@ const AppRoutesComponent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<AuthorError />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/notification" element={<CreateNotification />} />
 
         <Route element={<Header />}>
           {/* public routes with layout */}
@@ -69,9 +70,9 @@ const AppRoutesComponent = () => {
           ></Route>
 
           {/* Admin routes */}
-          <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/notification" element={<CreateNotification />} />
-          </Route>
+          <Route
+            element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}
+          ></Route>
         </Route>
       </Routes>
     </>
