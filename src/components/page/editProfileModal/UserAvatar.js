@@ -13,6 +13,14 @@ const UserAvatar = () => {
   const handleChange = function loadFile(event) {
     if (event.target.files.length > 0) {
       const targetImg = event.target.files[0]
+      const idxDot = targetImg.name.lastIndexOf('.') + 1
+      const extFile = targetImg.name
+        .substr(idxDot, targetImg.name.length)
+        .toLowerCase()
+      if (extFile != 'jpg' && extFile != 'jpeg' && extFile != 'png') {
+        alert('Only jpg/jpeg and png files are allowed!')
+      }
+
       const img = new Image()
       img.src = URL.createObjectURL(targetImg)
       img.addEventListener('load', () => {
@@ -30,6 +38,14 @@ const UserAvatar = () => {
   const handleChangeForSmall = function loadFileForSmall(event) {
     if (event.target.files.length > 0) {
       const targetImg = event.target.files[0]
+      const idxDot = targetImg.name.lastIndexOf('.') + 1
+      const extFile = targetImg.name
+        .substr(idxDot, targetImg.name.length)
+        .toLowerCase()
+      if (extFile != 'jpg' && extFile != 'jpeg' && extFile != 'png') {
+        alert('Only jpg/jpeg and png files are allowed!')
+      }
+
       const img = new Image()
       img.src = URL.createObjectURL(targetImg)
       img.addEventListener('load', () => {
@@ -48,27 +64,21 @@ const UserAvatar = () => {
     <>
       <div className={styles.avatarList}>
         <div className={styles.avatarContainer}>
-          <label htmlFor="upload-avatar">
-            <Avatar
-              shape="square"
-              className={styles.avatar}
-              src={avatarFile ?? defaultImage}
-            />
-            <div className={styles.avatarHover}>
-              + <br />
-              Upload
-            </div>
-          </label>
+          <Avatar
+            shape="square"
+            className={styles.avatar}
+            src={avatarFile ?? defaultImage}
+          />
           <label htmlFor="upload-avatar" className={styles.uploadLabel}>
             Choose File
+            <input
+              type="file"
+              onChange={handleChange}
+              style={{ display: 'none' }}
+              id="upload-avatar"
+              accept="image/png, image/jpeg, image/jpg"
+            />
           </label>
-          <input
-            type="file"
-            onChange={handleChange}
-            style={{ display: 'none' }}
-            id="upload-avatar"
-            accept="image/png, image/jpeg"
-          />
         </div>
         <div className={styles.avatarContainer}>
           <label htmlFor="upload-small-avatar">
@@ -77,21 +87,17 @@ const UserAvatar = () => {
               className={styles.smallAvatar}
               src={smallAvatarFile ?? defaultImage}
             />
-            <div className={styles.smallAvatarHover}>
-              + <br />
-              Upload
-            </div>
           </label>
           <label htmlFor="upload-small-avatar" className={styles.uploadLabel}>
             Choose File
+            <input
+              type="file"
+              onChange={handleChangeForSmall}
+              style={{ display: 'none' }}
+              id="upload-small-avatar"
+              accept="image/png, image/jpeg, image/jpg"
+            />
           </label>
-          <input
-            type="file"
-            onChange={handleChangeForSmall}
-            style={{ display: 'none' }}
-            id="upload-small-avatar"
-            accept="image/png, image/jpeg"
-          />
         </div>
       </div>
     </>

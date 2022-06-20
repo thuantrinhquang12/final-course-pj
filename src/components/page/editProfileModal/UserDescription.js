@@ -2,6 +2,7 @@ import { Descriptions, Row, Col } from 'antd'
 import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useState, useEffect } from 'react'
+
 import { get } from '../../service/requestApi'
 
 const API = '/members'

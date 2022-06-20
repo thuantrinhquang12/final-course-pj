@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { get, put } from '../../service/requestApi'
+
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
@@ -13,6 +14,38 @@ import { dateTime, typePopup } from '../../index'
 
 const API = '/members'
 const dateFormat = 'DD-MM-YYYY'
+const bankName = [
+  {
+    id: 1,
+    name: 'Vietcombank',
+    displayName: 'Vietcombank',
+  },
+  {
+    id: 2,
+    name: 'Techcombank',
+    displayName: 'Techcombank',
+  },
+  {
+    id: 3,
+    name: 'Vietinbank',
+    displayName: 'Vietinbank',
+  },
+  {
+    id: 4,
+    name: 'BIDV',
+    displayName: 'BIDV',
+  },
+  {
+    id: 5,
+    name: 'SHB',
+    displayName: 'SHB',
+  },
+  {
+    id: 6,
+    name: 'MB Bank',
+    displayName: 'MB Bank',
+  },
+]
 
 const disabledDate = (current) => {
   return current && current > moment().endOf('day')
@@ -130,7 +163,7 @@ const UserEditForm = () => {
               emergency_contact_relationship:
                 profileInfo.emergency_contact_relationship,
               emergency_contact_number: profileInfo.emergency_contact_number,
-              start_date: moment(profileInfo.start_date),
+              start_date: moment(profileInfo.start_date).format('DD-MM-YYYY'),
             }}
             onValuesChange={onFormLayoutChange}
             onFinish={onSubmit}
@@ -467,7 +500,16 @@ const UserEditForm = () => {
                                   },
                                 ]}
                               >
-                                <Input />
+                                <Select showSearch>
+                                  {bankName.map((bank) => (
+                                    <Select.Option
+                                      key={bank.id}
+                                      value={bank.name}
+                                    >
+                                      {bank.displayName}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
                               </Form.Item>
                             </Col>
                           </Row>
@@ -821,10 +863,7 @@ const UserEditForm = () => {
                                 labelAlign="left"
                                 name="start_date"
                               >
-                                <DatePicker
-                                  format={dateFormat}
-                                  disabled={true}
-                                />
+                                <Input disabled={true} />
                               </Form.Item>
                             </Col>
                           </Row>
