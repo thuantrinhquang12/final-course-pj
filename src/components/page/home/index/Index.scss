@@ -79,25 +79,17 @@
     tr {
       td {
         border-right: 1px solid #979292 !important;
-
+        &.ant-table-cell-row-hover {
+          cursor: pointer;
+          background-color: #95bcf2 !important;
+        }
         &:last-child {
           border-right: none !important;
         }
       }
-      &:hover {
-        td {
-          background-color: #e5e2e2;
-        }
-      }
-      &:nth-child(odd) {
-        background-color: #f5f5f5;
-        .ant-table-cell-row-hover {
-          background-color: #f5f5f5;
-        }
 
-        .ant-table-column-sort {
-          background-color: #f5f5f5;
-        }
+      &:nth-child(odd) {
+        background-color: #eeeeee;
       }
     }
   }
