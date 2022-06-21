@@ -1,5 +1,5 @@
-import { UploadOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Col, Form, Input, Row, Upload } from 'antd'
+import { FormOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Col, Form, Input, Row } from 'antd'
 import React, { useState } from 'react'
 import styles from './CreateNotification.scss'
 import { dateTime, typePopup } from '../../../index'
@@ -8,52 +8,51 @@ import { post } from '../../../service/requestApi'
 
 const CreateNotification = () => {
   const [form] = Form.useForm()
-  const [state, setState] = useState()
   const [selectDivision, setDivision] = useState(true)
 
-  const handleChange = (info) => {
-    setState(info.fileList)
-  }
-
-  const getFile = (e) => {
-    if (Array.isArray(e)) {
-      console.log('file1', e)
-      return e
-    }
-    return e && e.fileList
-  }
-
   const onSubmit = async (values) => {
-    const { subject, message, attachment, published_to: publishedTo } = values
-
+    const { subject, message, published_to: publishedTo } = values
+    const selectedFile = document.getElementById('myfile').files[0]
     const data = {
       published_date: dateTime.formatDate(moment.now()),
       subject,
       message,
       status: 1,
-      attachment,
+      attachment: selectedFile,
       created_by: 1,
-      published_to: publishedTo.includes('all') ? ['all'] : publishedTo,
+      published_to: publishedTo.includes('all')
+        ? JSON.stringify(['all'])
+        : JSON.stringify(publishedTo),
     }
+
     try {
-      await post('/admin/notifications/store', data)
-      // typePopup.popupNotice(
-      //   typePopup.SUCCESS_MESSAGE,
-      //   'Đăng thành công',
-      //   'ok nha',
-      // )
+      const res = await post('/admin/notifications/store', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      if (res.status === true) {
+        typePopup.popupNotice(
+          typePopup.SUCCESS_MESSAGE,
+          'Success',
+          'Create success message',
+        )
+        form.resetFields()
+      } else return false
     } catch (e) {
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
-        'Không thành công',
-        'ok nha',
+        'Reject',
+        'Generate failure message',
       )
     }
   }
 
+  const onReset = () => {
+    form.resetFields()
+  }
+
   return (
     <>
-      <div className={styles.notificationContainer}>
+      <div className="notificationContainer">
         <Form
           form={form}
           name="basic"
@@ -61,6 +60,7 @@ const CreateNotification = () => {
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
+          <h1 style={{ textAlign: 'center' }}>Create Notifications</h1>
           <Form.Item
             name="subject"
             className={styles.InputField}
@@ -71,10 +71,7 @@ const CreateNotification = () => {
               },
             ]}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Subject"
-            />
+            <Input prefix={<UnorderedListOutlined />} placeholder="Subject" />
           </Form.Item>
 
           <Form.Item
@@ -87,41 +84,25 @@ const CreateNotification = () => {
               },
             ]}
           >
-            <Input
-              prefix={<UserOutlined className="site-form-item-icon" />}
-              placeholder="Message"
-            />
+            <Input prefix={<FormOutlined />} placeholder="Message" />
           </Form.Item>
 
           <Form.Item
-            name="attachment"
-            valuePropName="fileList"
-            getValueFromEvent={getFile}
-            className={styles.InputField}
-            // rules={[
-            //   {
-            //     required: true,
-            //     message: 'Required to attachment',
-            //   },
-            // ]}
+            name="file"
+            rules={[
+              {
+                required: true,
+                message: 'Required to file',
+              },
+            ]}
           >
-            <Upload.Dragger
-              beforeUpload={(file) => {
-                console.log('file', file)
-                return false
-              }}
-              onChange={handleChange}
-              multiple={false}
-              maxCount={1}
-              defaultFileList={state}
-            >
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
-            </Upload.Dragger>
+            <Input type="file" id="myfile" name="myfile" />
           </Form.Item>
 
-          <Form.Item name="published_to" label="Published To">
+          <label>Published To : </label>
+          <Form.Item name="published_to">
             <Checkbox.Group>
-              <Row>
+              <Row className="divisionName">
                 <Col span={8}>
                   <Checkbox
                     value={1}
@@ -203,9 +184,12 @@ const CreateNotification = () => {
             </Checkbox.Group>
           </Form.Item>
 
-          <Form.Item className={styles.ItemSignin}>
-            <Button className={styles.Button} type="primary" htmlType="submit">
+          <Form.Item className="ItemSignin">
+            <Button type="primary" htmlType="submit">
               Submit
+            </Button>
+            <Button htmlType="button" onClick={onReset}>
+              Reset
             </Button>
           </Form.Item>
         </Form>
