@@ -2,8 +2,8 @@ import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import { get, put } from '../../service/requestApi'
-
+import instance, { get } from '../../service/requestApi'
+import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
@@ -58,7 +58,10 @@ const UserEditForm = () => {
   }
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
-
+  const [avatar, setAvatar] = useState(null)
+  emitter.on('EVENT_GET_AVATAR', (data) => {
+    setAvatar(data.avatar)
+  })
   useEffect(() => {
     get(API + '/edit').then((res) => {
       setProfileInfo(res.data)
@@ -80,7 +83,15 @@ const UserEditForm = () => {
     }
 
     try {
-      const data = await put(API + '/update', valueEdit)
+      const data = await instance({
+        method: 'put',
+        url: API + '/update',
+        params: valueEdit,
+        data: {
+          avatar: avatar,
+        },
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
       if (data.status) {
         typePopup.popupNotice(
           typePopup.SUCCESS_MESSAGE,
@@ -90,7 +101,8 @@ const UserEditForm = () => {
         )
         setModalVisible(false)
       }
-    } catch (error) {
+    } catch (e) {
+      console.log('err', e)
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
         'Message',

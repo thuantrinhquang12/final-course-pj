@@ -2,7 +2,7 @@ import { Avatar } from 'antd'
 import 'antd/dist/antd.min.css'
 import React from 'react'
 import { useState } from 'react'
-
+import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import defaultImage from './avatarDefault.png'
 
@@ -13,6 +13,7 @@ const UserAvatar = () => {
   const handleChange = function loadFile(event) {
     if (event.target.files.length > 0) {
       const targetImg = event.target.files[0]
+      emitter.emit('EVENT_GET_AVATAR', { avatar: targetImg })
       const idxDot = targetImg.name.lastIndexOf('.') + 1
       const extFile = targetImg.name
         .substr(idxDot, targetImg.name.length)
