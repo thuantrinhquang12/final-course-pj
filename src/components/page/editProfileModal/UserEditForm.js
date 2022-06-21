@@ -2,8 +2,9 @@ import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import { get, put } from '../../service/requestApi'
 
+import { get, put } from '../../service/requestApi'
+import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
@@ -50,7 +51,11 @@ const bankName = [
 const UserEditForm = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
+  const [avatar, setAvatar] = useState(null)
 
+  emitter.on('EVENT_GET_AVATAR', (data) => {
+    setAvatar(data.data)
+  })
   useEffect(() => {
     get(API + '/edit').then((res) => {
       setProfileInfo(res.data)
@@ -58,6 +63,7 @@ const UserEditForm = () => {
   }, [modalVisible])
 
   const onSubmit = async (values) => {
+    console.log('avatar', avatar)
     const valueEdit = {
       ...values,
       birth_date: dateTime.formatDate(values.birth_date),
@@ -69,9 +75,14 @@ const UserEditForm = () => {
       gender: values.gender,
       marital_status: values.marital_status,
       start_date: dateTime.formatDate(values.start_date),
+      avatar: avatar,
     }
+    console.log('value', valueEdit)
 
     try {
+      // const data = await put(API + '/update', valueEdit, {
+      //   headers: { 'Content-Type': 'multipart/form-data' },
+      // })
       const data = await put(API + '/update', valueEdit)
       if (data.status) {
         typePopup.popupNotice(
