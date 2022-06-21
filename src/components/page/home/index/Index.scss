@@ -1,22 +1,20 @@
 .tableNotice {
-  .ant-pagination-prev {
-    button.ant-pagination-item {
-      border-color: grey;
-      &:hover {
-        border-color: #1890ff;
-        transition: all 0.3s;
-      }
-    }
+  .ant-table {
+    border-radius: 15px;
+    overflow: hidden;
   }
 
-  .ant-pagination-next {
-    button.ant-pagination-item {
-      border-color: grey;
-      &:hover {
-        border-color: #1890ff;
-        transition: all 0.3s;
-      }
+  .ant-pagination-prev {
+    .ant-pagination-item {
+      margin-right: 0;
+      margin-left: 10px;
     }
+  }
+  .ant-pagination-total-text {
+    color: black;
+  }
+  .ant-pagination-options {
+    color: black;
   }
 
   .ant-pagination-item {
@@ -33,29 +31,34 @@
     border-top-left-radius: 10px;
     overflow: hidden;
   }
-  // .ant-table-container {
-  //   border-top-left-radius: 10px !important;
-  //   border-top-right-radius: 10px !important;
-  //   border-bottom-left-radius: 10px !important;
-  //   border-bottom-right-radius: 10px !important;
-  //   overflow: hidden;
-  // }
 
   .ant-table-title {
     background-color: white;
   }
   .ant-table-thead {
-    th {
-      background-color: #a4a4ac;
+    tr {
+      $color-background: #696969;
+      th {
+        .whiteColor {
+          color: white;
 
-      &.ant-table-column-has-sorters {
-        &:hover {
-          background-color: #a4a4ac;
+          p {
+            margin: 0;
+          }
         }
-      }
+        background-color: $color-background !important;
 
-      &.ant-table-column-sort {
-        background-color: #a4a4ac;
+        &.ant-table-cell-scrollbar {
+          position: relative;
+          &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            inset: 0;
+            background-color: $color-background;
+            transform: translateX(-2px);
+          }
+        }
       }
     }
   }
@@ -63,21 +66,24 @@
   .ant-table-tbody {
     tr {
       td {
-        border-right: 1px solid #979292 !important;
-      }
-      &:hover {
-        td {
-          background-color: #e5e2e2;
+        cursor: default !important;
+        .resetMargin {
+          margin: 0;
+        }
+        border-right: 1px solid black !important;
+        &.ant-table-cell-row-hover {
+          cursor: pointer;
+          background-color: #95bcf2 !important;
+        }
+        &:last-child {
+          border-right: none !important;
         }
       }
-      &:nth-child(odd) {
-        background-color: #bbbfbf;
-        .ant-table-cell-row-hover {
-          background-color: #bbbfbf;
-        }
 
+      &:nth-child(odd) {
+        background-color: #ccc7c7;
         .ant-table-column-sort {
-          background-color: #bbbfbf;
+          background-color: #ccc7c7;
         }
       }
     }
