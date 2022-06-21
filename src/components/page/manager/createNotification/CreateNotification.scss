@@ -8,7 +8,8 @@
   justify-content: center;
   form {
     padding: 30px;
-    max-width: 50%;
+    max-width: 500px;
+    width: 100%;
     box-shadow: 0 2px 5px 0 rgba(51, 62, 73, 0.6);
     background-color: white;
     border-radius: 6px;
@@ -22,6 +23,9 @@
       button {
         margin-right: 10px;
       }
+    }
+    .ant-checkbox-group {
+      width: 100%;
     }
   }
 }

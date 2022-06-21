@@ -1,10 +1,11 @@
-import { FormOutlined, UnorderedListOutlined } from '@ant-design/icons'
+import { UnorderedListOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Col, Form, Input, Row } from 'antd'
 import React, { useState } from 'react'
 import styles from './CreateNotification.scss'
 import { dateTime, typePopup } from '../../../index'
 import moment from 'moment'
 import { post } from '../../../service/requestApi'
+import TextArea from 'antd/lib/input/TextArea'
 
 const CreateNotification = () => {
   const [form] = Form.useForm()
@@ -69,6 +70,10 @@ const CreateNotification = () => {
                 required: true,
                 message: 'Required to subject',
               },
+              {
+                max: 50,
+                message: 'Subject cannot be longer than 50 characters',
+              },
             ]}
           >
             <Input prefix={<UnorderedListOutlined />} placeholder="Subject" />
@@ -82,9 +87,16 @@ const CreateNotification = () => {
                 required: true,
                 message: 'Required to message',
               },
+              {
+                max: 100,
+                message: 'Message cannot be longer than 100 characters',
+              },
             ]}
           >
-            <Input prefix={<FormOutlined />} placeholder="Message" />
+            <TextArea
+              placeholder="Message"
+              autoSize={{ minRows: 5, maxRows: 5 }}
+            />
           </Form.Item>
 
           <Form.Item
@@ -177,7 +189,7 @@ const CreateNotification = () => {
                     }}
                     onChange={() => setDivision((prev) => !prev)}
                   >
-                    All &nbsp;
+                    All
                   </Checkbox>
                 </Col>
               </Row>
