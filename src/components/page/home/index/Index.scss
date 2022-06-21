@@ -10,30 +10,11 @@
       margin-left: 10px;
     }
   }
-
-  .ant-pagination-prev {
-    button.ant-pagination-item {
-      border-color: grey;
-      &:hover {
-        border-color: #1890ff;
-        transition: all 0.3s;
-      }
-    }
-  }
   .ant-pagination-total-text {
     color: black;
   }
   .ant-pagination-options {
     color: black;
-  }
-  .ant-pagination-next {
-    button.ant-pagination-item {
-      border-color: grey;
-      &:hover {
-        border-color: #1890ff;
-        transition: all 0.3s;
-      }
-    }
   }
 
   .ant-pagination-item {

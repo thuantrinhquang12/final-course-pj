@@ -51,3 +51,23 @@
   color: #2892ff;
   cursor: pointer;
 }
+
+.ant-pagination-prev {
+  button.ant-pagination-item {
+    border-color: grey !important;
+    &:hover {
+      border-color: #1890ff !important;
+      transition: all 0.3s !important;
+    }
+  }
+}
+
+.ant-pagination-next {
+  button.ant-pagination-item {
+    border-color: grey !important;
+    &:hover {
+      border-color: #1890ff !important;
+      transition: all 0.3s !important;
+    }
+  }
+}
