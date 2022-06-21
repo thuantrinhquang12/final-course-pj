@@ -174,6 +174,7 @@ const CommonTable = ({
                       )
                     },
                 showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
             : {
                 pageSize: page ? page : 10,
@@ -188,6 +189,7 @@ const CommonTable = ({
                       )
                     },
                 showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
         }
         columns={columnS}
