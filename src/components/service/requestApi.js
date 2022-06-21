@@ -19,6 +19,10 @@ instance.interceptors.request.use(
   },
 )
 
+instance.interceptors.response.use((configs) => {
+  return configs
+})
+
 const get = async (url, params = {}) => {
   try {
     const config = { params }

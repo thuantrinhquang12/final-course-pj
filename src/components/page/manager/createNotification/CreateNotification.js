@@ -14,6 +14,7 @@ const CreateNotification = () => {
   const onSubmit = async (values) => {
     const { subject, message, published_to: publishedTo } = values
     const selectedFile = document.getElementById('myfile').files[0]
+    console.log(selectedFile)
     const data = {
       published_date: dateTime.formatDate(moment.now()),
       subject,
@@ -26,25 +27,25 @@ const CreateNotification = () => {
         : JSON.stringify(publishedTo),
     }
 
-    try {
-      const res = await post('/admin/notifications/store', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      if (res.status === true) {
-        typePopup.popupNotice(
-          typePopup.SUCCESS_MESSAGE,
-          'Success',
-          'Create success message',
-        )
-        form.resetFields()
-      } else return false
-    } catch (e) {
-      typePopup.popupNotice(
-        typePopup.ERROR_MESSAGE,
-        'Reject',
-        'Generate failure message',
-      )
-    }
+    // try {
+    //   const res = await post('/admin/notifications/store', data, {
+    //     headers: { 'Content-Type': 'multipart/form-data' },
+    //   })
+    //   if (res.status === true) {
+    //     typePopup.popupNotice(
+    //       typePopup.SUCCESS_MESSAGE,
+    //       'Success',
+    //       'Create success message',
+    //     )
+    //     form.resetFields()
+    //   } else return false
+    // } catch (e) {
+    //   typePopup.popupNotice(
+    //     typePopup.ERROR_MESSAGE,
+    //     'Reject',
+    //     'Generate failure message',
+    //   )
+    // }
   }
 
   const onReset = () => {

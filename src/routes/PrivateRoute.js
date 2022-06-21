@@ -21,8 +21,8 @@ const PrivateRoute = ({ allowedRoles }) => {
     auth = []
   }
 
-  const timeUsedToken = localStorage.getItem(LOCAL_STORAGE.TIME_EXPIRED)
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+  const timeUsedToken = localStorage.getItem(LOCAL_STORAGE.TIME_EXPIRED)
   if (tokenAccess) {
     if (Date.now() > timeUsedToken) {
       navigate('/login', { replace: true })
