@@ -21,7 +21,7 @@
     position: absolute;
     content: 'Items per page';
     display: block;
-    left: -100%;
+    left: -175%;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -50,4 +50,24 @@
 .colorBlue {
   color: #2892ff;
   cursor: pointer;
+}
+
+.ant-pagination-prev {
+  button.ant-pagination-item {
+    border-color: grey !important;
+    &:hover {
+      border-color: #1890ff !important;
+      transition: all 0.3s !important;
+    }
+  }
+}
+
+.ant-pagination-next {
+  button.ant-pagination-item {
+    border-color: grey !important;
+    &:hover {
+      border-color: #1890ff !important;
+      transition: all 0.3s !important;
+    }
+  }
 }
