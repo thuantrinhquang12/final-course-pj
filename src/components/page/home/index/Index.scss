@@ -5,8 +5,12 @@
 }
 
 .modalNotice {
+  .colorBlue {
+    color: #2892ff;
+    cursor: pointer;
+  }
   .ant-modal-header {
-    background-color: #0599ef;
+    background-color: #104382;
 
     .ant-modal-title {
       h2 {

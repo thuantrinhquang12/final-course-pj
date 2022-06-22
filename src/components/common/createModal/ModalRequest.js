@@ -16,9 +16,9 @@ const Dialog = ({
 }) => {
   const confirm = () => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
+      title: 'Modal',
       icon: <CloseCircleOutlined />,
-      content: 'Are you sure ?',
+      content: 'Are you sure close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {

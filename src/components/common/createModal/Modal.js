@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
-import './ModalRequest.scss'
+import './Modal.scss'
 
 const Dialog = ({ children, isOpen, title, handleModal, confirmDisable }) => {
   const confirm = () => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
-      content: 'Are you sure ?',
+      title: 'Modal',
+      content: 'Are you sure close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -30,7 +30,7 @@ const Dialog = ({ children, isOpen, title, handleModal, confirmDisable }) => {
       <Modal
         title={title}
         onCancel={confirmDisable ? handleModal : confirm}
-        className="modalRequestContainer"
+        className="modalContainer"
         footer={null}
         visible={isOpen}
         width={1000}

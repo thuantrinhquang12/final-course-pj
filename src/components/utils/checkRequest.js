@@ -67,3 +67,40 @@ export const checkRequestStatusColor = (status) => {
       break
   }
 }
+
+export const checkRequestStatusColorText = (status) => {
+  switch (status) {
+    case -1:
+      return 'red'
+    case 0:
+      return 'black'
+    case 1:
+      return '#1890ff'
+    case 2:
+      return 'green'
+    default:
+      break
+  }
+}
+
+export const checkRequestComment = (
+  status,
+  commentManager,
+  commentAdmin,
+  managerReject,
+  adminReject,
+) => {
+  if (status === 1 || managerReject === -1) {
+    return commentManager
+  } else if (status === 2 || adminReject === -1) {
+    return commentAdmin
+  }
+}
+
+export const checkRequestManager = (managerStatus, adminStatus) => {
+  if (adminStatus === -1 || adminStatus === 2) {
+    return 'Admin Comment'
+  } else if (managerStatus === -1 || managerStatus === 1) {
+    return 'Manager Comment'
+  }
+}

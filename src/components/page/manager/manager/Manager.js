@@ -1,4 +1,3 @@
-/* eslint-disable  no-unused-vars */
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import RequestDetail from '../requestDetail/RequestDetail'
@@ -169,8 +168,8 @@ const Manager = () => {
   }
   const confirmCloseModal = (e) => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
-      content: 'Are you sure ?',
+      title: 'Modal',
+      content: 'Are you sure close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -323,8 +322,8 @@ const Manager = () => {
               full_name: '20%',
               request_type: '15%',
               reason: '30%',
-              create_at: '15%',
-              status_id: '10%',
+              created_at: '15%',
+              status: '10%',
             }}
             columns={columns}
             onRow={(record) => {
@@ -346,7 +345,6 @@ const Manager = () => {
             }}
             styleBody={{
               full_name: { className: 'textCenter textOverflow' },
-              requestType: { position: 'tb_center' },
             }}
             pagination={{
               current: currentPage,
