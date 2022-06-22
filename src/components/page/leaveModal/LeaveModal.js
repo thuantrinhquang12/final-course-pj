@@ -28,7 +28,6 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
-
   const schema = yup.object().shape({
     reasonInput: yup
       .string()

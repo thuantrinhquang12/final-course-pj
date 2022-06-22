@@ -17,9 +17,12 @@ import {
   messageRequest,
   endPoint,
   requestSlice,
+  checkRequest,
 } from '../../index'
 import { getErrorCount, setErrorCount } from './handleErrorCount'
 import styles from './ForgetModal.module.scss'
+
+const { checkRequestStatus, checkRequestStatusColor } = checkRequest
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -28,10 +31,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
@@ -270,6 +270,9 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                     render={({ field }) => (
                       <>
                         <Input.TextArea
+                          showCount
+                          maxLength={100}
+                          placeholder="Please enter not too 100 characters"
                           autoSize={{ minRows: 5, maxRows: 5 }}
                           disabled={handleField.disableField(request.status)}
                           {...field}
@@ -284,6 +287,36 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   />
                 </Col>
               </Row>
+              {request.status !== 0 && request.status && (
+                <>
+                  <Row>
+                    <Col flex="150px">Status:</Col>
+                    <Col flex="auto">
+                      <strong
+                        style={{
+                          color: checkRequestStatusColor(request.status),
+                        }}
+                      >
+                        {checkRequestStatus(request.status)}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <>
+                      <Col flex="150px">Manager Comment:</Col>
+                      <Col flex="auto">
+                        <strong
+                          style={{
+                            color: checkRequestStatusColor(request.status),
+                          }}
+                        >
+                          {request.manager_confirmed_comment}
+                        </strong>
+                      </Col>
+                    </>
+                  </Row>
+                </>
+              )}
             </>
           )}
         </form>

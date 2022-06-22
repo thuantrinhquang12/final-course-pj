@@ -285,7 +285,10 @@ legend {
 progress {
   vertical-align: baseline;
 }
-
+p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 /**
  * Remove the default vertical scrollbar in IE 10+.
  */

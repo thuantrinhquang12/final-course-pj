@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Skeleton } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { typeStatusRequest } from '../../index'
 import './ModalRequest.scss'
 const Dialog = ({
@@ -16,6 +17,7 @@ const Dialog = ({
   const confirm = () => {
     Modal.confirm({
       title: 'CLOSE MODAL',
+      icon: <CloseCircleOutlined />,
       content: 'Are you sure ?',
       okText: 'Cancel',
       cancelText: 'OK',
@@ -42,7 +44,8 @@ const Dialog = ({
         className="modalRequestContainer"
         onCancel={
           statusRequest === typeStatusRequest.CONFIRMED ||
-          statusRequest === typeStatusRequest.APPROVED
+          statusRequest === typeStatusRequest.APPROVED ||
+          statusRequest === typeStatusRequest.REJECT
             ? handleModal
             : confirm
         }
@@ -57,7 +60,16 @@ const Dialog = ({
           ) : (
             <>
               {listButton.map(
-                ({ key, name, htmlType, type, idForm, text, loading }) => {
+                ({
+                  key,
+                  name,
+                  htmlType,
+                  type,
+                  idForm,
+                  text,
+                  loading,
+                  danger,
+                }) => {
                   const visibleRegister =
                     name === 'register' && requestExists
                       ? { display: 'none' }
@@ -66,7 +78,8 @@ const Dialog = ({
                     (name === 'update' || name === 'delete') &&
                     (!requestExists ||
                       statusRequest === typeStatusRequest.CONFIRMED ||
-                      statusRequest === typeStatusRequest.APPROVED)
+                      statusRequest === typeStatusRequest.APPROVED ||
+                      statusRequest === typeStatusRequest.REJECT)
                       ? { display: 'none' }
                       : {}
                   return (
@@ -86,6 +99,7 @@ const Dialog = ({
                           ? confirm
                           : () => {}
                       }
+                      danger={danger}
                     >
                       {text}
                     </Button>
