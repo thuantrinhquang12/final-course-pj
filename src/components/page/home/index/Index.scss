@@ -37,7 +37,7 @@
   }
   .ant-table-thead {
     tr {
-      $color-background: #696969;
+      $color-background: #104382;
       th {
         .whiteColor {
           color: white;
@@ -81,9 +81,9 @@
       }
 
       &:nth-child(odd) {
-        background-color: #ccc7c7;
+        background-color: #c1d4f2;
         .ant-table-column-sort {
-          background-color: #ccc7c7;
+          background-color: #c1d4f2;
         }
       }
     }
