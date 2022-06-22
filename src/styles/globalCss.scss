@@ -5,25 +5,23 @@ body {
   margin: 0 auto;
   width: 100% !important;
   font-family: 'Lato', sans-serif;
-  background: #f1f4f5 !important;
-  overflow: hidden;
+  background: #e9f2ff !important;
+  // overflow: hidden;
   -webkit-font-smoothing: antialiased;
   a:hover {
     cursor: pointer;
   }
+  &:-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+
+  &:-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+  }
 }
 code {
   font-family: 'Lato', sans-serif;
-}
-
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-  height: 7px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }

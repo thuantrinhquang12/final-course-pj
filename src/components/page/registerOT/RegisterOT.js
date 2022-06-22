@@ -10,34 +10,36 @@ import {
   dateTime,
   typeRequest,
   handleField,
+  handleDateTime,
   buttonForm,
   tryCatch,
   endPoint,
   messageRequest,
   requestSlice,
+  checkRequest,
 } from '../../index'
 import styles from './RegisterOT.module.scss'
 import moment from 'moment'
 
-const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
-  const dispatch = useDispatch()
+const {
+  checkRequestStatus,
+  checkRequestStatusColorText,
+  checkRequestComment,
+  checkRequestManager,
+} = checkRequest
 
+const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
+  const [hours, minutes] = row.ot_time
+    ? row.ot_time?.split(':')
+    : '00:00'.split(':')
   const [requestExists, setRequestExists] = useState(false)
   const [errorTimeOT, setErrorTimeOT] = useState(false)
-  const dateIn = new Date(row.checkin_original).getTime()
-  const dateOut = new Date(row.checkout_original).getTime()
-  const DateOT = (dateOut - dateIn) / (1000 * 3600) - 10
-  const actualOvertime = new Date(DateOT * 60 * 60 * 1000)
-    .toISOString()
-    .slice(11, 16)
-
+  const DateOT = Number(+hours + minutes / 60)
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     timeRequestOT: yup.date().nullable().required('Please enter timeRequestOT'),
   })
+  const dispatch = useDispatch()
 
   const {
     handleSubmit,
@@ -74,7 +76,8 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
 
   const onSubmit = async (values, e) => {
     if (
-      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) > DateOT
+      dateTime.timeToDecimal(dateTime.formatTime(values.timeRequestOT)) >=
+      DateOT
     ) {
       setErrorTimeOT(true)
       return null
@@ -86,9 +89,9 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
       case 'REGISTER':
         const newRequest = {
           request_type: typeRequest.REQUEST_OT,
+          check_in: dateTime.formatTime(row.checkin || row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout || row.checkout_original),
           request_for_date: row.work_date,
-          check_in: dateTime.formatTime(row.checkin_original),
-          check_out: dateTime.formatTime(row.checkout_original),
           request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
         }
@@ -100,15 +103,15 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
             }),
           ),
           messageRequest.CREATE,
-          handleCloseOT,
+          handleCloseModal,
         )
         break
       case 'UPDATE':
         const updateRequest = {
           request_type: typeRequest.REQUEST_OT,
+          check_in: dateTime.formatTime(row.checkin || row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout || row.checkout_original),
           request_for_date: row.work_date,
-          check_in: dateTime.formatTime(row.checkin_original),
-          check_out: dateTime.formatTime(row.checkout_original),
           request_ot_time: dateTime.formatTime(values.timeRequestOT),
           reason: values.reasonInput,
         }
@@ -121,7 +124,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
             }),
           ),
           messageRequest.UPDATE,
-          handleCloseOT,
+          handleCloseModal,
         )
         break
       case 'DELETE':
@@ -171,27 +174,36 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
           ) : (
             <>
               <Row>
-                <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">{dateTime.formatDate(row?.work_date)}</Col>
+                <Col xl={4}>Registration date:</Col>
+                <Col xl={20}>
+                  {request?.created_at
+                    ? dateTime.formatDateTime(request?.create_at)
+                    : ''}
+                </Col>
+              </Row>
+              <Row>
+                <Col xl={4}>Register for date: </Col>
+                <Col xl={20}>{dateTime.formatDate(row?.work_date)}</Col>
               </Row>
               <Row>
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Check-in: </Col>
+                  <Col flex="160px">Check-in: </Col>
                   <Col flex="auto">
-                    {dateTime.formatTime(row?.checkin_original)}
+                    {handleDateTime.checkInvalidTime(row?.checkin_original)}
                   </Col>
                 </div>
+
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Check-out: </Col>
+                  <Col flex="160px">Check-out: </Col>
                   <Col flex="auto">
-                    {dateTime.formatTime(row?.checkout_original)}
+                    {handleDateTime.checkInvalidTime(row?.checkout_original)}
                   </Col>
                 </div>
               </Row>
               <Row>
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Request OT: </Col>
-                  <Col flex="auto">
+                  <Col flex="160px">Request OT: </Col>
+                  <Col flex="auto" style={{ position: 'relative' }}>
                     <Controller
                       name="timeRequestOT"
                       control={control}
@@ -210,23 +222,23 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                         </>
                       )}
                     />
-                  </Col>
-                  <Col flex="100%">
-                    {errorTimeOT && (
-                      <span className={styles.errorField}>
-                        OT time must be less Actual Overtime
-                      </span>
-                    )}
-                    {errors.timeRequestOT && (
-                      <span className={styles.errorField}>
-                        {errors.timeRequestOT?.message}
-                      </span>
-                    )}
+                    <div style={{ position: 'absolute', top: '100%', left: 0 }}>
+                      {errors.timeRequestOT && (
+                        <div className={styles.errorField}>
+                          {errors.timeRequestOT?.message}
+                        </div>
+                      )}
+                      {errorTimeOT && (
+                        <div className={styles.errorField}>
+                          Must be less Actual Overtime
+                        </div>
+                      )}
+                    </div>
                   </Col>
                 </div>
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Actual Overtime: </Col>
-                  <Col flex="auto">{actualOvertime}</Col>
+                  <Col flex="160px">Actual Overtime: </Col>
+                  <Col flex="auto">{row.ot_time || '--:--'}</Col>
                 </div>
               </Row>
               <Row>
@@ -240,7 +252,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                   </span>
                 </Col>
                 <Col flex="100%">
-                  <p>
+                  <p style={{ fontStyle: 'oblique' }}>
                     Ví dụ ca làm việc từ 08:00 AM đến 17:00 PM, thì thời gian
                     được bắt đầu tính OT là 18:00 PM
                   </p>
@@ -255,21 +267,23 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px" style={{ marginBottom: '10px' }}>
+                <Col xl={4} style={{ marginBottom: '10px' }}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="100%">
+                <Col xl={20}>
                   <Controller
                     name="reasonInput"
                     control={control}
                     render={({ field }) => (
                       <>
                         <Input.TextArea
+                          showCount
+                          maxLength={100}
+                          placeholder="Please enter not too 100 characters"
                           rows={4}
                           disabled={handleField.disableField(request.status)}
                           {...field}
                           autoSize={{ minRows: 5, maxRows: 5 }}
-                          style={{ border: ' black 1px solid' }}
                         />
                         {errors.reasonInput && (
                           <span className={styles.errorField}>
@@ -281,6 +295,47 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                   />
                 </Col>
               </Row>
+              {request.status !== 0 && request.status && (
+                <>
+                  <Row>
+                    <Col xl={4}>Status:</Col>
+                    <Col xl={20}>
+                      <strong
+                        style={{
+                          color: checkRequestStatusColorText(request.status),
+                        }}
+                      >
+                        {checkRequestStatus(request.status).toUpperCase()}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <>
+                      <Col xl={4}>
+                        {checkRequestManager(
+                          request.manager_confirmed_status,
+                          request.admin_approved_status,
+                        )}
+                      </Col>
+                      <Col xl={20}>
+                        <p
+                          style={{
+                            color: checkRequestStatusColorText(request.status),
+                          }}
+                        >
+                          {checkRequestComment(
+                            request.status,
+                            request.manager_confirmed_comment,
+                            request.admin_approved_comment,
+                            request.manager_confirmed_status,
+                            request.admin_approved_status,
+                          )}
+                        </p>
+                      </Col>
+                    </>
+                  </Row>
+                </>
+              )}
             </>
           )}
         </form>

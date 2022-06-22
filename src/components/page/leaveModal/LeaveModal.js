@@ -18,8 +18,16 @@ import {
   endPoint,
   messageRequest,
   requestSlice,
+  checkRequest,
 } from '../../index'
 import styles from './LeaveModal.module.scss'
+
+const {
+  checkRequestStatus,
+  checkRequestStatusColorText,
+  checkRequestComment,
+  checkRequestManager,
+} = checkRequest
 
 const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -28,12 +36,8 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
 
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
-
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     rangeInput: yup.array().when('checkboxLeaveAllDay', {
       is: (value) => {
         return (value || []).length === 0
@@ -98,14 +102,14 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
     switch (buttonSubmit) {
       case 'REGISTER':
         const newRequest = {
-          check_in: dateTime.formatTime(row.checkin_original),
-          check_out: dateTime.formatTime(row.checkout_original),
           request_type:
             values.radioPaid == 'paid'
               ? typeRequest.REQUEST_LEAVE_PAID
               : values.radioPaid == 'unpaid'
               ? typeRequest.REQUEST_LEAVE_UNPAID
               : '',
+          check_in: dateTime.formatTime(row.checkin || row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout || row.checkout_original),
           request_for_date: row.work_date,
           leave_start: leaveAllDayCheck ? '' : dateTime.formatTime(leaveStart),
           leave_end: leaveAllDayCheck ? '' : dateTime.formatTime(leaveEnd),
@@ -138,8 +142,8 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
               ? typeRequest.REQUEST_LEAVE_UNPAID
               : '',
           request_for_date: row.work_date,
-          check_in: dateTime.formatTime(row.checkin_original),
-          check_out: dateTime.formatTime(row.checkout_original),
+          check_in: dateTime.formatTime(row.checkin || row.checkin_original),
+          check_out: dateTime.formatTime(row.checkout || row.checkout_original),
           leave_start: leaveAllDayCheck ? '' : dateTime.formatTime(leaveStart),
           leave_end: leaveAllDayCheck ? '' : dateTime.formatTime(leaveEnd),
           leave_time: leaveAllDayCheck ? '' : timeCount,
@@ -225,16 +229,16 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
             <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
-              {requestExists && (
-                <Row>
-                  <Col xl={4} md={6} xs={6}>
-                    Registration date:
-                  </Col>
-                  <Col xl={20} md={18} xs={18}>
-                    {dateTime.formatDateTime(request?.create_at)}
-                  </Col>
-                </Row>
-              )}
+              <Row>
+                <Col xl={4} md={6} xs={6}>
+                  Registration date:
+                </Col>
+                <Col xl={20} md={18} xs={18}>
+                  {request?.created_at
+                    ? dateTime.formatDateTime(request?.create_at)
+                    : ''}
+                </Col>
+              </Row>
               <Row>
                 <Col xl={4} md={6} xs={6}>
                   Register for date:
@@ -249,7 +253,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     Check-in:
                   </Col>
                   <Col xl={12} md={12} xs={12}>
-                    {dateTime.formatTime(row?.checkin_original)}
+                    {handleDateTime.checkInvalidTime(
+                      row?.checkin || row?.checkin_original,
+                    )}
                   </Col>
                 </Col>
                 <Col xl={8} md={6} xs={12} className={styles.dFlex}>
@@ -257,7 +263,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     Check-out:
                   </Col>
                   <Col xl={12} md={12} xs={12}>
-                    {dateTime.formatTime(row?.checkout_original)}
+                    {handleDateTime.checkInvalidTime(
+                      row?.checkout || row?.checkin_original,
+                    )}
                   </Col>
                 </Col>
               </Row>
@@ -267,7 +275,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     Work time:
                   </Col>
                   <Col xl={12} md={12} xs={12}>
-                    {row?.work_time}
+                    {handleDateTime.checkInvalid(row?.work_time)}
                   </Col>
                 </Col>
                 <Col xl={8} md={6} xs={12} className={styles.dFlex}>
@@ -275,7 +283,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     Lack time:
                   </Col>
                   <Col xl={12} md={12} xs={12}>
-                    {row?.lack_time}
+                    {handleDateTime.checkInvalid(row?.lack)}
                   </Col>
                 </Col>
               </Row>
@@ -377,7 +385,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                             <span
                               style={handleDateTime.compareTime(
                                 timeCount,
-                                row.lack_time,
+                                row?.lack,
                               )}
                             >
                               {!leaveAllDayCheck && <span> {timeCount}</span>}
@@ -400,6 +408,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     render={({ field }) => (
                       <>
                         <Input.TextArea
+                          showCount
+                          maxLength={100}
+                          placeholder="Please enter not too 100 characters"
                           autoSize={{ minRows: 5, maxRows: 5 }}
                           disabled={handleField.disableField(request.status)}
                           {...field}
@@ -414,6 +425,47 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                   />
                 </Col>
               </Row>
+              {request.status !== 0 && request.status && (
+                <>
+                  <Row>
+                    <Col xl={4}>Status:</Col>
+                    <Col xl={20}>
+                      <strong
+                        style={{
+                          color: checkRequestStatusColorText(request.status),
+                        }}
+                      >
+                        {checkRequestStatus(request.status).toUpperCase()}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <>
+                      <Col xl={4}>
+                        {checkRequestManager(
+                          request.manager_confirmed_status,
+                          request.admin_approved_status,
+                        )}
+                      </Col>
+                      <Col xl={20}>
+                        <p
+                          style={{
+                            color: checkRequestStatusColorText(request.status),
+                          }}
+                        >
+                          {checkRequestComment(
+                            request.status,
+                            request.manager_confirmed_comment,
+                            request.admin_approved_comment,
+                            request.manager_confirmed_status,
+                            request.admin_approved_status,
+                          )}
+                        </p>
+                      </Col>
+                    </>
+                  </Row>
+                </>
+              )}
             </>
           )}
         </form>

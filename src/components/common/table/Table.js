@@ -15,9 +15,13 @@ const CommonTable = ({
   styleBody,
   className,
   title,
+  onRow,
+  width,
+  loading,
 }) => {
   const [dataSource, setDataSource] = useState(null)
   const [columnS, setColumnS] = useState(null)
+
   useEffect(() => {
     const DATAVALID = data
     const REMOVEKEY = remove
@@ -114,6 +118,16 @@ const CommonTable = ({
       })
     }
 
+    if (width) {
+      const key = Object.keys(width)
+      COLUMNS.map((item) => {
+        if (key.includes(item.key)) {
+          item.width = width[item.key]
+          return item
+        }
+      })
+    }
+
     setColumnS(COLUMNS)
     setDataSource(() => {
       return DATAVALID.map((item, index) => {
@@ -125,9 +139,19 @@ const CommonTable = ({
   if ((data || []).length === 0 && columns.length === 0) {
     return null
   }
+
   return (
     <>
       <Table
+        loading={loading ? loading : false}
+        bordered={true}
+        onRow={
+          onRow
+            ? onRow
+            : () => {
+                return null
+              }
+        }
         title={
           title
             ? title
@@ -135,7 +159,7 @@ const CommonTable = ({
                 return null
               }
         }
-        className={className ? className : ''}
+        className={className ? `${className} tableContainer` : 'tableContainer'}
         pagination={
           pagination
             ? {
@@ -143,14 +167,30 @@ const CommonTable = ({
                 position: ['bottomCenter'],
                 showTotal: pagination?.showTotal
                   ? pagination?.showTotal
-                  : (total) => `Total Number of ${total} records`,
+                  : (total) => {
+                      return (
+                        <>
+                          Total number of records: <span>{total}</span>
+                        </>
+                      )
+                    },
+                showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
             : {
                 pageSize: page ? page : 10,
                 position: ['bottomCenter'],
                 showTotal: pagination?.showTotal
                   ? pagination?.showTotal
-                  : (total) => `Total Number of ${total} records`,
+                  : (total) => {
+                      return (
+                        <>
+                          Total number of records: <span>{total}</span>
+                        </>
+                      )
+                    },
+                showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
         }
         columns={columnS}
@@ -180,5 +220,8 @@ CommonTable.propTypes = {
   styleBody: PropTypes.object,
   className: PropTypes.string,
   title: PropTypes.func,
+  onRow: PropTypes.func,
+  width: PropTypes.object,
+  loading: PropTypes.bool,
 }
 export default CommonTable

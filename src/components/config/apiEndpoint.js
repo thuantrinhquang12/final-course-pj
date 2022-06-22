@@ -17,3 +17,9 @@ export const GET_REQUEST_LATE_EARLY_OF_DAY = 'register-late-early/show'
 export const POST_REQUEST_LATE_EARLY = 'register-late-early/store'
 export const PUT_REQUEST_LATE_EARLY = 'register-late-early/update/'
 export const DELETE_REQUEST_LATE_EARLY = 'register-late-early/delete/'
+
+export const GET_REQUEST_MANAGER = 'request/sent'
+export const PUT_REQUEST_MANAGER = 'request/confirm/'
+
+export const GET_REQUEST_ADMIN = 'admin/request/get'
+export const PUT_REQUEST_ADMIN = 'admin/request/approve/'

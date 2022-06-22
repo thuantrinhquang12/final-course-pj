@@ -1,6 +1,12 @@
 /* eslint-disable object-curly-spacing */
+import {
+  DoubleLeftOutlined,
+  LeftOutlined,
+  DoubleRightOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Modal } from 'antd'
+import { Row, Col, Modal, Button } from 'antd'
 import styles from './Index.module.scss'
 import './Index.scss'
 import { dateTime, CMTable } from '../../../index'
@@ -10,12 +16,9 @@ import { saveAs } from 'file-saver'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
+  const [heightTable, setHeightTable] = useState(0)
   const stateNotice = useSelector((state) => {
     return state.noticeList
-  })
-
-  const stateUser = useSelector((state) => {
-    return state.userInfo.currentUser.data
   })
 
   const dispatch = useDispatch()
@@ -23,88 +26,107 @@ const Index = () => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
   }, [])
 
+  useEffect(() => {
+    const header = document.querySelector('#Header_TimeSheet')
+    const homeTable = document.querySelector('#HomeTable')
+    const screenHeight = screen.height
+    const HEIGHT = screenHeight - header.getBoundingClientRect().height - 160
+    homeTable.style.height = HEIGHT + 'px'
+    homeTable.style.maxHeight = HEIGHT + 'px'
+    setHeightTable(HEIGHT - 270)
+  }, [])
+
   const columns = [
     {
-      title: <p className={styles.BlackColor}>No</p>,
+      title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload, recored) => {
-        return <p>{recored.key}</p>
-      },
-    },
-    {
-      title: <p className={styles.BlackColor}>Subject</p>,
-      dataIndex: 'subject',
-      key: 'subject',
-      render: (payload) => {
-        return <p>{payload}</p>
-      },
-    },
-    {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>Author</p>
-      ),
-      dataIndex: 'created_by',
-      key: 'created_by',
-      render: (payload) => {
-        return <p className={styles.tableHeader}>{payload}</p>
-      },
-    },
-    {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          Department
-        </p>
-      ),
-      dataIndex: 'published_to',
-      key: 'published_to',
-      render: (payload) => {
-        return <p className={styles.tableHeader}>{payload[0].division_name}</p>
-      },
-    },
-    {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          Published Date
-        </p>
-      ),
-      dataIndex: 'published_date',
-      key: 'published_date',
-      render: (payload) => {
-        const DATE = dateTime.formatDateTimes(new Date(payload))
-        return <p className={styles.tableHeader}>{DATE}</p>
-      },
-    },
-    {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          Attachment
-        </p>
-      ),
-      dataIndex: 'attachment',
-      key: 'attachment',
-      render: (payload) => {
-        const string =
-          payload && payload.length > 50 ? payload.slice(0, 50) : payload
+      render: (payload, record) => {
         return (
-          <a href={`${payload}`} target="_blank" rel="noopener noreferrer">
-            {`${string}...`}
-          </a>
+          <p className="resetMargin">
+            <> {(stateNotice.page - 1) * 10 + Number(record.key)}</>
+          </p>
         )
       },
     },
     {
-      title: <p className={styles.whiteColor}>Detail</p>,
+      title: <h4>SUBJECT</h4>,
+      dataIndex: 'subject',
+      key: 'subject',
+      render: (payload) => {
+        return <div className="resetMargin">{payload}</div>
+      },
+    },
+    {
+      title: <h4>AUTHOR</h4>,
+      dataIndex: 'created_by',
+      key: 'created_by',
+      render: (payload) => {
+        return <div className="resetMargin">{payload}</div>
+      },
+    },
+    {
+      title: <h4>TO DEPARTMENT</h4>,
+      dataIndex: 'published_to',
+      key: 'published_to',
+      render: (payload) => {
+        const department = Array.isArray(payload)
+          ? payload[0].division_name
+          : 'ALL'
+        return <div className="resetMargin tb_center">{department}</div>
+      },
+    },
+    {
+      title: <h4>PUBLISHED DATE</h4>,
+      dataIndex: 'published_date',
+      key: 'published_date',
+      render: (payload) => {
+        const DATE = dateTime.formatDateTimes(new Date(payload))
+        return <div className="resetMargin">{DATE}</div>
+      },
+    },
+    {
+      title: <h4>ATTACHMENT</h4>,
+      dataIndex: 'attachment',
+      key: 'attachment',
+      render: (payload, recored) => {
+        const redirect = () => {
+          const indexofDot = payload.lastIndexOf('.')
+          const pathFile = payload.slice(indexofDot, payload.length)
+          if (pathFile === '.zip' || pathFile === '.rar') {
+            saveAs(`${payload}`, `${payload}`)
+          } else {
+            window.open(payload)
+          }
+        }
+        let nameFile = payload
+        if (payload) {
+          const indexName = payload.lastIndexOf('/')
+          nameFile = payload.slice(indexName + 1, payload.length)
+        }
+
+        return (
+          <div
+            className="textOverflow colorBlue resetMargin"
+            onClick={redirect}
+          >
+            {nameFile}
+          </div>
+        )
+      },
+    },
+    {
+      title: <h4>DETAIL</h4>,
       dataIndex: 'detail',
       key: 'detail',
       render: (payload, record) => {
         return (
-          <p
-            className="tb_center"
+          <div
+            className="tb_center colorBlue resetMargin"
             onClick={() => setModal({ open: true, data: record })}
           >
-            View
-          </p>
+            view
+          </div>
         )
       },
     },
@@ -115,19 +137,12 @@ const Index = () => {
   }
 
   const itemRender = (_, type, originalElement) => {
-    const style = {
-      width: 30,
-      height: 33,
-      marginLeft: 10,
-      borderWidth: 1,
-      borderStyle: 'solid',
-      borderColor: `#7d7d81`,
-      borderRadius: 5,
-    }
     if (type === 'prev') {
       return (
         <>
-          <button
+          <Button
+            icon={<DoubleLeftOutlined />}
+            disabled={stateNotice.currentPage === 1}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -137,13 +152,13 @@ const Index = () => {
                 }),
               )
             }}
-            style={style}
-          >
-            <i className="fa-solid fa-angles-left"></i>
-          </button>
-          <button style={style}>
-            <i className="fa-solid fa-angle-left"></i>
-          </button>
+            className="ant-pagination-item"
+          ></Button>
+          <Button
+            className="ant-pagination-item"
+            disabled={stateNotice.currentPage === 1}
+            icon={<LeftOutlined />}
+          ></Button>
         </>
       )
     }
@@ -151,10 +166,14 @@ const Index = () => {
     if (type === 'next') {
       return (
         <>
-          <button style={style}>
-            <i className="fa-solid fa-angle-right"></i>
-          </button>
-          <button
+          <Button
+            className="ant-pagination-item"
+            disabled={stateNotice.currentPage === stateNotice.lastPage}
+            icon={<RightOutlined />}
+          ></Button>
+          <Button
+            disabled={stateNotice.currentPage === stateNotice.lastPage}
+            icon={<DoubleRightOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -164,10 +183,8 @@ const Index = () => {
                 }),
               )
             }}
-            style={style}
-          >
-            <i className="fa-solid fa-angles-right"></i>
-          </button>
+            className="ant-pagination-item"
+          ></Button>
         </>
       )
     }
@@ -180,40 +197,64 @@ const Index = () => {
   }
 
   return (
-    <div className={styles.Home}>
+    <div className={styles.Home} id="HomeTable">
       <Row
         style={{
           height: '100%',
           display: 'flex',
           justifyContent: 'center',
-          padding: '50px 0',
           borderRadius: 5,
-          overflow: 'hidden',
         }}
       >
-        <Col xs={24} md={20} xl={20}>
+        <Col xs={24} md={22} xl={24}>
           <CMTable
-            title={(data) => {
-              return <h1>Official Notice</h1>
+            title={() => {
+              return (
+                <>
+                  <h2>Official Notice</h2>
+                </>
+              )
             }}
-            // pagination={{ pageSize: page }}
+            loading={stateNotice.loading}
             className="tableNotice"
             data={stateNotice.tableData}
-            // remove={['published_to']}
+            width={{
+              id: '4%',
+              attachment: '15%',
+              created_by: '12%',
+              published_to: '9%',
+              published_date: '10%',
+              detail: '5%',
+              subject: '20%',
+            }}
             columns={columns}
             sorter={{ published_date: 'date' }}
             scroll={{
               x: 1000,
-              y: 350,
+              y: heightTable,
             }}
             styleHead={{
-              id: { position: 'tb_start' },
+              id: { position: 'tb_center' },
               subject: { position: 'tb_start' },
               created_by: { position: 'tb_center' },
-              published_date: { position: 'tb_center' },
+              published_date: {
+                position: 'tb_center',
+                className: 'whiteColor',
+              },
+              published_to: {
+                position: 'tb_center',
+                className: 'whiteColor',
+              },
+              attachment: { position: 'tb_start' },
               detail: { position: 'tb_center' },
             }}
-            // styleBody={{ detail: { position: 'tb_center' } }}
+            styleBody={{
+              subject: { className: 'textOverflow' },
+              created_by: { position: 'tb_center' },
+              published_date: {
+                position: 'tb_center',
+              },
+            }}
             pagination={{
               current: stateNotice.currentPage,
               total: stateNotice.total,
@@ -226,8 +267,9 @@ const Index = () => {
       </Row>
       <Modal
         wrapClassName="modalNotice"
-        title="Notice Detail"
+        title={<h2>Notice Detail</h2>}
         visible={modal.open}
+        width={1000}
         onCancel={() =>
           setModal((prev) => {
             return { ...prev, open: false }
@@ -242,13 +284,19 @@ const Index = () => {
             style={{ display: 'flex', borderBottom: '2px solid #ab9f9f' }}
           >
             <Col xs={12} md={12} xl={12}>
-              <h3 style={{ marginBottom: '20px' }}>User Member</h3>
+              <h3
+                style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
+              >
+                Author
+              </h3>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
                   <i className="fa-solid fa-user"></i>
                   <div className="formGroupText">
-                    <p>Name:</p>
-                    <p>{stateUser?.full_name ? stateUser.full_name : ''}</p>
+                    <p>Name: &nbsp;</p>
+                    <p>
+                      {modal?.data?.created_by ? modal?.data?.created_by : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
@@ -256,17 +304,25 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
-                    <p>Email:</p>
-                    <p>{stateUser?.email ? stateUser.email : ''}</p>
+                    <p>Email: &nbsp;</p>
+                    <p>
+                      {modal?.data?.author_email
+                        ? modal?.data?.author_email
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
-                  <i className="fa-solid fa-user"></i>
+                  <i className="fa-solid fa-envelope"></i>
                   <div className="formGroupText">
-                    <p>Nick name:</p>
-                    <p>{stateUser?.nick_name ? stateUser.nick_name : ''}</p>
+                    <p>Other Email: &nbsp;</p>
+                    <p>
+                      {modal?.data?.author_other_email
+                        ? modal?.data?.author_other_email
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
@@ -274,22 +330,31 @@ const Index = () => {
                 <div className="formGroup">
                   <i className="fa-solid fa-phone"></i>
                   <div className="formGroupText">
-                    <p>Phone:</p>
-                    <p>{stateUser?.phone ? stateUser.phone : ''}</p>
+                    <p>Phone: &nbsp;</p>
+                    <p>
+                      {modal?.data?.author_phone
+                        ? modal?.data?.author_phone
+                        : ''}
+                    </p>
                   </div>
                 </div>
               </Col>
             </Col>
             <Col xs={12} md={12} xl={12}>
-              <h3 style={{ marginBottom: '20px' }}>To Department</h3>
+              <h3
+                style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
+              >
+                To Department &nbsp;
+              </h3>
               <Col xs={24} md={24} xl={24}>
                 <div className="formGroup">
                   <i className="fa-solid fa-building"></i>
                   <div className="formGroupText">
-                    <p>To department:</p>
+                    <p>To department: &nbsp;</p>
                     <p>
-                      {modal.data.published_to &&
-                        modal.data.published_to[0].division_name}
+                      {Array.isArray(modal?.data?.published_to)
+                        ? modal?.data?.published_to[0].division_name
+                        : 'ALL'}
                     </p>
                   </div>
                 </div>
@@ -308,23 +373,36 @@ const Index = () => {
         </Row>
         <Row>
           <Col xs={24} md={24} xl={24}>
-            <h3 style={{ marginBottom: '20px' }}>Detail</h3>
+            <h3 style={{ margin: '20px 0', color: 'black', fontSize: 20 }}>
+              Detail
+            </h3>
           </Col>
           <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>Subject: {modal?.data?.subject}</p>
+            <p style={{ fontWeight: 600 }}>
+              <span style={{ fontWeight: 700, fontSize: 16 }}>Subject: </span>
+              {modal?.data?.subject}
+            </p>
           </Col>
           <Col xs={24} md={24} xl={24}>
             <p
+              className="colorBlue"
               style={{ fontWeight: 600 }}
               onClick={() => {
                 saveAs(`${modal.data.attachment}`, `${modal.data.attachment}`)
               }}
             >
-              Attachment: {modal?.data?.attachment}
+              <span style={{ fontWeight: 700, color: 'black' }}>
+                {' '}
+                Attachment:{' '}
+              </span>
+              {modal?.data?.attachment}
             </p>
           </Col>
           <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>Message: {modal?.data?.message}</p>
+            <p style={{ fontWeight: 600 }}>
+              <span style={{ fontWeight: 700 }}>Message: </span>
+              {modal?.data?.message}
+            </p>
           </Col>
         </Row>
       </Modal>

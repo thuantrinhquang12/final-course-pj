@@ -2,16 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import reducerRegistry from '../../../store/reducerRegister'
 import { get, post, put, del } from '../../service/requestApi'
 
-export const getRequests = createAsyncThunk(
-  'requests/getRequests',
-  async (id) => {
-    if (id === -1) {
-      return {}
-    }
-    return await get(`requests/${id}`)
-  },
-)
-
 export const getRequestsOfDay = createAsyncThunk(
   'requests/getRequestsOfDay',
   async (data) => {
@@ -68,7 +58,7 @@ const requestsSlice = createSlice({
     [getRequestsOfDay.rejected]: (state) => {
       state.status = 'failed'
     },
-    [postRequests.pending]: (state) => {
+    [postRequests.pending]: (state, action) => {
       state.status = 'loadingRegister'
     },
     [postRequests.fulfilled]: (state) => {

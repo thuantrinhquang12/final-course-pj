@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { TimePicker, Input, Checkbox, Row, Col, Skeleton } from 'antd'
+
 import {
   DialogRequest,
   dateTime,
@@ -17,9 +18,17 @@ import {
   messageRequest,
   endPoint,
   requestSlice,
+  checkRequest,
 } from '../../index'
 import { getErrorCount, setErrorCount } from './handleErrorCount'
 import styles from './ForgetModal.module.scss'
+
+const {
+  checkRequestStatus,
+  checkRequestStatusColorText,
+  checkRequestComment,
+  checkRequestManager,
+} = checkRequest
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -28,10 +37,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
@@ -166,23 +172,23 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
             <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
-              {requestExists && (
-                <Row>
-                  <Col flex="150px">Registration date: </Col>
-                  <Col flex="auto">
-                    {dateTime.formatDateTime(request?.create_at)}
-                  </Col>
-                </Row>
-              )}
               <Row>
-                <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">{row.work_date}</Col>
+                <Col xl={4}>Registration date: </Col>
+                <Col xl={20}>
+                  {request?.created_at
+                    ? dateTime.formatDateTime(request?.create_at)
+                    : ''}
+                </Col>
               </Row>
               <Row>
-                <Col flex="150px">
+                <Col xl={4}>Register for date: </Col>
+                <Col xl={20}>{row.work_date}</Col>
+              </Row>
+              <Row>
+                <Col xl={4} className={styles.dFlex}>
                   Check-in: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="auto">
+                <Col xl={20}>
                   <Controller
                     name="checkInTime"
                     control={control}
@@ -212,10 +218,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">
+                <Col xl={4} className={styles.dFlex}>
                   Check-out: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="auto">
+                <Col xl={20}>
                   <Controller
                     name="checkOutTime"
                     control={control}
@@ -241,8 +247,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">Special reason: </Col>
-                <Col flex="auto">
+                <Col xl={4}>Special reason: </Col>
+                <Col xl={20}>
                   <Controller
                     name="specialReason"
                     control={control}
@@ -265,16 +271,19 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px" style={{ marginBottom: '10px' }}>
+                <Col xl={4} style={{ marginBottom: '10px' }}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="100%">
+                <Col xl={20}>
                   <Controller
                     name="reasonInput"
                     control={control}
                     render={({ field }) => (
                       <>
                         <Input.TextArea
+                          showCount
+                          maxLength={100}
+                          placeholder="Please enter not too 100 characters"
                           autoSize={{ minRows: 5, maxRows: 5 }}
                           disabled={handleField.disableField(request.status)}
                           {...field}
@@ -289,6 +298,47 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   />
                 </Col>
               </Row>
+              {request.status !== 0 && request.status && (
+                <>
+                  <Row>
+                    <Col xl={4}>Status:</Col>
+                    <Col xl={20}>
+                      <strong
+                        style={{
+                          color: checkRequestStatusColorText(request.status),
+                        }}
+                      >
+                        {checkRequestStatus(request.status).toUpperCase()}
+                      </strong>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <>
+                      <Col xl={4}>
+                        {checkRequestManager(
+                          request.manager_confirmed_status,
+                          request.admin_approved_status,
+                        )}
+                      </Col>
+                      <Col xl={20}>
+                        <p
+                          style={{
+                            color: checkRequestStatusColorText(request.status),
+                          }}
+                        >
+                          {checkRequestComment(
+                            request.status,
+                            request.manager_confirmed_comment,
+                            request.admin_approved_comment,
+                            request.manager_confirmed_status,
+                            request.admin_approved_status,
+                          )}
+                        </p>
+                      </Col>
+                    </>
+                  </Row>
+                </>
+              )}
             </>
           )}
         </form>

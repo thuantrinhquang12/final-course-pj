@@ -1,39 +1,21 @@
 .tableNotice {
-  .ant-table-title {
-    background-color: white;
-  }
-  .ant-table-thead {
-    th {
-      background-color: #c9cccf;
-
-      &.ant-table-column-has-sorters {
-        &:hover {
-          background-color: #c9cccf;
-        }
-      }
-    }
-  }
-
-  .ant-table-tbody {
-    tr {
-      &:hover {
-        td {
-          background-color: #e5e2e2;
-        }
-      }
-      &:nth-child(even) {
-        // background-color: #a8a0a0;
-      }
-    }
-  }
+  width: 90%;
+  margin: auto;
+  padding-top: 50px;
 }
 
 .modalNotice {
+  .colorBlue {
+    color: #2892ff;
+    cursor: pointer;
+  }
   .ant-modal-header {
-    background-color: #0599ef;
+    background-color: #104382;
 
     .ant-modal-title {
-      color: white;
+      h2 {
+        color: white;
+      }
     }
   }
 
