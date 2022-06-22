@@ -122,7 +122,6 @@ const CommonTable = ({
       const key = Object.keys(width)
       COLUMNS.map((item) => {
         if (key.includes(item.key)) {
-          // console.log('co roi', item, width[item.key])
           item.width = width[item.key]
           return item
         }
@@ -175,6 +174,7 @@ const CommonTable = ({
                       )
                     },
                 showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
             : {
                 pageSize: page ? page : 10,
@@ -189,6 +189,7 @@ const CommonTable = ({
                       )
                     },
                 showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
         }
         columns={columnS}

@@ -1,6 +1,5 @@
-import { Avatar } from 'antd'
-import 'antd/dist/antd.min.css'
 import React from 'react'
+import { Avatar } from 'antd'
 import { useState } from 'react'
 import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'

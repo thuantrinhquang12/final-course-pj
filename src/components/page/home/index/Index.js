@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
-  // const [heightTable, setHeightTable] = useState(0)
+  const [heightTable, setHeightTable] = useState(0)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
@@ -20,109 +20,100 @@ const Index = () => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
   }, [])
 
-  // useEffect(() => {
-  //   const Screen = screen.height
-  //   const Header = document.querySelector('#Header').offsetHeight
-  //   const HomeTable = document.querySelector('#HomeTable')
-  //   ;(HomeTable.style.height = `${Screen - Header}px`),
-  //     setHeightTable(HomeTable.offsetHeight - 450)
-  // }, [])
+  useEffect(() => {
+    const header = document.querySelector('#Header_TimeSheet')
+    const homeTable = document.querySelector('#HomeTable')
+    const screenHeight = screen.height
+    const HEIGHT = screenHeight - header.getBoundingClientRect().height - 160
+    homeTable.style.height = HEIGHT + 'px'
+    homeTable.style.maxHeight = HEIGHT + 'px'
+    setHeightTable(HEIGHT - 270)
+  }, [])
 
   const columns = [
     {
-      title: <p className={styles.whiteColor}>NO</p>,
+      title: <p>NO</p>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
         return (
-          <p className="tb_center">
-            {(stateNotice.page - 1) * 10 + Number(recored.key)}
+          <p className="resetMargin">
+            <> {(stateNotice.page - 1) * 10 + Number(recored.key)}</>
           </p>
         )
       },
     },
     {
-      title: <p className={styles.whiteColor}>SUBJECT</p>,
+      title: <p>SUBJECT</p>,
       dataIndex: 'subject',
       key: 'subject',
-      width: '20%',
       render: (payload) => {
-        return <p className="textOverFlow">{payload}</p>
+        return <p className="textOverFlow resetMargin">{payload}</p>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>AUTHOR</p>
-      ),
+      title: <p>AUTHOR</p>,
       dataIndex: 'created_by',
       key: 'created_by',
       render: (payload) => {
-        return <p className={styles.tableHeader}>{payload}</p>
+        return <p className="resetMargin">{payload}</p>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          TO DEPARTMENT
-        </p>
-      ),
+      title: <p>TO DEPARTMENT</p>,
       dataIndex: 'published_to',
       key: 'published_to',
       render: (payload) => {
         const department = Array.isArray(payload)
           ? payload[0].division_name
           : 'ALL'
-        return <p className={styles.tableHeader}>{department}</p>
+        return <p className="resetMargin">{department}</p>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          PUBLISHED DATE
-        </p>
-      ),
+      title: <p>PUBLISHED DATE</p>,
       dataIndex: 'published_date',
       key: 'published_date',
       render: (payload) => {
         const DATE = dateTime.formatDateTimes(new Date(payload))
-        return <p className={styles.tableHeader}>{DATE}</p>
+        return <p className="resetMargin">{DATE}</p>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          ATTACHMENT
-        </p>
-      ),
+      title: <p>ATTACHMENT</p>,
       dataIndex: 'attachment',
       key: 'attachment',
-      render: (payload) => {
-        const test = () => {
+      render: (payload, recored) => {
+        const redirect = () => {
           const indexofDot = payload.lastIndexOf('.')
           const pathFile = payload.slice(indexofDot, payload.length)
-          console.log('payload', payload)
           if (pathFile === '.zip' || pathFile === '.rar') {
             saveAs(`${payload}`, `${payload}`)
-            return null
+          } else {
+            window.open(payload)
           }
+        }
+        let nameFile = payload
+        if (payload) {
+          const indexName = payload.lastIndexOf('/')
+          nameFile = payload.slice(indexName + 1, payload.length)
         }
 
         return (
-          <p className="textOverFlow colorBlue" onClick={test}>
-            {payload}
+          <p className="textOverFlow colorBlue resetMargin" onClick={redirect}>
+            {nameFile}
           </p>
         )
       },
     },
     {
-      title: <p className={styles.whiteColor}>Detail</p>,
+      title: <p>DETAIL</p>,
       dataIndex: 'detail',
       key: 'detail',
-      width: '10%',
       render: (payload, record) => {
         return (
           <p
-            className="tb_center colorBlue"
+            className="tb_center colorBlue resetMargin"
             onClick={() => setModal({ open: true, data: record })}
           >
             view
@@ -155,7 +146,7 @@ const Index = () => {
             }}
             className="ant-pagination-item"
           >
-            <i className="fa-solid fa-angles-left"></i>
+            <i className="fa-solid fa-angles-left" />
           </button>
           <button
             className="ant-pagination-item"
@@ -163,7 +154,7 @@ const Index = () => {
               stateNotice.currentPage === 1 ? { cursor: 'not-allowed' } : {}
             }
           >
-            <i className="fa-solid fa-angle-left"></i>
+            <i className="fa-solid fa-angle-left" />
           </button>
         </>
       )
@@ -180,7 +171,7 @@ const Index = () => {
                 : {}
             }
           >
-            <i className="fa-solid fa-angle-right"></i>
+            <i className="fa-solid fa-angle-right" />
           </button>
           <button
             style={
@@ -199,7 +190,7 @@ const Index = () => {
             }}
             className="ant-pagination-item"
           >
-            <i className="fa-solid fa-angles-right"></i>
+            <i className="fa-solid fa-angles-right" />
           </button>
         </>
       )
@@ -219,7 +210,7 @@ const Index = () => {
           height: '100%',
           display: 'flex',
           justifyContent: 'center',
-          padding: '50px 0',
+          // padding: '50px 0',
           borderRadius: 5,
         }}
       >
@@ -235,22 +226,33 @@ const Index = () => {
             loading={stateNotice.loading}
             className="tableNotice"
             data={stateNotice.tableData}
-            // remove={['published_to']}
-            width={{ id: '5%' }}
+            width={{
+              id: '5%',
+              attachment: '30%',
+              detail: '7%',
+              subject: '20%',
+            }}
             columns={columns}
             sorter={{ published_date: 'date' }}
             scroll={{
               x: 1000,
-              y: 350,
+              y: heightTable,
             }}
             styleHead={{
-              id: { position: 'tb_start' },
-              subject: { position: 'tb_start' },
-              created_by: { position: 'tb_center' },
-              published_date: { position: 'tb_center' },
-              detail: { position: 'tb_center' },
+              id: { position: 'tb_center', className: 'whiteColor' },
+              subject: { position: 'tb_start', className: 'whiteColor' },
+              created_by: { position: 'tb_center', className: 'whiteColor' },
+              published_date: {
+                position: 'tb_center',
+                className: 'whiteColor',
+              },
+              published_to: {
+                position: 'tb_center',
+                className: 'whiteColor',
+              },
+              attachment: { position: 'tb_center', className: 'whiteColor' },
+              detail: { position: 'tb_center', className: 'whiteColor' },
             }}
-            // styleBody={{ detail: { position: 'tb_center' } }}
             pagination={{
               current: stateNotice.currentPage,
               total: stateNotice.total,
