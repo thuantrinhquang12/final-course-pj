@@ -16,7 +16,7 @@ const Index = () => {
               <h2
                 style={{
                   height: '100%',
-                  color: 'white',
+                  color: '#23466d',
                   marginLeft: '50px',
                   display: 'flex',
                   alignItems: 'center',

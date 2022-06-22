@@ -219,7 +219,9 @@ const Index = () => {
             title={() => {
               return (
                 <>
-                  <h1>Official Notice</h1>
+                  <h1 style={{ color: '#23466d', fontSize: '25px' }}>
+                    Official Notice
+                  </h1>
                 </>
               )
             }}
