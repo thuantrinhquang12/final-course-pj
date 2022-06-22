@@ -2,16 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import reducerRegistry from '../../../store/reducerRegister'
 import { get, post, put, del } from '../../service/requestApi'
 
-export const getRequests = createAsyncThunk(
-  'requests/getRequests',
-  async (id) => {
-    if (id === -1) {
-      return {}
-    }
-    return await get(`requests/${id}`)
-  },
-)
-
 export const getRequestsOfDay = createAsyncThunk(
   'requests/getRequestsOfDay',
   async (data) => {
@@ -45,8 +35,9 @@ export const putRequests = createAsyncThunk(
 
 export const deleteRequests = createAsyncThunk(
   'requests/deleteRequests',
-  async (id) => {
-    return await del(`requests/${id}`)
+  async (data) => {
+    const { url, id } = data
+    return await del(url + id)
   },
 )
 

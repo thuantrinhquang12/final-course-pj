@@ -5,6 +5,10 @@
   .requiredField {
     color: red;
   }
+  .errorField {
+    color: red;
+    margin-right: 10px;
+  }
 }
 
 @media (max-width: 768px) {

@@ -1,7 +1,8 @@
 import React from 'react'
 import styles from './Index.module.scss'
 import { Row, Col } from 'antd'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import { Dropdown, Menu } from 'antd'
 import {
@@ -19,7 +20,7 @@ const menu = (
     items={[
       {
         key: '1',
-        label: <a target="_blank">Create notice</a>,
+        label: <Link to={'/notification'}>Create notice</Link>,
         icon: <FormOutlined style={{ color: '#23466d', fontSize: '14px' }} />,
       },
       {
@@ -31,7 +32,7 @@ const menu = (
       },
       {
         key: '3',
-        label: <a target="_blank">List requests</a>,
+        label: <Link to={'/manager'}>List requests</Link>,
         icon: (
           <DatabaseOutlined style={{ color: '#23466d', fontSize: '14px' }} />
         ),
@@ -41,7 +42,7 @@ const menu = (
 )
 
 const Index = () => {
-  const data = useSelector((state) => state.userInfo?.currentUser?.role)
+  // const data = useSelector((state) => state.userInfo?.currentUser?.role)
   const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
   return (
     <div className={styles.ListItem}>
@@ -71,7 +72,7 @@ const Index = () => {
             <Col xs={24} md={7} xl={6} className={styles.column}>
               <Dropdown overlay={menu}>
                 <NavLink
-                  to={data || '/'}
+                  to={'/manager'}
                   className={styles.formGroup}
                   onClick={(e) => e.preventDefault()}
                 >
