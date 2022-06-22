@@ -125,7 +125,12 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.deleteRequests(request.id)),
+          dispatch(
+            requestSlice.deleteRequests({
+              url: endPoint.DELETE_REQUEST_FORGET,
+              id: request.id,
+            }),
+          ),
           messageRequest.DELETE,
           handleCloseModal,
         )

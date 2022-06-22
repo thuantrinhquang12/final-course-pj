@@ -45,8 +45,9 @@ export const putRequests = createAsyncThunk(
 
 export const deleteRequests = createAsyncThunk(
   'requests/deleteRequests',
-  async (id) => {
-    return await del(`requests/${id}`)
+  async (data) => {
+    const { url, id } = data
+    return await del(url + id)
   },
 )
 

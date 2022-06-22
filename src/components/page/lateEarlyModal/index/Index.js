@@ -145,7 +145,12 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.deleteRequests(request.id)),
+          dispatch(
+            requestSlice.deleteRequests({
+              url: endPoint.DELETE_REQUEST_LATE_EARLY,
+              id: request.id,
+            }),
+          ),
           messageRequest.DELETE,
           handleCloseModal,
         )

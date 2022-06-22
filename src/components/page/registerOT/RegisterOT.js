@@ -126,9 +126,14 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.deleteRequests(request.id)),
+          dispatch(
+            requestSlice.deleteRequests({
+              url: endPoint.DELETE_REQUEST_OT,
+              id: request.id,
+            }),
+          ),
           messageRequest.DELETE,
-          handleCloseOT,
+          handleCloseModal,
         )
         break
       default:

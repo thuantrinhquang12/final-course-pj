@@ -163,7 +163,12 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
         break
       case 'DELETE':
         await tryCatch.handleTryCatch(
-          dispatch(requestSlice.deleteRequests(request.id)),
+          dispatch(
+            requestSlice.deleteRequests({
+              url: endPoint.DELETE_REQUEST_LEAVE,
+              id: request.id,
+            }),
+          ),
           messageRequest.DELETE,
           handleCloseModal,
         )
