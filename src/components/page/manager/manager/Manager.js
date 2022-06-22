@@ -1,8 +1,15 @@
+/* eslint-disable  no-unused-vars */
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Tag, Button, Modal } from 'antd'
 import RequestDetail from '../requestDetail/RequestDetail'
 import { checkConfirm } from './checkConfirm'
+import { Tag, Button, Modal } from 'antd'
+import {
+  DoubleLeftOutlined,
+  LeftOutlined,
+  DoubleRightOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
 import {
   getRequests,
   putRequestsManager,
@@ -184,7 +191,7 @@ const Manager = () => {
 
   const columns = [
     {
-      title: <div>No</div>,
+      title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
       render: (_, record) => {
@@ -192,13 +199,13 @@ const Manager = () => {
       },
     },
     {
-      title: 'Member name',
+      title: <h4>MEMBER NAME</h4>,
       dataIndex: 'full_name',
       key: 'full_name',
     },
 
     {
-      title: 'Request type',
+      title: <h4>REQUEST TYPE</h4>,
       dataIndex: 'request_type',
       key: 'request_type',
       render: (type) => {
@@ -218,12 +225,12 @@ const Manager = () => {
       },
     },
     {
-      title: 'Reason',
+      title: <h4>REASON</h4>,
       dataIndex: 'reason',
       key: 'reason',
     },
     {
-      title: 'Date Created',
+      title: <h4>DATE CREATED</h4>,
       dataIndex: 'created_at',
       key: 'created_at',
       render: (date) => (
@@ -231,9 +238,10 @@ const Manager = () => {
       ),
     },
     {
-      title: 'Status',
+      title: <h4>STATUS</h4>,
       dataIndex: 'status',
       key: 'status',
+      defaultSortOrder: 'ascend',
       render: (_) => {
         return (
           <>
@@ -247,50 +255,47 @@ const Manager = () => {
       },
     },
   ]
+
   const itemRender = (_, type, originalElement) => {
     if (type === 'prev') {
       return (
         <>
-          <button
-            style={currentPage === 1 ? { cursor: 'not-allowed' } : {}}
+          <Button
+            icon={<DoubleLeftOutlined />}
+            disabled={currentPage === 1}
             onClick={(e) => {
               e.stopPropagation()
               setCurrentPage(1)
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-left"></i>
-          </button>
-          <button
+          ></Button>
+          <Button
             className="ant-pagination-item"
-            style={currentPage === 1 ? { cursor: 'not-allowed' } : {}}
-          >
-            <i className="fa-solid fa-angle-left"></i>
-          </button>
+            disabled={currentPage === 1}
+            icon={<LeftOutlined />}
+          ></Button>
         </>
       )
     }
 
     if (type === 'next') {
-      const lastPage = Math.ceil(requests.length / perPage)
+      const lastPage = Math.ceil(dataTable.length / perPage)
       return (
         <>
-          <button
+          <Button
             className="ant-pagination-item"
-            style={currentPage === lastPage ? { cursor: 'not-allowed' } : {}}
-          >
-            <i className="fa-solid fa-angle-right"></i>
-          </button>
-          <button
-            style={currentPage === lastPage ? { cursor: 'not-allowed' } : {}}
+            disabled={currentPage === lastPage}
+            icon={<RightOutlined />}
+          ></Button>
+          <Button
+            disabled={currentPage === lastPage}
+            icon={<DoubleRightOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               setCurrentPage(lastPage)
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-right"></i>
-          </button>
+          ></Button>
         </>
       )
     }
@@ -330,7 +335,7 @@ const Manager = () => {
                 },
               }
             }}
-            sorter={({ created_at: 'date' }, { status: 'number' })}
+            sorter={{ created_at: 'date', status: 'number' }}
             scroll={{
               x: 1000,
               y: 350,
@@ -340,7 +345,7 @@ const Manager = () => {
               reason: { position: 'tb_start' },
             }}
             styleBody={{
-              full_name: { position: 'tb_center' },
+              full_name: { className: 'textCenter textOverflow' },
               requestType: { position: 'tb_center' },
             }}
             pagination={{

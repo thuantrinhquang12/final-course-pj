@@ -159,7 +159,7 @@ const CommonTable = ({
                 return null
               }
         }
-        className={className ? className : ''}
+        className={className ? `${className} tableContainer` : 'tableContainer'}
         pagination={
           pagination
             ? {
