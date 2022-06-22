@@ -29,10 +29,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     rangeInput: yup.array().when('checkboxLeaveAllDay', {
       is: (value) => {
         return (value || []).length === 0
@@ -219,16 +216,16 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
             <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
-              {requestExists && (
-                <Row>
-                  <Col xl={4} md={6} xs={6}>
-                    Registration date:
-                  </Col>
-                  <Col xl={20} md={18} xs={18}>
-                    {dateTime.formatDateTime(request?.create_at)}
-                  </Col>
-                </Row>
-              )}
+              <Row>
+                <Col xl={4} md={6} xs={6}>
+                  Registration date:
+                </Col>
+                <Col xl={20} md={18} xs={18}>
+                  {request?.created_at
+                    ? dateTime.formatDateTime(request?.create_at)
+                    : ''}
+                </Col>
+              </Row>
               <Row>
                 <Col xl={4} md={6} xs={6}>
                   Register for date:
@@ -394,6 +391,9 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                     render={({ field }) => (
                       <>
                         <Input.TextArea
+                          showCount
+                          maxLength={100}
+                          placeholder="Please enter not too 100 characters"
                           autoSize={{ minRows: 5, maxRows: 5 }}
                           disabled={handleField.disableField(request.status)}
                           {...field}

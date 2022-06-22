@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col, DatePicker, Space, Input, Skeleton } from 'antd'
+import { Row, Col, DatePicker, Input, Skeleton } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
-import styles from './Index.module.scss'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
@@ -9,7 +8,6 @@ import { handlePlusTime, handleFormat, handleSubTime } from './handleTime'
 import { get } from '../../../service/requestApi'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-
 import {
   DialogRequest,
   dateTime,
@@ -22,6 +20,7 @@ import {
   requestSlice,
   endPoint,
 } from '../../../index'
+import styles from './Index.module.scss'
 
 const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   const [requestExists, setRequestExists] = useState(false)
@@ -60,10 +59,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   }, [])
 
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     checkDateTime: yup.date().nullable().required('Please enter dateTime'),
   })
 
@@ -196,20 +192,20 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
               <Skeleton paragraph={{ rows: 10 }}></Skeleton>
             ) : (
               <>
-                {requestExists && (
-                  <Row style={{ marginBottom: 0 }}>
-                    <Col xs={24} md={24} xl={24}>
-                      <div className={styles.formGroup}>
-                        <Col xs={6} md={6} xl={4}>
-                          Registration date:
-                        </Col>
-                        <Col xs={20} md={20} xl={20}>
-                          {dateTime.formatDateTime(request?.create_at)}
-                        </Col>
-                      </div>
-                    </Col>
-                  </Row>
-                )}
+                <Row style={{ marginBottom: 0 }}>
+                  <Col xs={24} md={24} xl={24}>
+                    <div className={styles.formGroup}>
+                      <Col xs={6} md={6} xl={4}>
+                        Registration date:
+                      </Col>
+                      <Col xs={20} md={20} xl={20}>
+                        {request?.created_at
+                          ? dateTime.formatDateTime(request?.create_at)
+                          : ''}
+                      </Col>
+                    </div>
+                  </Col>
+                </Row>
                 <Row>
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
@@ -250,9 +246,9 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           Late time:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
-                          <h3 style={{ color: 'red' }}>
+                          <p style={{ color: 'red' }}>
                             {row.late ? row.late : ''}
-                          </h3>
+                          </p>
                         </Col>
                       </Col>
                       <Col xs={12} md={12} xl={12} style={{ display: 'flex' }}>
@@ -260,9 +256,9 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           Early:
                         </Col>
                         <Col xs={12} md={12} xl={16}>
-                          <h3 style={{ color: 'red' }}>
+                          <p style={{ color: 'red' }}>
                             {row.early ? row.early : ''}
-                          </h3>
+                          </p>
                         </Col>
                       </Col>
                     </div>
@@ -272,7 +268,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={24} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={6} md={12} xl={8}>
-                          Date cover up:{' '}
+                          Date cover up:
                           <span className={styles.requiredField}>(*)</span>
                         </Col>
                         <Col xs={18} md={12} xl={16}>
@@ -281,33 +277,34 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                             control={control}
                             render={({ field }) => (
                               <>
-                                <Space direction="vertical" size={12}>
-                                  <DatePicker
-                                    disabledDate={(current) =>
-                                      current.isAfter(moment())
+                                <DatePicker
+                                  disabledDate={(current) =>
+                                    current.isAfter(moment())
+                                  }
+                                  format={dateTime.formatDateTypeYear}
+                                  onChange={(e) => {
+                                    const res = async () => {
+                                      const response = await getCompensation(e)
+                                      setOverTime(response)
+                                      setValidateTime(false)
                                     }
-                                    format={dateTime.formatDateTypeYear}
-                                    onChange={(e) => {
-                                      const res = async () => {
-                                        const respon = await getCompensation(e)
-                                        setOverTime(respon)
-                                        setValidateTime(false)
-                                      }
-                                      res()
-                                      return field.onChange(e)
-                                    }}
-                                    defaultValue={
-                                      request.compensation_date
-                                        ? moment(request.compensation_date)
-                                        : moment().subtract(1, 'days')
-                                    }
-                                  />
-                                  {errors.checkDateTime && (
-                                    <span className={styles.requiredField}>
-                                      {errors.checkDateTime?.message}
-                                    </span>
-                                  )}
-                                </Space>
+                                    res()
+                                    return field.onChange(e)
+                                  }}
+                                  defaultValue={
+                                    request.compensation_date
+                                      ? moment(request.compensation_date)
+                                      : moment().subtract(1, 'days')
+                                  }
+                                />
+                                {errors.checkDateTime && (
+                                  <span
+                                    style={{ marginLeft: '10px' }}
+                                    className={styles.errorField}
+                                  >
+                                    {errors.checkDateTime?.message}
+                                  </span>
+                                )}
                               </>
                             )}
                           />
@@ -348,14 +345,14 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                             Time request:
                           </Col>
                           <Col xs={12} md={10} xl={13}>
-                            <h3
+                            <p
                               style={handleDateTime.compareTime(
                                 overTime ? overTime : '00:00',
                                 timeRequest,
                               )}
                             >
                               {timeRequest}
-                            </h3>
+                            </p>
                           </Col>
                         </Col>
                       </Col>
@@ -375,14 +372,14 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                           render={({ field }) => (
                             <>
                               <Input.TextArea
-                                autoSize={{
-                                  minRows: 4,
-                                  maxRows: 7,
-                                }}
+                                showCount
+                                maxLength={100}
+                                placeholder="Please enter not too 100 characters"
+                                autoSize={{ minRows: 5, maxRows: 5 }}
                                 {...field}
                               />
                               {errors.reasonInput && (
-                                <span className={styles.requiredField}>
+                                <span className={styles.errorField}>
                                   {errors.reasonInput?.message}
                                 </span>
                               )}

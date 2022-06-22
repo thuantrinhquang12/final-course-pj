@@ -323,8 +323,8 @@ const Manager = () => {
               full_name: '20%',
               request_type: '15%',
               reason: '30%',
-              create_at: '15%',
-              status_id: '10%',
+              created_at: '15%',
+              status: '10%',
             }}
             columns={columns}
             onRow={(record) => {
@@ -346,7 +346,6 @@ const Manager = () => {
             }}
             styleBody={{
               full_name: { className: 'textCenter textOverflow' },
-              requestType: { position: 'tb_center' },
             }}
             pagination={{
               current: currentPage,

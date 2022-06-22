@@ -10,12 +10,12 @@ import {
   dateTime,
   typeRequest,
   handleField,
+  handleDateTime,
   buttonForm,
   tryCatch,
   endPoint,
   messageRequest,
   requestSlice,
-  checkInvalidTime,
 } from '../../index'
 import styles from './RegisterOT.module.scss'
 import moment from 'moment'
@@ -31,10 +31,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [errorTimeOT, setErrorTimeOT] = useState(false)
   const DateOT = Number(+hours + minutes / 60)
   const schema = yup.object().shape({
-    reasonInput: yup
-      .string()
-      .required('Please enter reason')
-      .max(100, 'Please enter not too 100 characters'),
+    reasonInput: yup.string().required('Please enter reason'),
     timeRequestOT: yup.date().nullable().required('Please enter timeRequestOT'),
   })
 
@@ -165,36 +162,37 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
             <Skeleton paragraph={{ rows: 10 }}></Skeleton>
           ) : (
             <>
-              {requestExists && (
-                <Row>
-                  <Col flex="150px">Registration date:</Col>
-                  <Col flex="auto">
-                    {dateTime.formatDateTime(request?.create_at)}
-                  </Col>
-                </Row>
-              )}
               <Row>
-                <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">{dateTime.formatDate(row?.work_date)}</Col>
+                <Col xl={4}>Registration date:</Col>
+                <Col xl={20}>
+                  {request?.created_at
+                    ? dateTime.formatDateTime(request?.create_at)
+                    : ''}
+                </Col>
+              </Row>
+              <Row>
+                <Col xl={4}>Register for date: </Col>
+                <Col xl={20}>{dateTime.formatDate(row?.work_date)}</Col>
               </Row>
               <Row>
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Check-in: </Col>
+                  <Col flex="160px">Check-in: </Col>
                   <Col flex="auto">
-                    {checkInvalidTime.checkInvalidTime(row?.checkin_original)}
+                    {handleDateTime.checkInvalidTime(row?.checkin_original)}
                   </Col>
                 </div>
+
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Check-out: </Col>
+                  <Col flex="160px">Check-out: </Col>
                   <Col flex="auto">
-                    {checkInvalidTime.checkInvalidTime(row?.checkout_original)}
+                    {handleDateTime.checkInvalidTime(row?.checkout_original)}
                   </Col>
                 </div>
               </Row>
               <Row>
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Request OT: </Col>
-                  <Col flex="auto">
+                  <Col flex="160px">Request OT: </Col>
+                  <Col flex="auto" style={{ position: 'relative' }}>
                     <Controller
                       name="timeRequestOT"
                       control={control}
@@ -213,22 +211,22 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                         </>
                       )}
                     />
-                  </Col>
-                  <Col flex="100%">
-                    {errorTimeOT && (
-                      <span className={styles.errorField}>
-                        OT time must be less Actual Overtime
-                      </span>
-                    )}
-                    {errors.timeRequestOT && (
-                      <span className={styles.errorField}>
-                        {errors.timeRequestOT?.message}
-                      </span>
-                    )}
+                    <div style={{ position: 'absolute', top: '100%', left: 0 }}>
+                      {errors.timeRequestOT && (
+                        <div className={styles.errorField}>
+                          {errors.timeRequestOT?.message}
+                        </div>
+                      )}
+                      {errorTimeOT && (
+                        <div className={styles.errorField}>
+                          Must be less Actual Overtime
+                        </div>
+                      )}
+                    </div>
                   </Col>
                 </div>
                 <div className={styles.groupCol}>
-                  <Col flex="150px">Actual Overtime: </Col>
+                  <Col flex="160px">Actual Overtime: </Col>
                   <Col flex="auto">{row.ot_time || '--:--'}</Col>
                 </div>
               </Row>
@@ -258,21 +256,23 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px" style={{ marginBottom: '10px' }}>
+                <Col xl={4} style={{ marginBottom: '10px' }}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="100%">
+                <Col xl={20}>
                   <Controller
                     name="reasonInput"
                     control={control}
                     render={({ field }) => (
                       <>
                         <Input.TextArea
+                          showCount
+                          maxLength={100}
+                          placeholder="Please enter not too 100 characters"
                           rows={4}
                           disabled={handleField.disableField(request.status)}
                           {...field}
                           autoSize={{ minRows: 5, maxRows: 5 }}
-                          style={{ border: ' black 1px solid' }}
                         />
                         {errors.reasonInput && (
                           <span className={styles.errorField}>

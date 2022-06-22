@@ -67,3 +67,18 @@ export const checkRequestStatusColor = (status) => {
       break
   }
 }
+
+export const checkRequestStatusColorText = (status) => {
+  switch (status) {
+    case -1:
+      return 'red'
+    case 0:
+      return 'black'
+    case 1:
+      return '#1890ff'
+    case 2:
+      return 'green'
+    default:
+      break
+  }
+}

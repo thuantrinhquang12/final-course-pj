@@ -161,23 +161,23 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
             <Skeleton paragraph={{ rows: 10 }} />
           ) : (
             <>
-              {requestExists && (
-                <Row>
-                  <Col flex="150px">Registration date: </Col>
-                  <Col flex="auto">
-                    {dateTime.formatDateTime(request?.create_at)}
-                  </Col>
-                </Row>
-              )}
               <Row>
-                <Col flex="150px">Register for date: </Col>
-                <Col flex="auto">{row.work_date}</Col>
+                <Col xl={4}>Registration date: </Col>
+                <Col xl={20}>
+                  {request?.created_at
+                    ? dateTime.formatDateTime(request?.create_at)
+                    : ''}
+                </Col>
               </Row>
               <Row>
-                <Col flex="150px">
+                <Col xl={4}>Register for date: </Col>
+                <Col xl={20}>{row.work_date}</Col>
+              </Row>
+              <Row>
+                <Col xl={4} className={styles.dFlex}>
                   Check-in: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="auto">
+                <Col xl={20}>
                   <Controller
                     name="checkInTime"
                     control={control}
@@ -207,10 +207,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">
+                <Col xl={4} className={styles.dFlex}>
                   Check-out: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="auto">
+                <Col xl={20}>
                   <Controller
                     name="checkOutTime"
                     control={control}
@@ -236,8 +236,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px">Special reason: </Col>
-                <Col flex="auto">
+                <Col xl={4}>Special reason: </Col>
+                <Col xl={20}>
                   <Controller
                     name="specialReason"
                     control={control}
@@ -260,10 +260,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                 </Col>
               </Row>
               <Row>
-                <Col flex="150px" style={{ marginBottom: '10px' }}>
+                <Col xl={4} style={{ marginBottom: '10px' }}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
-                <Col flex="100%">
+                <Col xl={20}>
                   <Controller
                     name="reasonInput"
                     control={control}
@@ -290,8 +290,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               {request.status !== 0 && request.status && (
                 <>
                   <Row>
-                    <Col flex="150px">Status:</Col>
-                    <Col flex="auto">
+                    <Col xl={4}>Status:</Col>
+                    <Col xl={20}>
                       <strong
                         style={{
                           color: checkRequestStatusColor(request.status),
@@ -303,8 +303,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   </Row>
                   <Row>
                     <>
-                      <Col flex="150px">Manager Comment:</Col>
-                      <Col flex="auto">
+                      <Col xl={4}>Manager Comment:</Col>
+                      <Col xl={20}>
                         <strong
                           style={{
                             color: checkRequestStatusColor(request.status),

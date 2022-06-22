@@ -9,7 +9,9 @@ const {
   checkRequestLeave,
   checkRequestLeavePaid,
   checkRequestTwoCondition,
+  checkRequestStatusColorText,
 } = checkRequest
+import './RequestDetail.scss'
 
 const RequestDetail = ({ row, refInput, roleUser }) => {
   const {
@@ -29,7 +31,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
     manager_confirmed_comment: managerConfirmedComment,
   } = row
   return (
-    <>
+    <div className="requestDetail">
       <Row>
         <Col xl={15} style={{ paddingRight: '10px' }}>
           <Row>
@@ -75,7 +77,9 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           <Row>
             <Col xl={8}>Status:</Col>
             <Col xl={16}>
-              <strong>{checkRequestStatus(status)}</strong>
+              <strong style={{ color: checkRequestStatusColorText(status) }}>
+                {checkRequestStatus(status)}
+              </strong>
             </Col>
           </Row>
         </Col>
@@ -129,7 +133,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           )}
         </Col>
       </Row>
-    </>
+    </div>
   )
 }
 
