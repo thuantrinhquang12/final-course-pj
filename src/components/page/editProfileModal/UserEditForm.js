@@ -58,7 +58,7 @@ const UserEditForm = () => {
   })
   useEffect(() => {
     get(API + '/edit').then((res) => {
-      setProfileInfo(res.data)
+      setProfileInfo(res?.data)
     })
   }, [modalVisible])
 

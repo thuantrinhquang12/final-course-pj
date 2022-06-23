@@ -20,22 +20,22 @@ const menu = (
     items={[
       {
         key: '1',
-        label: <Link to={'/notification'}>Create notice</Link>,
-        icon: <FormOutlined style={{ color: '#23466d', fontSize: '14px' }} />,
+        label: <Link to={'/manager'}>List requests</Link>,
+        icon: (
+          <DatabaseOutlined style={{ color: '#23466d', fontSize: '14px' }} />
+        ),
       },
       {
         key: '2',
-        label: <a target="_blank">Change shift</a>,
+        label: <Link to={'/change-shift'}>Change shift</Link>,
         icon: (
           <ClockCircleOutlined style={{ color: '#23466d', fontSize: '14px' }} />
         ),
       },
       {
         key: '3',
-        label: <Link to={'/manager'}>List requests</Link>,
-        icon: (
-          <DatabaseOutlined style={{ color: '#23466d', fontSize: '14px' }} />
-        ),
+        label: <Link to={'/notification'}>Create notice</Link>,
+        icon: <FormOutlined style={{ color: '#23466d', fontSize: '14px' }} />,
       },
     ]}
   />
@@ -72,12 +72,11 @@ const Index = () => {
             <Col xs={24} md={7} xl={6} className={styles.column}>
               <Dropdown overlay={menu}>
                 <NavLink
-                  to={'/manager'}
+                  to={'/a'}
                   className={styles.formGroup}
                   onClick={(e) => e.preventDefault()}
                 >
                   <i className="fa-solid fa-bars-progress"></i>
-
                   <h4>MANAGER</h4>
                   <div className={styles.progress} id="progress"></div>
                 </NavLink>
