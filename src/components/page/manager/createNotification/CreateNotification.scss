@@ -1,16 +1,11 @@
 .notificationContainer {
   display: flex;
-  height: 100vh;
+  height: 100%;
   align-items: center;
   position: relative;
-  background-color: #7f53ac;
-  background-image: linear-gradient(315deg, #7f53ac 0%, #647dee 74%);
   justify-content: center;
   form {
-    padding: 30px;
-    max-width: 500px;
     width: 100%;
-    box-shadow: 0 2px 5px 0 rgba(51, 62, 73, 0.6);
     background-color: white;
     border-radius: 6px;
     margin: 10px;
@@ -27,5 +22,11 @@
     .ant-checkbox-group {
       width: 100%;
     }
+    .status {
+      max-width: 140px;
+    }
   }
+}
+.modalContainer {
+  max-width: 600px !important;
 }

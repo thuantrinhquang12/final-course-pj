@@ -9,7 +9,7 @@ import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
-import CreateNotification from '../components/page/manager/createNotification/CreateNotification'
+import NotificationList from '../components/page/manager/createNotification/NotificationList'
 import ChangeShiff from '../components/page/changeShift/ChangeShift'
 import Manager from '../components/page/manager/manager/Manager'
 
@@ -46,7 +46,6 @@ const AppRoutesComponent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<AuthorError />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/notification" element={<CreateNotification />} />
 
         <Route element={<Header />}>
           {/* public routes with layout */}
@@ -62,22 +61,18 @@ const AppRoutesComponent = () => {
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-            <Route path="/timesheet" element={<SearchField />} />
             <Route path="/" element={<Home />} />
           </Route>
 
           {/* Manager routes */}
-          <Route
-            element={
-              <PrivateRoute allowedRoles={[ROLES.Manager, ROLES.Admin]} />
-            }
-          >
+          <Route element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}>
             <Route path="/manager" element={<Manager />} />
           </Route>
 
           {/* Admin routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
-            {' '}
+            <Route path="/notification" element={<NotificationList />} />
+            <Route path="/manager" element={<Manager />} />
             <Route path="/change-shift" element={<ChangeShiff />} />
           </Route>
         </Route>
