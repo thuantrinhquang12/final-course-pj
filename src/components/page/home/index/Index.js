@@ -7,6 +7,7 @@ import { dateTime, CMTable } from '../../../index'
 import { getDataListNotice } from '../slice/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveAs } from 'file-saver'
+import distance from '../../../utils/distance'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
@@ -21,13 +22,8 @@ const Index = () => {
   }, [])
 
   useEffect(() => {
-    const header = document.querySelector('#Header_TimeSheet')
-    const homeTable = document.querySelector('#HomeTable')
-    const screenHeight = screen.height
-    const HEIGHT = screenHeight - header.getBoundingClientRect().height - 160
-    homeTable.style.height = HEIGHT + 'px'
-    homeTable.style.maxHeight = HEIGHT + 'px'
-    setHeightTable(HEIGHT - 270)
+    const height = distance('HomeTable')
+    setHeightTable(height.heightTable)
   }, [])
 
   const columns = [
@@ -35,10 +31,10 @@ const Index = () => {
       title: <p>NO</p>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload, recored) => {
+      render: (payload, records) => {
         return (
           <p className="resetMargin">
-            <> {(stateNotice.page - 1) * 10 + Number(recored.key)}</>
+            <> {(stateNotice.page - 1) * 10 + Number(records.key)}</>
           </p>
         )
       },
@@ -83,7 +79,7 @@ const Index = () => {
       title: <p>ATTACHMENT</p>,
       dataIndex: 'attachment',
       key: 'attachment',
-      render: (payload, recored) => {
+      render: (payload, records) => {
         const redirect = () => {
           const indexofDot = payload.lastIndexOf('.')
           const pathFile = payload.slice(indexofDot, payload.length)
@@ -110,11 +106,11 @@ const Index = () => {
       title: <p>DETAIL</p>,
       dataIndex: 'detail',
       key: 'detail',
-      render: (payload, record) => {
+      render: (payload, records) => {
         return (
           <p
             className="tb_center colorBlue resetMargin"
-            onClick={() => setModal({ open: true, data: record })}
+            onClick={() => setModal({ open: true, data: records })}
           >
             view
           </p>
@@ -210,7 +206,6 @@ const Index = () => {
           height: '100%',
           display: 'flex',
           justifyContent: 'center',
-          // padding: '50px 0',
           borderRadius: 5,
         }}
       >

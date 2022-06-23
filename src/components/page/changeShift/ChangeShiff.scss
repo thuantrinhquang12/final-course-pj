@@ -1,0 +1,24 @@
+.ChangeShiff {
+  padding: 50px 0;
+  width: 100%;
+  overflow: hidden;
+  .ant-row {
+    justify-content: center;
+    .Table__User {
+      margin-top: 50px;
+    }
+  }
+}
+
+.change_Shift {
+  .ant-modal-header {
+    background-color: #0599ef;
+    h2 {
+      color: white;
+      margin: 0;
+    }
+  }
+  .ant-modal-close-icon {
+    color: white;
+  }
+}
