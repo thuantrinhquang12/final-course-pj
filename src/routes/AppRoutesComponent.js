@@ -10,8 +10,8 @@ import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
 import NotificationList from '../components/page/manager/createNotification/NotificationList'
-import ChangeShift from '../components/page/changeShift/ChangeShift'
-import Manager from '../components/page/manager/manager/Manager'
+import ChangeShift from '../components/page/manager/changeShift/ChangeShift'
+import Manager from '../components/page/manager/managerRequests/Requests'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()

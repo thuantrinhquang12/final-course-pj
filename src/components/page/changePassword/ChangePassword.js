@@ -88,6 +88,7 @@ const ChangePassword = () => {
             Cancel
           </Button>,
         ]}
+        width={600}
       >
         <Form
           form={form}

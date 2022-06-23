@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Input } from 'antd'
-import { dateTime, checkRequest } from '../../../index'
+import { dateTime, checkRequest } from '../../../../index'
 const {
   checkRequestType,
   checkRequestStatus,
@@ -32,7 +32,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
   } = row
   return (
     <div className="requestDetail">
-      <Row>
+      <Row style={{ margin: 0 }}>
         <Col xl={15} style={{ paddingRight: '10px' }}>
           <Row>
             <Col xl={8}>Request type:</Col>
@@ -78,7 +78,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
             <Col xl={8}>Status:</Col>
             <Col xl={16}>
               <strong style={{ color: checkRequestStatusColorText(status) }}>
-                {checkRequestStatus(status)}
+                {checkRequestStatus(status).toUpperCase()}
               </strong>
             </Col>
           </Row>
@@ -88,11 +88,11 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           style={{ borderLeft: '1px solid #e0e0e0', paddingLeft: '10px' }}
         >
           <Row>
-            <Col xl={12}>Check-in:</Col>
+            <Col xl={12}>Check In:</Col>
             <Col xl={12}>{dateTime.formatTime(checkIn)}</Col>
           </Row>
           <Row>
-            <Col xl={12}>Check-out:</Col>
+            <Col xl={12}>Check Out:</Col>
             <Col xl={12}>{dateTime.formatTime(checkOut)}</Col>
           </Row>
           {requestType === 1 && (

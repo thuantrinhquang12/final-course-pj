@@ -13,9 +13,7 @@ const UserAvatar = () => {
   const handleChange = function loadFile(event) {
     if (event.target.files.length > 0) {
       const targetImg = event.target.files[0]
-
       emitter.emit('EVENT_GET_AVATAR', { data: targetImg })
-      console.log('file', targetImg)
       const idxDot = targetImg.name.lastIndexOf('.') + 1
       const extFile = targetImg.name
         .substr(idxDot, targetImg.name.length)

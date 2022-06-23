@@ -10,6 +10,7 @@ const Dialog = ({
   handleModal,
   confirmDisable,
   className,
+  widthModal,
 }) => {
   const confirm = () => {
     Modal.confirm({
@@ -42,7 +43,7 @@ const Dialog = ({
         }
         footer={null}
         visible={isOpen}
-        width={1000}
+        width={widthModal || 1000}
       >
         {children}
       </Modal>
@@ -60,6 +61,7 @@ Dialog.propTypes = {
   isOpen: PropTypes.bool,
   confirmDisable: PropTypes.bool,
   className: PropTypes.string,
+  widthModal: PropTypes.number,
 }
 
 export default Dialog

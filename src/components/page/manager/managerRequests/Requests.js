@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import RequestDetail from '../requestDetail/RequestDetail'
+import RequestDetail from './requestDetail/RequestDetail'
 import { checkConfirm } from './checkConfirm'
 import { Tag, Button, Modal } from 'antd'
 import {
@@ -13,7 +13,7 @@ import {
   getRequests,
   putRequestsManager,
   putRequestsReject,
-} from './managerSlice'
+} from './slice/managerSlice'
 import {
   checkRequestStatus,
   checkRequestStatusColor,
@@ -26,7 +26,7 @@ import {
   CMTable,
 } from '../../../index'
 import '../../../common/createModal/ModalRequest.scss'
-import './Manager.scss'
+import './Requests.scss'
 
 const Manager = () => {
   const [dataTable, setDataTable] = useState([])
@@ -194,7 +194,9 @@ const Manager = () => {
       dataIndex: 'id',
       key: 'id',
       render: (_, record) => {
-        return <span className="tb_center">{currentPage - 1 + record.key}</span>
+        return (
+          <span className="tb_center">{currentPage - 1 + record.key + 1}</span>
+        )
       },
     },
     {
@@ -227,6 +229,7 @@ const Manager = () => {
       title: <h4>REASON</h4>,
       dataIndex: 'reason',
       key: 'reason',
+      render: (reason) => <p className="textOverflow ">{reason}</p>,
     },
     {
       title: <h4>DATE CREATED</h4>,

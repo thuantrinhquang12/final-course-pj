@@ -63,7 +63,6 @@ const UserEditForm = () => {
   }, [modalVisible])
 
   const onSubmit = async (values) => {
-    console.log('avatar', avatar)
     const valueEdit = {
       ...values,
       birth_date: dateTime.formatDate(values.birth_date),
@@ -77,7 +76,6 @@ const UserEditForm = () => {
       start_date: dateTime.formatDate(values.start_date),
       avatar: avatar,
     }
-    console.log('value', valueEdit)
 
     try {
       // const data = await put(API + '/update', valueEdit, {

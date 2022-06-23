@@ -262,10 +262,10 @@ const Index = () => {
         </Col>
       </Row>
       <Modal
-        wrapClassName="modalNotice"
+        className="modalNotice"
         title={<h2>Notice Detail</h2>}
         visible={modal.open}
-        width={1000}
+        width={700}
         onCancel={() =>
           setModal((prev) => {
             return { ...prev, open: false }

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import reducerRegistry from '../../../../store/reducerRegister'
-import { get, put } from '../../../service/requestApi'
+import reducerRegistry from '../../../../../store/reducerRegister'
+import { get, put } from '../../../../service/requestApi'
 
 export const getRequests = createAsyncThunk(
   'requests/getRequests',
