@@ -8,7 +8,6 @@ const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [error, setError] = useState(false)
   const [form] = Form.useForm()
-
   const onFinish = async (values) => {
     const {
       old_password: oldPassword,
@@ -107,7 +106,7 @@ const ChangePassword = () => {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item label="Email" name="email" rules={[]}>
+          <Form.Item label="Email" name="email" rules={[]} className="email">
             <Input disabled={true} />
           </Form.Item>
 

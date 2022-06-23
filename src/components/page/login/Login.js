@@ -23,21 +23,20 @@ const Login = () => {
       setLoading(false)
       await dispatch(
         loginAccess({
-          role: res[0].data.roles[0].title,
-          tokenAccess: res[0].access_token,
-          shift: res[0].data.shifts,
+          role: res.data.roles[0].title,
+          tokenAccess: res.access_token,
         }),
       )
-      const UsedTimeToken = 3600 * 1000
+      const UsedTimeToken = 216000 * 1000
       const timeExpires = Date.now() + UsedTimeToken
       localStorage.setItem(LOCAL_STORAGE.TIME_EXPIRED, timeExpires)
-      localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res[0].access_token)
-      localStorage.setItem(LOCAL_STORAGE.ROLE, res[0].data.roles[0].title)
+      localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
+      localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
       localStorage.setItem(
         LOCAL_STORAGE.INF_USER,
         JSON.stringify({
-          avatar: res[0].data.avatar,
-          name: res[0].data.full_name,
+          avatar: res.data.avatar,
+          name: res.data.full_name,
         }),
       )
       typePopup.popupNotice(

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
-import CreateNotification from '../components/page/manager/createNotification/CreateNotification'
+import NotificationList from '../components/page/manager/createNotification/NotificationList'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -44,7 +44,6 @@ const AppRoutesComponent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<AuthorError />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/notification" element={<CreateNotification />} />
 
         <Route element={<Header />}>
           {/* public routes with layout */}
@@ -70,9 +69,9 @@ const AppRoutesComponent = () => {
           ></Route>
 
           {/* Admin routes */}
-          <Route
-            element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}
-          ></Route>
+          <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
+            <Route path="/notification1" element={<NotificationList />} />
+          </Route>
         </Route>
       </Routes>
     </>

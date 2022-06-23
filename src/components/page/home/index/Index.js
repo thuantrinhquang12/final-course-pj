@@ -14,7 +14,6 @@ const Index = () => {
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
-  console.log('state Notice', stateNotice)
 
   const dispatch = useDispatch()
   useEffect(() => {

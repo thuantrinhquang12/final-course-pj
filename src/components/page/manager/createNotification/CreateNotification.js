@@ -1,25 +1,36 @@
 import { UnorderedListOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Col, Form, Input, Row } from 'antd'
+import {
+  Button,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+} from 'antd'
 import React, { useState } from 'react'
 import styles from './CreateNotification.scss'
 import { dateTime, typePopup } from '../../../index'
 import moment from 'moment'
 import { post } from '../../../service/requestApi'
 import TextArea from 'antd/lib/input/TextArea'
+import PropTypes from 'prop-types'
+import { saveAs } from 'file-saver'
 
-const CreateNotification = () => {
+const CreateNotification = ({ data, handleModal }) => {
   const [form] = Form.useForm()
   const [selectDivision, setDivision] = useState(true)
 
   const onSubmit = async (values) => {
-    const { subject, message, published_to: publishedTo } = values
+    const { subject, message, published_to: publishedTo, date, status } = values
     const selectedFile = document.getElementById('myfile').files[0]
-    console.log(selectedFile)
-    const data = {
-      published_date: dateTime.formatDate(moment.now()),
+
+    const dataSent = {
+      published_date: dateTime.formatDate(moment(date)),
       subject,
       message,
-      status: 1,
+      status,
       attachment: selectedFile,
       created_by: 1,
       published_to: publishedTo.includes('all')
@@ -28,7 +39,7 @@ const CreateNotification = () => {
     }
 
     try {
-      const res = await post('/admin/notifications/store', data, {
+      const res = await post('/admin/notifications/store', dataSent, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       if (res.status === true) {
@@ -38,6 +49,7 @@ const CreateNotification = () => {
           'Create success message',
         )
         form.resetFields()
+        handleModal()
       } else return false
     } catch (e) {
       typePopup.popupNotice(
@@ -52,17 +64,57 @@ const CreateNotification = () => {
     form.resetFields()
   }
 
+  let setPublishedTo = []
+  if (typeof data?.published_to === 'string') {
+    setPublishedTo = ['all']
+  } else if (data?.published_to) {
+    data?.published_to.map((item) => {
+      setPublishedTo.push(item.id)
+    })
+  } else {
+    setPublishedTo = []
+  }
+
+  const file = (payload) => {
+    const redirect = () => {
+      const indexofDot = payload.lastIndexOf('.')
+      const pathFile = payload.slice(indexofDot, payload.length)
+      if (pathFile === '.zip' || pathFile === '.rar') {
+        saveAs(`${payload}`, `${payload}`)
+      } else {
+        window.open(payload)
+      }
+    }
+    let nameFile = payload
+    if (payload) {
+      const indexName = payload.lastIndexOf('/')
+      nameFile = payload.slice(indexName + 1, payload.length)
+    }
+    return (
+      <p className="textOverFlow colorBlue resetMargin" onClick={redirect}>
+        {nameFile}
+      </p>
+    )
+  }
+
   return (
     <>
       <div className="notificationContainer">
         <Form
           form={form}
           name="basic"
-          initialValues={{ published_to: ['all'] }}
+          initialValues={{
+            published_to: setPublishedTo.length > 0 ? setPublishedTo : ['all'],
+            subject: data?.subject,
+            date: moment(data?.published_date),
+            status: moment(data?.published_date).isAfter(moment())
+              ? 'Pending'
+              : 'Official',
+            message: data?.message,
+          }}
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
-          <h1 style={{ textAlign: 'center' }}>Create Notifications</h1>
           <Form.Item
             name="subject"
             className={styles.InputField}
@@ -77,40 +129,56 @@ const CreateNotification = () => {
               },
             ]}
           >
-            <Input prefix={<UnorderedListOutlined />} placeholder="Subject" />
-          </Form.Item>
-
-          <Form.Item
-            name="message"
-            className={styles.InputField}
-            rules={[
-              {
-                required: true,
-                message: 'Required to message',
-              },
-              {
-                max: 100,
-                message: 'Message cannot be longer than 100 characters',
-              },
-            ]}
-          >
-            <TextArea
-              placeholder="Message"
-              autoSize={{ minRows: 5, maxRows: 5 }}
+            <Input
+              prefix={<UnorderedListOutlined />}
+              placeholder="Subject"
+              disabled={data}
             />
           </Form.Item>
 
-          <Form.Item
-            name="file"
-            rules={[
-              {
-                required: true,
-                message: 'Required to file',
-              },
-            ]}
-          >
-            <Input type="file" id="myfile" name="myfile" />
-          </Form.Item>
+          <Row>
+            <Col sm={12} xl={12}>
+              <p>Date</p>
+              <Form.Item
+                name="date"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Required to date',
+                  },
+                ]}
+              >
+                <DatePicker disabled={data} />
+              </Form.Item>
+            </Col>
+            {data && (
+              <Col sm={12} xl={12}>
+                <p>Status</p>
+                <Form.Item
+                  name="status"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Required to status',
+                    },
+                  ]}
+                >
+                  <Select disabled={data}>
+                    <Select.Option value={0}>Pending</Select.Option>
+                    <Select.Option value={1}>Official</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            )}
+          </Row>
+
+          {data ? (
+            file(data.attachment)
+          ) : (
+            <Form.Item name="file" rules={[]}>
+              <Input type="file" id="myfile" name="myfile" />
+            </Form.Item>
+          )}
 
           <label>Published To : </label>
           <Form.Item name="published_to">
@@ -189,6 +257,7 @@ const CreateNotification = () => {
                       lineHeight: '32px',
                     }}
                     onChange={() => setDivision((prev) => !prev)}
+                    disabled={data}
                   >
                     All
                   </Checkbox>
@@ -197,18 +266,46 @@ const CreateNotification = () => {
             </Checkbox.Group>
           </Form.Item>
 
-          <Form.Item className="ItemSignin">
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-            <Button htmlType="button" onClick={onReset}>
-              Reset
-            </Button>
+          <Form.Item
+            name="message"
+            className={styles.InputField}
+            rules={[
+              {
+                required: true,
+                message: 'Required to message',
+              },
+              {
+                max: 100,
+                message: 'Message cannot be longer than 100 characters',
+              },
+            ]}
+          >
+            <TextArea
+              placeholder="Message"
+              autoSize={{ minRows: 5, maxRows: 5 }}
+              disabled={data}
+            />
           </Form.Item>
+
+          {!data && (
+            <Form.Item className="ItemSignin">
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+              <Button htmlType="button" onClick={onReset}>
+                Reset
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </div>
     </>
   )
+}
+
+CreateNotification.propTypes = {
+  data: PropTypes.object,
+  handleModal: PropTypes.func,
 }
 
 export default CreateNotification
