@@ -1,13 +1,11 @@
 import React from 'react'
 import styles from './Index.module.scss'
 import { Row, Col } from 'antd'
-import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { LOCAL_STORAGE } from '../../../constant/localStorage'
 import './index.scss'
 
 const Index = () => {
-  const data = useSelector((state) => state.userInfo?.currentUser?.role)
   const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
   return (
     <div className={styles.ListItem}>
@@ -16,11 +14,7 @@ const Index = () => {
           <>
             <Col xs={24} md={1} xl={3}></Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <NavLink
-                to="/"
-                className={styles.formGroup}
-                activeclassname="active"
-              >
+              <NavLink to="/" className={styles.formGroup}>
                 <i className="fa-solid fa-house-chimney"></i>
                 <h4>HOME</h4>
                 <div className={styles.progress} id="progress"></div>
@@ -35,7 +29,7 @@ const Index = () => {
             </Col>
 
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <NavLink to={data || '/'} className={styles.formGroup}>
+              <NavLink to="/manager" className={styles.formGroup}>
                 <i className="fa-solid fa-bars-progress"></i>
                 <h4>MANAGER</h4>
                 <div className={styles.progress} id="progress"></div>

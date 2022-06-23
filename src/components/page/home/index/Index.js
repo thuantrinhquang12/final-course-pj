@@ -1,15 +1,23 @@
 /* eslint-disable object-curly-spacing */
+import {
+  DoubleLeftOutlined,
+  LeftOutlined,
+  DoubleRightOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Modal } from 'antd'
+import { Row, Col, Modal, Button } from 'antd'
 import styles from './Index.module.scss'
 import './Index.scss'
 import { dateTime, CMTable } from '../../../index'
 import { getDataListNotice } from '../slice/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveAs } from 'file-saver'
+import distance from '../../../utils/distance'
 
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
+  const [heightTable, setHeightTable] = useState(0)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
@@ -19,106 +27,102 @@ const Index = () => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
   }, [])
 
+  useEffect(() => {
+    const height = distance('HomeTable')
+    setHeightTable(height.heightTable)
+  }, [])
+
   const columns = [
     {
-      title: <p className={styles.whiteColor}>NO</p>,
+      title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload, recored) => {
+      render: (payload, records) => {
         return (
-          <p className="tb_center">
-            {(stateNotice.page - 1) * 10 + Number(recored.key)}
+          <p className="resetMargin">
+            <> {(stateNotice.page - 1) * 10 + Number(records.key)}</>
           </p>
         )
       },
     },
     {
-      title: <p className={styles.whiteColor}>SUBJECT</p>,
+      title: <h4>SUBJECT</h4>,
       dataIndex: 'subject',
       key: 'subject',
-      width: '20%',
       render: (payload) => {
-        return <p className="textOverFlow">{payload}</p>
+        return <div className="resetMargin">{payload}</div>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>AUTHOR</p>
-      ),
+      title: <h4>AUTHOR</h4>,
       dataIndex: 'created_by',
       key: 'created_by',
       render: (payload) => {
-        return <p className={styles.tableHeader}>{payload}</p>
+        return <div className="resetMargin">{payload}</div>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          TO DEPARTMENT
-        </p>
-      ),
+      title: <h4>TO DEPARTMENT</h4>,
       dataIndex: 'published_to',
       key: 'published_to',
       render: (payload) => {
         const department = Array.isArray(payload)
           ? payload[0].division_name
           : 'ALL'
-        return <p className={styles.tableHeader}>{department}</p>
+        return <div className="resetMargin tb_center">{department}</div>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          PUBLISHED DATE
-        </p>
-      ),
+      title: <h4>PUBLISHED DATE</h4>,
       dataIndex: 'published_date',
       key: 'published_date',
       render: (payload) => {
         const DATE = dateTime.formatDateTimes(new Date(payload))
-        return <p className={styles.tableHeader}>{DATE}</p>
+        return <div className="resetMargin">{DATE}</div>
       },
     },
     {
-      title: (
-        <p className={`${styles.tableHeader} ${styles.whiteColor}`}>
-          ATTACHMENT
-        </p>
-      ),
+      title: <h4>ATTACHMENT</h4>,
       dataIndex: 'attachment',
       key: 'attachment',
-      render: (payload) => {
-        const test = () => {
+      render: (payload, records) => {
+        const redirect = () => {
           const indexofDot = payload.lastIndexOf('.')
           const pathFile = payload.slice(indexofDot, payload.length)
-          console.log('payload', payload)
           if (pathFile === '.zip' || pathFile === '.rar') {
             saveAs(`${payload}`, `${payload}`)
           } else {
             window.open(payload)
           }
         }
+        let nameFile = payload
+        if (payload) {
+          const indexName = payload.lastIndexOf('/')
+          nameFile = payload.slice(indexName + 1, payload.length)
+        }
 
         return (
-          <p className="textOverFlow colorBlue" onClick={test}>
-            {payload}
-          </p>
+          <div
+            className="textOverflow colorBlue resetMargin"
+            onClick={redirect}
+          >
+            {nameFile}
+          </div>
         )
       },
     },
     {
-      title: <p className={styles.whiteColor}>DETAIL</p>,
+      title: <h4>DETAIL</h4>,
       dataIndex: 'detail',
       key: 'detail',
-      width: '10%',
-      render: (payload, record) => {
+      render: (payload, records) => {
         return (
-          <p
-            className="tb_center colorBlue"
-            onClick={() => setModal({ open: true, data: record })}
+          <div
+            className="tb_center colorBlue resetMargin"
+            onClick={() => setModal({ open: true, data: records })}
           >
             view
-          </p>
+          </div>
         )
       },
     },
@@ -132,10 +136,9 @@ const Index = () => {
     if (type === 'prev') {
       return (
         <>
-          <button
-            style={
-              stateNotice.currentPage === 1 ? { cursor: 'not-allowed' } : {}
-            }
+          <Button
+            icon={<DoubleLeftOutlined />}
+            disabled={stateNotice.currentPage === 1}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -146,17 +149,12 @@ const Index = () => {
               )
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-left" />
-          </button>
-          <button
+          ></Button>
+          <Button
             className="ant-pagination-item"
-            style={
-              stateNotice.currentPage === 1 ? { cursor: 'not-allowed' } : {}
-            }
-          >
-            <i className="fa-solid fa-angle-left" />
-          </button>
+            disabled={stateNotice.currentPage === 1}
+            icon={<LeftOutlined />}
+          ></Button>
         </>
       )
     }
@@ -164,22 +162,14 @@ const Index = () => {
     if (type === 'next') {
       return (
         <>
-          <button
+          <Button
             className="ant-pagination-item"
-            style={
-              stateNotice.currentPage === stateNotice.lastPage
-                ? { cursor: 'not-allowed' }
-                : {}
-            }
-          >
-            <i className="fa-solid fa-angle-right" />
-          </button>
-          <button
-            style={
-              stateNotice.currentPage === stateNotice.lastPage
-                ? { cursor: 'not-allowed' }
-                : {}
-            }
+            disabled={stateNotice.currentPage === stateNotice.lastPage}
+            icon={<RightOutlined />}
+          ></Button>
+          <Button
+            disabled={stateNotice.currentPage === stateNotice.lastPage}
+            icon={<DoubleRightOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -190,9 +180,7 @@ const Index = () => {
               )
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-right" />
-          </button>
+          ></Button>
         </>
       )
     }
@@ -211,35 +199,57 @@ const Index = () => {
           height: '100%',
           display: 'flex',
           justifyContent: 'center',
-          padding: '50px 0',
           borderRadius: 5,
         }}
       >
-        <Col xs={24} md={22} xl={22}>
+        <Col xs={24} md={22} xl={24}>
           <CMTable
             title={() => {
               return (
                 <>
-                  <h1>Official Notice</h1>
+                  <h2>Official Notice</h2>
                 </>
               )
             }}
             loading={stateNotice.loading}
             className="tableNotice"
             data={stateNotice.tableData}
-            width={{ id: '5%' }}
+            width={{
+              id: '4%',
+              attachment: '15%',
+              created_by: '12%',
+              published_to: '9%',
+              published_date: '10%',
+              detail: '5%',
+              subject: '20%',
+            }}
             columns={columns}
             sorter={{ published_date: 'date' }}
             scroll={{
               x: 1000,
-              y: 350,
+              y: heightTable,
             }}
             styleHead={{
-              id: { position: 'tb_start' },
+              id: { position: 'tb_center' },
               subject: { position: 'tb_start' },
               created_by: { position: 'tb_center' },
-              published_date: { position: 'tb_center' },
+              published_date: {
+                position: 'tb_center',
+                className: 'whiteColor',
+              },
+              published_to: {
+                position: 'tb_center',
+                className: 'whiteColor',
+              },
+              attachment: { position: 'tb_start' },
               detail: { position: 'tb_center' },
+            }}
+            styleBody={{
+              subject: { className: 'textOverflow' },
+              created_by: { position: 'tb_center' },
+              published_date: {
+                position: 'tb_center',
+              },
             }}
             pagination={{
               current: stateNotice.currentPage,

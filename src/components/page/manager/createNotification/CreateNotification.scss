@@ -1,0 +1,32 @@
+.notificationContainer {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  form {
+    width: 100%;
+    background-color: white;
+    border-radius: 6px;
+    margin: 10px;
+    .divisionName {
+      text-align: center;
+    }
+    .ItemSignin {
+      display: flex;
+      text-align: center;
+      button {
+        margin-right: 10px;
+      }
+    }
+    .ant-checkbox-group {
+      width: 100%;
+    }
+    .status {
+      max-width: 140px;
+    }
+  }
+}
+.modalContainer {
+  max-width: 600px !important;
+}

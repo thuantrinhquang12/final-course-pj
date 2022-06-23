@@ -140,6 +140,7 @@ const CommonTable = ({
   if ((data || []).length === 0 && columns.length === 0) {
     return null
   }
+
   return (
     <>
       <Table
@@ -160,7 +161,7 @@ const CommonTable = ({
                 return null
               }
         }
-        className={className ? className : ''}
+        className={className ? `${className} tableContainer` : 'tableContainer'}
         pagination={
           pagination
             ? {
@@ -176,6 +177,7 @@ const CommonTable = ({
                       )
                     },
                 showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
             : {
                 pageSize: page ? page : 10,
@@ -190,6 +192,7 @@ const CommonTable = ({
                       )
                     },
                 showSizeChanger: true,
+                locale: { items_per_page: '' },
               }
         }
         columns={columnS}

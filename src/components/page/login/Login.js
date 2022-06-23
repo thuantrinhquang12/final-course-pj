@@ -25,10 +25,9 @@ const Login = () => {
         loginAccess({
           role: res.data.roles[0].title,
           tokenAccess: res.access_token,
-          shift: res.data.shifts,
         }),
       )
-      const UsedTimeToken = 3600 * 1000
+      const UsedTimeToken = 216000 * 1000
       const timeExpires = Date.now() + UsedTimeToken
       localStorage.setItem(LOCAL_STORAGE.TIME_EXPIRED, timeExpires)
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)

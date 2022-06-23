@@ -32,18 +32,20 @@ const noticeList = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getDataListNotice.fulfilled, (state, action) => {
+      state.loading = false
       state.per_page = action.payload.meta?.per_page
       state.total = action.payload.meta?.total
       state.page = action.payload.meta?.current_page
       state.lastPage = action.payload.meta?.last_page
       state.currentPage = action.payload?.meta.current_page
       state.tableData = action.payload?.data
+      state.loading = false
     })
     builder.addCase(getDataListNotice.pending, (state, action) => {
-      state.loading = false
+      state.loading = true
     })
     builder.addCase(getDataListNotice.rejected, (state, action) => {
-      state.loading = false
+      state.loading = true
     })
   },
 })

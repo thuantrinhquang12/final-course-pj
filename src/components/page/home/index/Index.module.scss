@@ -1,10 +1,9 @@
 .Home {
-  background: linear-gradient(45deg, #4158d0, #c850c0);
-  min-height: 100vh;
+  overflow: hidden;
 }
 
 .listNotice {
-  width: 100%;
+  width: 90%;
   padding: 20px 50px;
   .titleNotice {
     display: flex;
