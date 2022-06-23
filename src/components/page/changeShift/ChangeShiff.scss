@@ -11,8 +11,25 @@
 }
 
 .change_Shift {
+  .userInfo {
+    .selectChange {
+      font-weight: 600;
+      span {
+        font-weight: 600;
+      }
+    }
+    h3 {
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: black;
+    }
+
+    p {
+      font-weight: 600;
+    }
+  }
   .ant-modal-header {
-    background-color: #0599ef;
+    background-color: #104382;
     h2 {
       color: white;
       margin: 0;

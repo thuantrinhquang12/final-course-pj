@@ -55,6 +55,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
     <>
       <Modal
         wrapClassName="change_Shift"
+        okText="Submit"
         title={<h2>Change Shift</h2>}
         visible={modal.isOpen}
         width={1000}
@@ -62,7 +63,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
         onOk={handleSubmit}
       >
         <div className="userInfo">
-          <h2>User Info</h2>
+          <h3>User Info</h3>
           <Row>
             <Col xs={24} md={24} xl={24}>
               <Row>
@@ -107,7 +108,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
                 </Col>
               </Row>
               <Row>
-                <Col xs={24} md={24} xl={24}>
+                <Col xs={24} md={24} xl={24} className="selectChange">
                   <EditOutlined />
                   &nbsp; Change Shift: &nbsp;
                   <Select

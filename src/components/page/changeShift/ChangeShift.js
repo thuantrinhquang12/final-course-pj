@@ -106,61 +106,63 @@ const ChangeShift = () => {
 
   const columns = [
     {
-      title: <div>No</div>,
+      title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, records) => {
         return (
-          <div className="resetMargin">
+          <div className="resetMargin tb_center">
             <> {currentPage - 1 + Number(records.key)}</>
           </div>
         )
       },
     },
     {
-      title: <div>Member Name</div>,
+      title: <h4 style={{ textAlign: 'left' }}>MEMBER NAME</h4>,
       dataIndex: 'member_name',
       key: 'member_name',
       render: (payload, records) => {
-        return <div>{payload}</div>
+        return <div className="textOverflow">{payload}</div>
       },
     },
     {
-      title: <div>Email</div>,
+      title: <h4 style={{ textAlign: 'left' }}>EMAIL</h4>,
       dataIndex: 'email',
       key: 'email',
       render: (payload, records) => {
-        return <div>{payload}</div>
+        return <div className="textOverflow">{payload}</div>
       },
     },
     {
-      title: <div>Division Name</div>,
+      title: <h4>DIVISION NAME</h4>,
       dataIndex: 'division_name',
       key: 'division_name',
       render: (payload, records) => {
-        return <div>{payload}</div>
+        return <div className="tb_center">{payload}</div>
       },
     },
     {
-      title: <div>Shift name</div>,
+      title: <h4>SHIFT NAME</h4>,
       dataIndex: 'shift_name',
       key: 'shift_name',
       render: (payload, records) => {
-        return <div>{payload}</div>
+        return <div className="tb_center">{payload}</div>
       },
     },
     {
-      title: <div>Action</div>,
+      title: <h4>ACTION</h4>,
       dataIndex: 'shift_name',
       key: 'shift_name',
       render: (payload, records) => {
         return (
-          <Button
-            type="primary"
-            onClick={() => setModal({ isOpen: true, data: records })}
-          >
-            Change Shift
-          </Button>
+          <div className="tb_center">
+            <Button
+              type="primary"
+              onClick={() => setModal({ isOpen: true, data: records })}
+            >
+              Change Shift
+            </Button>
+          </div>
         )
       },
     },
