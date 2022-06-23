@@ -39,12 +39,13 @@ const noticeList = createSlice({
       state.lastPage = action.payload.meta?.last_page
       state.currentPage = action.payload?.meta.current_page
       state.tableData = action.payload?.data
+      state.loading = false
     })
     builder.addCase(getDataListNotice.pending, (state, action) => {
       state.loading = true
     })
     builder.addCase(getDataListNotice.rejected, (state, action) => {
-      state.loading = false
+      state.loading = true
     })
   },
 })

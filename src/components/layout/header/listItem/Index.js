@@ -1,7 +1,6 @@
 import React from 'react'
 import styles from './Index.module.scss'
 import { Row, Col } from 'antd'
-// import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import { Dropdown, Menu } from 'antd'
@@ -14,36 +13,37 @@ import {
 import { LOCAL_STORAGE } from '../../../constant/localStorage'
 import './index.scss'
 
-const menu = (
-  <Menu
-    className={styles.subMenu}
-    items={[
-      {
-        key: '1',
-        label: <Link to={'/manager'}>List requests</Link>,
-        icon: (
-          <DatabaseOutlined style={{ color: '#23466d', fontSize: '14px' }} />
-        ),
-      },
-      {
-        key: '2',
-        label: <Link to={'/change-shift'}>Change shift</Link>,
-        icon: (
-          <ClockCircleOutlined style={{ color: '#23466d', fontSize: '14px' }} />
-        ),
-      },
-      {
-        key: '3',
-        label: <Link to={'/notification'}>Create notice</Link>,
-        icon: <FormOutlined style={{ color: '#23466d', fontSize: '14px' }} />,
-      },
-    ]}
-  />
-)
-
 const Index = () => {
-  // const data = useSelector((state) => state.userInfo?.currentUser?.role)
   const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
+
+  const menu = (
+    <Menu
+      className={styles.subMenu}
+      items={[
+        {
+          key: '1',
+          label: <Link to={'/manager'}>List requests</Link>,
+          icon: (
+            <DatabaseOutlined style={{ color: '#23466d', fontSize: '14px' }} />
+          ),
+        },
+        {
+          key: '2',
+          label: <Link to={'/change-shift'}>Change shift</Link>,
+          icon: (
+            <ClockCircleOutlined
+              style={{ color: '#23466d', fontSize: '14px' }}
+            />
+          ),
+        },
+        {
+          key: '3',
+          label: <Link to={'/notification'}>Create notice</Link>,
+          icon: <FormOutlined style={{ color: '#23466d', fontSize: '14px' }} />,
+        },
+      ]}
+    />
+  )
   return (
     <div className={styles.ListItem}>
       <Row style={{ width: '100%', height: '100%' }}>
@@ -51,11 +51,7 @@ const Index = () => {
           <>
             <Col xs={24} md={1} xl={3}></Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <NavLink
-                to="/"
-                className={styles.formGroup}
-                activeclassname="active"
-              >
+              <NavLink to="/" className={styles.formGroup}>
                 <i className="fa-solid fa-house-chimney"></i>
                 <h4>HOME</h4>
                 <div className={styles.progress} id="progress"></div>

@@ -9,7 +9,8 @@ import { LOCAL_STORAGE } from '../components/constant/localStorage'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
-import CreateNotification from '../components/page/manager/createNotification/CreateNotification'
+import NotificationList from '../components/page/manager/createNotification/NotificationList'
+import ChangeShift from '../components/page/changeShift/ChangeShift'
 import Manager from '../components/page/manager/manager/Manager'
 
 const AppRoutesComponent = () => {
@@ -60,7 +61,6 @@ const AppRoutesComponent = () => {
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-            <Route path="/timesheet" element={<SearchField />} />
             <Route path="/" element={<Home />} />
           </Route>
 
@@ -75,7 +75,8 @@ const AppRoutesComponent = () => {
 
           {/* Admin routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/notification" element={<CreateNotification />} />
+            <Route path="/notification" element={<NotificationList />} />
+            <Route path="/change-shift" element={<ChangeShift />} />
           </Route>
         </Route>
       </Routes>
