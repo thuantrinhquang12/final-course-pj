@@ -139,6 +139,7 @@ const CommonTable = ({
   if ((data || []).length === 0 && columns.length === 0) {
     return null
   }
+
   return (
     <>
       <Table
@@ -158,7 +159,7 @@ const CommonTable = ({
                 return null
               }
         }
-        className={className ? className : ''}
+        className={className ? `${className} tableContainer` : 'tableContainer'}
         pagination={
           pagination
             ? {

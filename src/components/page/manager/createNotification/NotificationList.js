@@ -27,7 +27,7 @@ const NotificationList = () => {
 
   const confirmCancel = (record) => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
+      title: 'DELETE NOTICE',
       content: 'Are you sure ?',
       okText: 'Cancel',
       cancelText: 'OK',
@@ -47,27 +47,31 @@ const NotificationList = () => {
 
   const columns = [
     {
-      title: <p>NO</p>,
+      title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
       render: (payload, recored) => {
         return (
-          <p className="resetMargin">
+          <p className="resetMargin tb_center">
             {(dataNoticeDraft.page - 1) * 10 + Number(recored.key) + 1}
           </p>
         )
       },
     },
     {
-      title: <p>AUTHOR</p>,
+      title: <h4>AUTHOR</h4>,
       dataIndex: 'author',
       key: 'author',
       render: (payload, recored) => {
-        return <p className="textOverFlow resetMargin">{recored.created_by}</p>
+        return (
+          <p className="textOverFlow resetMargin tb_center">
+            {recored.created_by}
+          </p>
+        )
       },
     },
     {
-      title: <p>SUBJECT</p>,
+      title: <h4>SUBJECT</h4>,
       dataIndex: 'subject',
       key: 'subject',
       render: (payload, recored) => {
@@ -75,7 +79,7 @@ const NotificationList = () => {
       },
     },
     {
-      title: <p>Published Date</p>,
+      title: <h4>Published Date</h4>,
       dataIndex: 'published_date',
       key: 'published_date',
       render: (payload, recored) => {
@@ -85,12 +89,12 @@ const NotificationList = () => {
       },
     },
     {
-      title: <p>Status</p>,
+      title: <h4>Status</h4>,
       dataIndex: 'status',
       key: 'status',
       render: (payload, recored) => {
         return (
-          <p className="textOverFlow resetMargin">
+          <p className="textOverFlow resetMargin tb_center">
             {moment(recored.published_date).unix() > moment().unix()
               ? 'Bản tương lai'
               : 'Đã Xuất bản'}
@@ -99,7 +103,7 @@ const NotificationList = () => {
       },
     },
     {
-      title: <p> ACTION </p>,
+      title: <h4> ACTION </h4>,
       dataIndex: 'action',
       key: 'action',
       render: (payload, record) => {
@@ -208,7 +212,7 @@ const NotificationList = () => {
   }
 
   return (
-    <div>
+    <div id="notification" style={{ padding: '50px 0' }}>
       <Row
         style={{
           height: '100%',
@@ -251,6 +255,12 @@ const NotificationList = () => {
             width={{
               id: '5%',
               subject: '20%',
+            }}
+            styleBody={{
+              subject: { className: 'textOverflow' },
+              published_date: {
+                position: 'tb_center',
+              },
             }}
           />
         </Col>

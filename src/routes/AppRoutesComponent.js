@@ -1,15 +1,16 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import Login from '../components/page/login/Login'
 import PrivateRoute from './PrivateRoute'
 import Home from '../components/page/home/index/Index'
 import SearchField from '../components/page/timesheet'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
-import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
 import NotificationList from '../components/page/manager/createNotification/NotificationList'
+import Manager from '../components/page/manager/manager/Manager'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -59,18 +60,18 @@ const AppRoutesComponent = () => {
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-            <Route path="/timesheet" element={<SearchField />} />
             <Route path="/" element={<Home />} />
           </Route>
 
           {/* Manager routes */}
-          <Route
-            element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}
-          ></Route>
+          <Route element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}>
+            <Route path="/manager" element={<Manager />} />
+          </Route>
 
           {/* Admin routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/notification1" element={<NotificationList />} />
+            <Route path="/notification" element={<NotificationList />} />
+            <Route path="/manager" element={<Manager />} />
           </Route>
         </Route>
       </Routes>

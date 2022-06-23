@@ -91,9 +91,20 @@ const CreateNotification = ({ data, handleModal }) => {
       nameFile = payload.slice(indexName + 1, payload.length)
     }
     return (
-      <p className="textOverFlow colorBlue resetMargin" onClick={redirect}>
-        {nameFile}
-      </p>
+      <Row>
+        <Col xs={4} md={4} xl={4}>
+          <p>File</p>
+        </Col>
+        <Col>
+          <p
+            className="textOverFlow colorBlue resetMargin"
+            style={{ cursor: 'pointer', color: 'blue' }}
+            onClick={redirect}
+          >
+            {nameFile}
+          </p>
+        </Col>
+      </Row>
     )
   }
 
@@ -152,7 +163,7 @@ const CreateNotification = ({ data, handleModal }) => {
               </Form.Item>
             </Col>
             {data && (
-              <Col sm={12} xl={12}>
+              <Col sm={12} xl={12} className="status">
                 <p>Status</p>
                 <Form.Item
                   name="status"

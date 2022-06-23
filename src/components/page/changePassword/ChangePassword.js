@@ -51,8 +51,8 @@ const ChangePassword = () => {
   }
   const confirmCancel = () => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
-      content: 'Are you sure ?',
+      title: 'Modal',
+      content: 'Are you sure close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
