@@ -10,6 +10,7 @@ import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
 import CreateNotification from '../components/page/manager/createNotification/CreateNotification'
+import ChangeShiff from '../components/page/changeShift/ChangeShift'
 import Manager from '../components/page/manager/manager/Manager'
 
 const AppRoutesComponent = () => {
@@ -75,9 +76,10 @@ const AppRoutesComponent = () => {
           </Route>
 
           {/* Admin routes */}
-          <Route
-            element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}
-          ></Route>
+          <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
+            {' '}
+            <Route path="/change-shift" element={<ChangeShiff />} />
+          </Route>
         </Route>
       </Routes>
     </>
