@@ -8,11 +8,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { CMTable } from '../../..'
 import ModalEditNotice from './ModalEditNotice'
 import { delItemListNoticeDraft, getDataListNoticeDraft } from './slice/slice'
+import distance from '../../../utils/distance'
+import { PlusOutlined } from '@ant-design/icons'
 
 const NotificationList = () => {
   const dispatch = useDispatch()
   const [modal, setModal] = useState({ open: false, data: {} })
   const [load, setLoad] = useState(false)
+  const [heightTable, setHeightTable] = useState(0)
 
   useEffect(() => {
     const returnData = async () => {
@@ -20,6 +23,12 @@ const NotificationList = () => {
     }
     returnData()
   }, [load])
+
+  useEffect(() => {
+    const height = distance('notification', 50)
+    console.log('height', height)
+    setHeightTable(height.heightTable)
+  }, [])
 
   const dataNoticeDraft = useSelector((state) => {
     return state.noticeListDraft
@@ -212,7 +221,7 @@ const NotificationList = () => {
   }
 
   return (
-    <div id="notification" style={{ padding: '50px 0' }}>
+    <div id="notification" style={{ paddingTop: '50px' }}>
       <Row
         style={{
           height: '100%',
@@ -230,7 +239,16 @@ const NotificationList = () => {
                     <h2>List Notice Draft</h2>
                   </Col>
                   <Col xl={12} md={12} xs={12} style={{ textAlign: 'right' }}>
-                    <Button onClick={() => setModal({ open: true })}>
+                    <Button
+                      style={{
+                        backgroundColor: '#104382',
+                        color: 'white',
+                        borderRadius: '5px',
+                        height: '35px',
+                      }}
+                      onClick={() => setModal({ open: true })}
+                    >
+                      <PlusOutlined />
                       Create Notice Draft
                     </Button>
                   </Col>
@@ -249,7 +267,7 @@ const NotificationList = () => {
             }}
             scroll={{
               x: 1000,
-              y: 400,
+              y: heightTable,
             }}
             sorter={{ published_date: 'date' }}
             width={{
