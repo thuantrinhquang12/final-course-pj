@@ -2,7 +2,9 @@ import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
+
 import { get, put } from '../../service/requestApi'
+import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
@@ -12,23 +14,51 @@ import { messageRequest } from '../../index'
 import { dateTime, typePopup } from '../../index'
 
 const API = '/members'
-const dateFormat = 'DD-MM-YYYY'
-
-const disabledDate = (current) => {
-  return current && current > moment().endOf('day')
-}
+const dateFormat = 'DD/MM/YYYY'
+const bankName = [
+  {
+    id: 1,
+    name: 'Vietcombank',
+    displayName: 'Vietcombank',
+  },
+  {
+    id: 2,
+    name: 'Techcombank',
+    displayName: 'Techcombank',
+  },
+  {
+    id: 3,
+    name: 'Vietinbank',
+    displayName: 'Vietinbank',
+  },
+  {
+    id: 4,
+    name: 'BIDV',
+    displayName: 'BIDV',
+  },
+  {
+    id: 5,
+    name: 'SHB',
+    displayName: 'SHB',
+  },
+  {
+    id: 6,
+    name: 'MB Bank',
+    displayName: 'MB Bank',
+  },
+]
 
 const UserEditForm = () => {
-  const [componentSize, setComponentSize] = useState('default')
-  const onFormLayoutChange = ({ size }) => {
-    setComponentSize(size)
-  }
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
+  const [avatar, setAvatar] = useState(null)
 
+  emitter.on('EVENT_GET_AVATAR', (data) => {
+    setAvatar(data.data)
+  })
   useEffect(() => {
     get(API + '/edit').then((res) => {
-      setProfileInfo(res.data)
+      setProfileInfo(res?.data)
     })
   }, [modalVisible])
 
@@ -44,9 +74,13 @@ const UserEditForm = () => {
       gender: values.gender,
       marital_status: values.marital_status,
       start_date: dateTime.formatDate(values.start_date),
+      avatar: avatar,
     }
 
     try {
+      // const data = await put(API + '/update', valueEdit, {
+      //   headers: { 'Content-Type': 'multipart/form-data' },
+      // })
       const data = await put(API + '/update', valueEdit)
       if (data.status) {
         typePopup.popupNotice(
@@ -66,7 +100,6 @@ const UserEditForm = () => {
       )
     }
   }
-
   return (
     <>
       <h3 onClick={() => setModalVisible(true)}>Edit Profile</h3>
@@ -85,25 +118,14 @@ const UserEditForm = () => {
               identity_number: profileInfo.identity_number,
               identity_card_place: profileInfo.identity_card_place,
               birth_date: profileInfo.birth_date
-                ? moment(
-                    moment(profileInfo.birth_date).format('DD-MM-YYYY'),
-                    'DD-MM-YYYY',
-                  )
+                ? moment(profileInfo.birth_date)
                 : '',
               identity_card_date: profileInfo.identity_card_date
-                ? moment(
-                    moment(profileInfo.identity_card_date).format('DD-MM-YYYY'),
-                    'DD-MM-YYYY',
-                  )
+                ? moment(profileInfo.identity_card_date)
                 : '',
               passport_number: profileInfo.passport_number,
               passport_expiration: profileInfo.passport_expiration
-                ? moment(
-                    moment(profileInfo.passport_expiration).format(
-                      'DD-MM-YYYY',
-                    ),
-                    'DD-MM-YYYY',
-                  )
+                ? moment(profileInfo.passport_expiration)
                 : '',
               nationality: profileInfo.nationality,
               other_email: profileInfo.other_email,
@@ -130,11 +152,9 @@ const UserEditForm = () => {
               emergency_contact_relationship:
                 profileInfo.emergency_contact_relationship,
               emergency_contact_number: profileInfo.emergency_contact_number,
-              start_date: moment(profileInfo.start_date),
+              start_date: moment(profileInfo.start_date).format('DD-MM-YYYY'),
             }}
-            onValuesChange={onFormLayoutChange}
             onFinish={onSubmit}
-            size={componentSize}
             labelCol={{
               span: 12,
             }}
@@ -197,10 +217,7 @@ const UserEditForm = () => {
                                   },
                                 ]}
                               >
-                                <DatePicker
-                                  format={dateFormat}
-                                  disabledDate={disabledDate}
-                                />
+                                <DatePicker format={dateFormat} />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -230,6 +247,10 @@ const UserEditForm = () => {
                                   {
                                     max: 12,
                                     message: 'Must not exceed 12 characters',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
                                   },
                                 ]}
                               >
@@ -285,6 +306,10 @@ const UserEditForm = () => {
                                     max: 50,
                                     message: 'Must not exceed 50 characters',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -306,6 +331,10 @@ const UserEditForm = () => {
                                   {
                                     max: 20,
                                     message: 'Must not exceed 20 characters.',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
                                   },
                                 ]}
                               >
@@ -352,6 +381,10 @@ const UserEditForm = () => {
                                     max: 50,
                                     message: 'Must not exceed 50 characters',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -370,6 +403,12 @@ const UserEditForm = () => {
                                 label=""
                                 name="nickname"
                                 labelAlign="left"
+                                rules={[
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
+                                ]}
                               >
                                 <Input />
                               </Form.Item>
@@ -399,6 +438,10 @@ const UserEditForm = () => {
                                     type: 'email',
                                     message: 'The input is not valid E-mail!',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -420,6 +463,10 @@ const UserEditForm = () => {
                                     max: 30,
                                     message: 'Must not exceed 30 characters.',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -436,6 +483,12 @@ const UserEditForm = () => {
                                 label=""
                                 labelAlign="left"
                                 name="facebook"
+                                rules={[
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
+                                ]}
                               >
                                 <Input />
                               </Form.Item>
@@ -467,7 +520,16 @@ const UserEditForm = () => {
                                   },
                                 ]}
                               >
-                                <Input />
+                                <Select showSearch>
+                                  {bankName.map((bank) => (
+                                    <Select.Option
+                                      key={bank.id}
+                                      value={bank.name}
+                                    >
+                                      {bank.displayName}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
                               </Form.Item>
                             </Col>
                           </Row>
@@ -549,6 +611,10 @@ const UserEditForm = () => {
                                     max: 50,
                                     message: 'Must not exceed 50 characters.',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -588,6 +654,10 @@ const UserEditForm = () => {
                             max: 255,
                             message:
                               'This field must be maximum 255 characters.',
+                          },
+                          {
+                            whitespace: true,
+                            message: 'Must not enter only whitespace !',
                           },
                         ]}
                       >
@@ -654,6 +724,10 @@ const UserEditForm = () => {
                                     max: 20,
                                     message: 'Must not exceed 20 characters.',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -671,6 +745,12 @@ const UserEditForm = () => {
                                 label=""
                                 labelAlign="left"
                                 name="insurance_number"
+                                rules={[
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
+                                ]}
                               >
                                 <Input />
                               </Form.Item>
@@ -692,6 +772,10 @@ const UserEditForm = () => {
                                     max: 30,
                                     message: 'Must not exceed 30 characters.',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -709,6 +793,10 @@ const UserEditForm = () => {
                                   {
                                     max: 20,
                                     message: 'Must not exceed 20 characters.',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
                                   },
                                 ]}
                               >
@@ -742,6 +830,10 @@ const UserEditForm = () => {
                                     max: 70,
                                     message: 'Must not exceed 70 characters.',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -771,6 +863,10 @@ const UserEditForm = () => {
                                   {
                                     max: 50,
                                     message: 'Must not exceed 50 characters.',
+                                  },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
                                   },
                                 ]}
                               >
@@ -802,6 +898,10 @@ const UserEditForm = () => {
                                     max: 20,
                                     message: 'Must not exceed 20 characters.',
                                   },
+                                  {
+                                    whitespace: true,
+                                    message: 'Must not enter only whitespace !',
+                                  },
                                 ]}
                               >
                                 <Input />
@@ -821,10 +921,7 @@ const UserEditForm = () => {
                                 labelAlign="left"
                                 name="start_date"
                               >
-                                <DatePicker
-                                  format={dateFormat}
-                                  disabled={true}
-                                />
+                                <Input disabled={true} />
                               </Form.Item>
                             </Col>
                           </Row>

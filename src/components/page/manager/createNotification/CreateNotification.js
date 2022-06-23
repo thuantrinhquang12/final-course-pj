@@ -1,4 +1,4 @@
-import { UnorderedListOutlined } from '@ant-design/icons'
+import React, { useState } from 'react'
 import {
   Button,
   Checkbox,
@@ -9,7 +9,6 @@ import {
   Row,
   Select,
 } from 'antd'
-import React, { useState } from 'react'
 import styles from './CreateNotification.scss'
 import { dateTime, typePopup } from '../../../index'
 import moment from 'moment'
@@ -18,7 +17,7 @@ import TextArea from 'antd/lib/input/TextArea'
 import PropTypes from 'prop-types'
 import { saveAs } from 'file-saver'
 
-const CreateNotification = ({ data, handleModal }) => {
+const CreateNotification = ({ data, handleModal, confirm }) => {
   const [form] = Form.useForm()
   const [selectDivision, setDivision] = useState(true)
 
@@ -60,9 +59,9 @@ const CreateNotification = ({ data, handleModal }) => {
     }
   }
 
-  const onReset = () => {
-    form.resetFields()
-  }
+  // const onReset = () => {
+  //   form.resetFields()
+  // }
 
   let setPublishedTo = []
   if (typeof data?.published_to === 'string') {
@@ -93,7 +92,9 @@ const CreateNotification = ({ data, handleModal }) => {
     return (
       <Row>
         <Col xs={4} md={4} xl={4}>
-          <p>File</p>
+          <p>
+            File:<span className="requiredField"> (*)</span>
+          </p>
         </Col>
         <Col>
           <p
@@ -126,59 +127,70 @@ const CreateNotification = ({ data, handleModal }) => {
           onFinish={(values) => onSubmit(values)}
           autoComplete="off"
         >
-          <Form.Item
-            name="subject"
-            className={styles.InputField}
-            rules={[
-              {
-                required: true,
-                message: 'Required to subject',
-              },
-              {
-                max: 50,
-                message: 'Subject cannot be longer than 50 characters',
-              },
-            ]}
-          >
-            <Input
-              prefix={<UnorderedListOutlined />}
-              placeholder="Subject"
-              disabled={data}
-            />
-          </Form.Item>
-
           <Row>
-            <Col sm={12} xl={12}>
-              <p>Date</p>
+            <Col span={4}>
+              Subject:<span className="requiredField"> (*)</span>
+            </Col>
+            <Col span={20}>
               <Form.Item
-                name="date"
+                name="subject"
+                className={styles.InputField}
                 rules={[
                   {
                     required: true,
-                    message: 'Required to date',
+                    message: 'Required to subject',
+                  },
+                  {
+                    max: 50,
+                    message: 'Subject cannot be longer than 50 characters',
                   },
                 ]}
               >
-                <DatePicker disabled={data} />
+                <Input placeholder="Enter subject" disabled={data} />
               </Form.Item>
             </Col>
-            {data && (
-              <Col sm={12} xl={12} className="status">
-                <p>Status</p>
+          </Row>
+
+          <Row>
+            <Col xl={12} className="dFlex">
+              <Col xl={8}>
+                Date:<span className="requiredField"> (*)</span>
+              </Col>
+              <Col sm={12} xl={16}>
                 <Form.Item
-                  name="status"
+                  name="date"
+                  style={{ margin: 0 }}
                   rules={[
                     {
                       required: true,
-                      message: 'Required to status',
+                      message: 'Required to date',
                     },
                   ]}
                 >
-                  <Select disabled={data}>
-                    <Select.Option value={0}>Pending</Select.Option>
-                    <Select.Option value={1}>Official</Select.Option>
-                  </Select>
+                  <DatePicker disabled={data} />
                 </Form.Item>
+              </Col>
+            </Col>
+            {data && (
+              <Col xl={12} className="dFlex">
+                <Col xl={8}>Status: </Col>
+                <Col sm={12} xl={16} className="status">
+                  <Form.Item
+                    style={{ margin: 0 }}
+                    name="status"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Required to status',
+                      },
+                    ]}
+                  >
+                    <Select disabled={data}>
+                      <Select.Option value={0}>Pending</Select.Option>
+                      <Select.Option value={1}>Official</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
               </Col>
             )}
           </Row>
@@ -186,126 +198,109 @@ const CreateNotification = ({ data, handleModal }) => {
           {data ? (
             file(data.attachment)
           ) : (
-            <Form.Item name="file" rules={[]}>
-              <Input type="file" id="myfile" name="myfile" />
-            </Form.Item>
+            <Row>
+              <Col span={4}>
+                File:<span className="requiredField"> (*)</span>
+              </Col>
+              <Col span={20}>
+                <Form.Item name="file" rules={[]}>
+                  <Input type="file" id="myfile" name="myfile" />
+                </Form.Item>
+              </Col>
+            </Row>
           )}
 
-          <label>Published To : </label>
-          <Form.Item name="published_to">
-            <Checkbox.Group>
-              <Row className="divisionName">
-                <Col span={8}>
-                  <Checkbox
-                    value={1}
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    disabled={selectDivision && true}
-                  >
-                    D1
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox
-                    value={2}
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    disabled={selectDivision && true}
-                  >
-                    D2
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox
-                    value={3}
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    disabled={selectDivision && true}
-                  >
-                    D3
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox
-                    value={4}
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    disabled={selectDivision && true}
-                  >
-                    D4
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox
-                    value={5}
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    disabled={selectDivision && true}
-                  >
-                    D5
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox
-                    value={6}
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    disabled={selectDivision && true}
-                  >
-                    D6
-                  </Checkbox>
-                </Col>
-                <Col span={8}>
-                  <Checkbox
-                    value="all"
-                    style={{
-                      lineHeight: '32px',
-                    }}
-                    onChange={() => setDivision((prev) => !prev)}
-                    disabled={data}
-                  >
-                    All
-                  </Checkbox>
-                </Col>
-              </Row>
-            </Checkbox.Group>
-          </Form.Item>
-
-          <Form.Item
-            name="message"
-            className={styles.InputField}
-            rules={[
-              {
-                required: true,
-                message: 'Required to message',
-              },
-              {
-                max: 100,
-                message: 'Message cannot be longer than 100 characters',
-              },
-            ]}
-          >
-            <TextArea
-              placeholder="Message"
-              autoSize={{ minRows: 5, maxRows: 5 }}
-              disabled={data}
-            />
-          </Form.Item>
-
+          <Row>
+            <Col span={4}>
+              Published To:<span className="requiredField"> (*)</span>
+            </Col>
+            <Col span={20}>
+              <Form.Item name="published_to">
+                <Checkbox.Group>
+                  <Row className="divisionName">
+                    <Col span={8}>
+                      <Checkbox value={1} disabled={selectDivision && true}>
+                        D1
+                      </Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={2} disabled={selectDivision && true}>
+                        D2
+                      </Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={3} disabled={selectDivision && true}>
+                        D3
+                      </Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={4} disabled={selectDivision && true}>
+                        D4
+                      </Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={5} disabled={selectDivision && true}>
+                        D5
+                      </Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value={6} disabled={selectDivision && true}>
+                        D6
+                      </Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox
+                        value="all"
+                        onChange={() => setDivision((prev) => !prev)}
+                        disabled={data}
+                      >
+                        All
+                      </Checkbox>
+                    </Col>
+                  </Row>
+                </Checkbox.Group>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={4}>
+              Message:<span className="requiredField"> (*)</span>
+            </Col>
+            <Col span={20}>
+              <Form.Item
+                name="message"
+                className={styles.InputField}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Required to message',
+                  },
+                ]}
+              >
+                <TextArea
+                  showCount
+                  maxLength={100}
+                  placeholder="Please enter message not too 100 characters"
+                  autoSize={{ minRows: 5, maxRows: 5 }}
+                  disabled={data}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
           {!data && (
             <Form.Item className="ItemSignin">
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
-              <Button htmlType="button" onClick={onReset}>
+              <Button onClick={confirm}>Cancel</Button>
+              {/* <Button htmlType="button" onClick={onReset}>
                 Reset
-              </Button>
+              </Button> */}
+            </Form.Item>
+          )}
+          {data && (
+            <Form.Item className="ItemSignin">
+              <Button onClick={handleModal}>Cancel</Button>
             </Form.Item>
           )}
         </Form>
@@ -317,6 +312,7 @@ const CreateNotification = ({ data, handleModal }) => {
 CreateNotification.propTypes = {
   data: PropTypes.object,
   handleModal: PropTypes.func,
+  confirm: PropTypes.func,
 }
 
 export default CreateNotification

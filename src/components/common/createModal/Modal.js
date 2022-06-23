@@ -3,7 +3,15 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import './Modal.scss'
 
-const Dialog = ({ children, isOpen, title, handleModal, confirmDisable }) => {
+const Dialog = ({
+  children,
+  isOpen,
+  title,
+  handleModal,
+  confirmDisable,
+  className,
+  widthModal,
+}) => {
   const confirm = () => {
     Modal.confirm({
       title: 'Modal',
@@ -30,10 +38,12 @@ const Dialog = ({ children, isOpen, title, handleModal, confirmDisable }) => {
       <Modal
         title={title}
         onCancel={confirmDisable ? handleModal : confirm}
-        className="modalContainer"
+        className={
+          className ? `${className} modalContainer ` : 'modalContainer'
+        }
         footer={null}
         visible={isOpen}
-        width={1000}
+        width={widthModal || 1000}
       >
         {children}
       </Modal>
@@ -50,6 +60,8 @@ Dialog.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
   confirmDisable: PropTypes.bool,
+  className: PropTypes.string,
+  widthModal: PropTypes.number,
 }
 
 export default Dialog

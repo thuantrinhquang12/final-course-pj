@@ -9,6 +9,7 @@
       }
     }
     .ant-modal-body {
+      padding-bottom: 0;
       .ant-row {
         margin-bottom: 20px;
       }
@@ -47,6 +48,9 @@
     position: absolute;
     bottom: 0;
     right: 5px;
+  }
+  .ant-modal-close-icon {
+    color: white;
   }
 }
 

@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import reducerRegistry from '../../../../store/reducerRegister'
-import { get } from '../../../service/requestApi'
+import reducerRegistry from '../../../../../store/reducerRegister'
+import { get } from '../../../../service/requestApi'
 
 export const getDataListUser = createAsyncThunk(
-  'changeShiff/getDataUserList',
+  'changeShift/getDataUserList',
   async (item) => {
     const response = await get(`admin/shift/list?member_name=${item}`)
     return response

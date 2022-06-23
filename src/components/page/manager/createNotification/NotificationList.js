@@ -1,7 +1,13 @@
 /* eslint-disable object-curly-spacing */
-import { Button, Col, Modal, Row } from 'antd'
-import moment from 'moment'
 import * as React from 'react'
+import { Button, Col, Modal, Row } from 'antd'
+import {
+  DoubleLeftOutlined,
+  LeftOutlined,
+  DoubleRightOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
+import moment from 'moment'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,10 +18,11 @@ import distance from '../../../utils/distance'
 import { PlusOutlined } from '@ant-design/icons'
 
 const NotificationList = () => {
-  const dispatch = useDispatch()
   const [modal, setModal] = useState({ open: false, data: {} })
   const [load, setLoad] = useState(false)
   const [heightTable, setHeightTable] = useState(0)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const returnData = async () => {
@@ -26,7 +33,6 @@ const NotificationList = () => {
 
   useEffect(() => {
     const height = distance('notification', 50)
-    console.log('height', height)
     setHeightTable(height.heightTable)
   }, [])
 
@@ -59,10 +65,10 @@ const NotificationList = () => {
       title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
           <p className="resetMargin tb_center">
-            {(dataNoticeDraft.page - 1) * 10 + Number(recored.key) + 1}
+            {(dataNoticeDraft.page - 1) * 10 + Number(record.key) + 1}
           </p>
         )
       },
@@ -71,10 +77,10 @@ const NotificationList = () => {
       title: <h4>AUTHOR</h4>,
       dataIndex: 'author',
       key: 'author',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
           <p className="textOverFlow resetMargin tb_center">
-            {recored.created_by}
+            {record.created_by}
           </p>
         )
       },
@@ -83,28 +89,28 @@ const NotificationList = () => {
       title: <h4>SUBJECT</h4>,
       dataIndex: 'subject',
       key: 'subject',
-      render: (payload, recored) => {
-        return <p className="textOverFlow resetMargin">{recored.subject}</p>
+      render: (payload, record) => {
+        return <p className="textOverFlow resetMargin">{record.subject}</p>
       },
     },
     {
-      title: <h4>Published Date</h4>,
+      title: <h4>PUBLISHED DATE</h4>,
       dataIndex: 'published_date',
       key: 'published_date',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
-          <p className="textOverFlow resetMargin">{recored.published_date}</p>
+          <p className="textOverFlow resetMargin">{record.published_date}</p>
         )
       },
     },
     {
-      title: <h4>Status</h4>,
+      title: <h4>STATUS</h4>,
       dataIndex: 'status',
       key: 'status',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
           <p className="textOverFlow resetMargin tb_center">
-            {moment(recored.published_date).unix() > moment().unix()
+            {moment(record.published_date).unix() > moment().unix()
               ? 'Bản tương lai'
               : 'Đã Xuất bản'}
           </p>
@@ -148,10 +154,9 @@ const NotificationList = () => {
     if (type === 'prev') {
       return (
         <>
-          <button
-            style={
-              dataNoticeDraft.currentPage === 1 ? { cursor: 'not-allowed' } : {}
-            }
+          <Button
+            disabled={dataNoticeDraft.currentPage === 1}
+            icon={<DoubleLeftOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -162,17 +167,12 @@ const NotificationList = () => {
               )
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-left" />
-          </button>
-          <button
+          ></Button>
+          <Button
             className="ant-pagination-item"
-            style={
-              dataNoticeDraft.currentPage === 1 ? { cursor: 'not-allowed' } : {}
-            }
-          >
-            <i className="fa-solid fa-angle-left" />
-          </button>
+            disabled={dataNoticeDraft.currentPage === 1}
+            icon={<LeftOutlined />}
+          ></Button>
         </>
       )
     }
@@ -180,22 +180,14 @@ const NotificationList = () => {
     if (type === 'next') {
       return (
         <>
-          <button
+          <Button
             className="ant-pagination-item"
-            style={
-              dataNoticeDraft.currentPage === dataNoticeDraft.lastPage
-                ? { cursor: 'not-allowed' }
-                : {}
-            }
-          >
-            <i className="fa-solid fa-angle-right" />
-          </button>
-          <button
-            style={
-              dataNoticeDraft.currentPage === dataNoticeDraft.lastPage
-                ? { cursor: 'not-allowed' }
-                : {}
-            }
+            icon={<RightOutlined />}
+            disabled={dataNoticeDraft.currentPage === dataNoticeDraft.lastPage}
+          ></Button>
+          <Button
+            disabled={dataNoticeDraft.currentPage === dataNoticeDraft.lastPage}
+            icon={<DoubleRightOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -206,9 +198,7 @@ const NotificationList = () => {
               )
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-right" />
-          </button>
+          ></Button>
         </>
       )
     }
@@ -236,7 +226,7 @@ const NotificationList = () => {
               return (
                 <Row style={{ justifyContent: 'space-between' }}>
                   <Col xl={12} md={12} xs={12}>
-                    <h2>List Notice Draft</h2>
+                    <h2>List Notice</h2>
                   </Col>
                   <Col xl={12} md={12} xs={12} style={{ textAlign: 'right' }}>
                     <Button
@@ -249,7 +239,7 @@ const NotificationList = () => {
                       onClick={() => setModal({ open: true })}
                     >
                       <PlusOutlined />
-                      Create Notice Draft
+                      Create Notice
                     </Button>
                   </Col>
                 </Row>
