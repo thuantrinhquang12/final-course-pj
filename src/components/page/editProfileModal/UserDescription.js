@@ -4,6 +4,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 
 import { get } from '../../service/requestApi'
+import styles from './UserEditForm.module.scss'
 
 const API = '/members'
 
@@ -20,27 +21,27 @@ const UserDescription = () => {
     <Descriptions>
       <Row>
         <Col span={24}>
-          <Row style={{ marginBottom: '20px' }}>
+          <Row className={styles.descriptionRow}>
             <Col span={6}>Member Code:</Col>
-            <Col span={12}>
+            <Col className={styles.descriptionCol} span={12}>
               <Descriptions.Item>{profileInfo.member_code}</Descriptions.Item>
             </Col>
           </Row>
-          <Row style={{ marginBottom: '20px' }}>
+          <Row className={styles.descriptionRow}>
             <Col span={6}>Email:</Col>
-            <Col span={12}>
+            <Col className={styles.descriptionCol} span={12}>
               <Descriptions.Item>{profileInfo.email}</Descriptions.Item>
             </Col>
           </Row>
-          <Row style={{ marginBottom: '20px' }}>
+          <Row className={styles.descriptionRow}>
             <Col span={6}>Name:</Col>
-            <Col span={12}>
+            <Col className={styles.descriptionCol} span={12}>
               <Descriptions.Item>{profileInfo.full_name}</Descriptions.Item>
             </Col>
           </Row>
-          <Row>
+          <Row className={styles.descriptionRow}>
             <Col span={6}>Phone Number:</Col>
-            <Col span={12}>
+            <Col className={styles.descriptionCol} span={12}>
               <Descriptions.Item>{profileInfo.phone}</Descriptions.Item>
             </Col>
           </Row>

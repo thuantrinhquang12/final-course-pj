@@ -2,12 +2,12 @@ import { Form, Input, DatePicker, Select, Button, Row, Col } from 'antd'
 import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
+
 import instance, { get } from '../../service/requestApi'
 import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
 import UserDescription from './UserDescription'
-import './Index.scss'
 import Dialog from '../../common/createModal/Modal'
 import { messageRequest } from '../../index'
 import { dateTime, typePopup } from '../../index'
@@ -104,6 +104,7 @@ const UserEditForm = () => {
       )
     }
   }
+  console.log('profileInfo: ', profileInfo)
   return (
     <>
       <h3 onClick={() => setModalVisible(true)}>Edit Profile</h3>

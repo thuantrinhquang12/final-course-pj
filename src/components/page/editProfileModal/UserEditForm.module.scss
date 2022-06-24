@@ -73,6 +73,18 @@
     }
   }
 }
+.descriptionTable {
+  border: none !important;
+}
+.descriptionRow {
+  margin-bottom: 20px;
+  .descriptionCol {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 14px;
+    overflow: hidden;
+  }
+}
 
 @media (max-width: 768px) {
   .form {
