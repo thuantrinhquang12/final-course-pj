@@ -285,7 +285,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={24} md={12} xl={12} style={{ display: 'flex' }}>
                         <Col xs={6} md={12} xl={8}>
-                          Date cover up:
+                          <span>Date cover up:</span>
                           <span className={styles.requiredField}>(*)</span>
                         </Col>
                         <Col xs={18} md={12} xl={16}>
@@ -380,7 +380,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     <div className={styles.formGroup}>
                       <Col xs={6} md={6} xl={4} style={{ display: 'flex' }}>
                         Reason:
-                        <span className={styles.requiredField}>(*)</span>
+                        <span className={styles.requiredField}> (*)</span>
                       </Col>
                       <Col xs={18} md={18} xl={20}>
                         <Controller

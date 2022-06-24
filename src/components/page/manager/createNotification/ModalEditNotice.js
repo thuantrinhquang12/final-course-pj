@@ -1,6 +1,7 @@
 import React from 'react'
 import Dialog from '../../../common/createModal/Modal'
 import { Modal } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import CreateNotification from './CreateNotification'
 import PropTypes from 'prop-types'
 import './CreateNotification.scss'
@@ -10,7 +11,8 @@ const ModalEditNotice = (props) => {
   const confirm = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {

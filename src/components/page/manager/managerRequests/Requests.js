@@ -8,6 +8,8 @@ import {
   LeftOutlined,
   DoubleRightOutlined,
   RightOutlined,
+  DeleteOutlined,
+  CloseCircleOutlined,
 } from '@ant-design/icons'
 import {
   getRequests,
@@ -153,7 +155,8 @@ const Manager = () => {
         : ''
     Modal.confirm({
       title: 'REQUEST',
-      content: 'Are you sure reject request?',
+      icon: <DeleteOutlined style={{ color: 'red' }} />,
+      content: 'Do you want reject request?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -169,7 +172,8 @@ const Manager = () => {
   const confirmCloseModal = (e) => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -243,7 +247,6 @@ const Manager = () => {
       title: <h4>STATUS</h4>,
       dataIndex: 'status',
       key: 'status',
-      defaultSortOrder: 'ascend',
       render: (_) => {
         return (
           <>

@@ -6,6 +6,7 @@ import {
   LeftOutlined,
   DoubleRightOutlined,
   RightOutlined,
+  CloseCircleOutlined,
 } from '@ant-design/icons'
 import moment from 'moment'
 import { useState } from 'react'
@@ -43,7 +44,8 @@ const NotificationList = () => {
   const confirmCancel = (record) => {
     Modal.confirm({
       title: 'DELETE NOTICE',
-      content: 'Are you sure ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Are you sure delete notice ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {

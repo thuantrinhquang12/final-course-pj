@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { typePopup } from '../../index'
 import './ChangePassword.scss'
 import { patch } from '../../service/requestApi'
@@ -52,7 +53,8 @@ const ChangePassword = () => {
   const confirmCancel = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {

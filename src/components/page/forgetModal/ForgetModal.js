@@ -186,7 +186,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               </Row>
               <Row>
                 <Col xl={4} className={styles.dFlex}>
-                  Check-in: <span className={styles.requiredField}>(*)</span>
+                  <span> Check-in:</span>
+                  <span className={styles.requiredField}> (*)</span>
                 </Col>
                 <Col xl={20}>
                   <Controller
@@ -219,7 +220,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               </Row>
               <Row>
                 <Col xl={4} className={styles.dFlex}>
-                  Check-out: <span className={styles.requiredField}>(*)</span>
+                  <span> Check-out:</span>
+                  <span className={styles.requiredField}> (*)</span>
                 </Col>
                 <Col xl={20}>
                   <Controller
@@ -272,7 +274,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               </Row>
               <Row>
                 <Col xl={4} style={{ marginBottom: '10px' }}>
-                  Reason: <span className={styles.requiredField}>(*)</span>
+                  <span>Reason:</span>
+                  <span className={styles.requiredField}>(*)</span>
                 </Col>
                 <Col xl={20}>
                   <Controller

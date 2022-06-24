@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Row, Col, Select, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { get, put } from '../../../service/requestApi'
 import PropTypes from 'prop-types'
 import { typePopup } from '../../../index'
@@ -46,7 +47,8 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   const confirm = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {

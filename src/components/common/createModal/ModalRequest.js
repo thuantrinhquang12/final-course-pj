@@ -18,7 +18,7 @@ const Dialog = ({
     Modal.confirm({
       title: 'Modal',
       icon: <CloseCircleOutlined />,
-      content: 'Are you sure close modal ?',
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -93,7 +93,8 @@ const Dialog = ({
                       form={idForm}
                       onClick={
                         statusRequest === typeStatusRequest.CONFIRMED ||
-                        statusRequest === typeStatusRequest.APPROVED
+                        statusRequest === typeStatusRequest.APPROVED ||
+                        statusRequest === typeStatusRequest.REJECT
                           ? handleModal
                           : key === 'cancel'
                           ? confirm

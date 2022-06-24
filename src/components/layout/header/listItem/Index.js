@@ -66,17 +66,26 @@ const Index = () => {
             </Col>
 
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <Dropdown overlay={menu}>
-                <NavLink
-                  to={'/a'}
-                  className={styles.formGroup}
-                  onClick={(e) => e.preventDefault()}
-                >
+              {role === 'Admin' && (
+                <Dropdown overlay={menu}>
+                  <NavLink
+                    to={'/'}
+                    className={styles.formGroup}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <i className="fa-solid fa-bars-progress"></i>
+                    <h4>MANAGER</h4>
+                    <div className={styles.progress} id="progress"></div>
+                  </NavLink>
+                </Dropdown>
+              )}
+              {role === 'Manager' && (
+                <NavLink to={'/manager'} className={styles.formGroup}>
                   <i className="fa-solid fa-bars-progress"></i>
                   <h4>MANAGER</h4>
                   <div className={styles.progress} id="progress"></div>
                 </NavLink>
-              </Dropdown>
+              )}
             </Col>
           </>
         )}
