@@ -58,7 +58,6 @@ export default function SearchField() {
   const [form] = Form.useForm()
   const onChangeChoose = (e) => {
     setChoose(e.target.value)
-    console.log(choose)
   }
 
   return (

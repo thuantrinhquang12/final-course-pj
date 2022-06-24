@@ -1,15 +1,17 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import Login from '../components/page/login/Login'
 import PrivateRoute from './PrivateRoute'
 import Home from '../components/page/home/index/Index'
 import SearchField from '../components/page/timesheet'
 import { LOCAL_STORAGE } from '../components/constant/localStorage'
-import { useDispatch, useSelector } from 'react-redux'
 import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
-import CreateNotification from '../components/page/manager/createNotification/CreateNotification'
+import NotificationList from '../components/page/manager/createNotification/NotificationList'
+import ChangeShift from '../components/page/manager/changeShift/ChangeShift'
+import Manager from '../components/page/manager/managerRequests/Requests'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -44,7 +46,6 @@ const AppRoutesComponent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<AuthorError />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/notification" element={<CreateNotification />} />
 
         <Route element={<Header />}>
           {/* public routes with layout */}
@@ -60,19 +61,23 @@ const AppRoutesComponent = () => {
 
           {/* User routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.User]} />}>
-            <Route path="/timesheet" element={<SearchField />} />
             <Route path="/" element={<Home />} />
           </Route>
 
           {/* Manager routes */}
           <Route
-            element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}
-          ></Route>
+            element={
+              <PrivateRoute allowedRoles={[ROLES.Manager, ROLES.Admin]} />
+            }
+          >
+            <Route path="/manager" element={<Manager />} />
+          </Route>
 
           {/* Admin routes */}
-          <Route
-            element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}
-          ></Route>
+          <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
+            <Route path="/notification" element={<NotificationList />} />
+            <Route path="/change-shift" element={<ChangeShift />} />
+          </Route>
         </Route>
       </Routes>
     </>

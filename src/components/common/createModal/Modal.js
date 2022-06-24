@@ -1,12 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
+import './Modal.scss'
 
-const Dialog = ({ children, isOpen, title, handleModal }) => {
+const Dialog = ({
+  children,
+  isOpen,
+  title,
+  handleModal,
+  confirmDisable,
+  className,
+  widthModal,
+}) => {
   const confirm = () => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
-      content: 'Are you sure ?',
+      title: 'Modal',
+      content: 'Are you sure close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -28,10 +37,13 @@ const Dialog = ({ children, isOpen, title, handleModal }) => {
     <>
       <Modal
         title={title}
-        onCancel={confirm}
+        onCancel={confirmDisable ? handleModal : confirm}
+        className={
+          className ? `${className} modalContainer ` : 'modalContainer'
+        }
         footer={null}
         visible={isOpen}
-        width={1000}
+        width={widthModal || 1000}
       >
         {children}
       </Modal>
@@ -47,6 +59,9 @@ Dialog.propTypes = {
   handleModal: PropTypes.func,
   title: PropTypes.string,
   isOpen: PropTypes.bool,
+  confirmDisable: PropTypes.bool,
+  className: PropTypes.string,
+  widthModal: PropTypes.number,
 }
 
 export default Dialog

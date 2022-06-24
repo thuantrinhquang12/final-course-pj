@@ -56,12 +56,11 @@ const UserEditForm = () => {
   })
   useEffect(() => {
     get(API + '/edit').then((res) => {
-      setProfileInfo(res.data)
+      setProfileInfo(res?.data)
     })
   }, [modalVisible])
 
   const onSubmit = async (values) => {
-    console.log('avatar', avatar)
     const valueEdit = {
       ...values,
       birth_date: dateTime.formatDate(values.birth_date),

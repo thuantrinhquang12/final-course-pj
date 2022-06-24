@@ -8,7 +8,6 @@ const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [error, setError] = useState(false)
   const [form] = Form.useForm()
-
   const onFinish = async (values) => {
     const {
       old_password: oldPassword,
@@ -52,8 +51,8 @@ const ChangePassword = () => {
   }
   const confirmCancel = () => {
     Modal.confirm({
-      title: 'CLOSE MODAL',
-      content: 'Are you sure ?',
+      title: 'Modal',
+      content: 'Are you sure close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -89,6 +88,7 @@ const ChangePassword = () => {
             Cancel
           </Button>,
         ]}
+        width={600}
       >
         <Form
           form={form}
@@ -107,7 +107,7 @@ const ChangePassword = () => {
           onFinish={onFinish}
           autoComplete="off"
         >
-          <Form.Item label="Email" name="email" rules={[]}>
+          <Form.Item label="Email" name="email" rules={[]} className="email">
             <Input disabled={true} />
           </Form.Item>
 

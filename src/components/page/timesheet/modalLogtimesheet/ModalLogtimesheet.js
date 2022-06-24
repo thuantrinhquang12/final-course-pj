@@ -7,7 +7,6 @@ import { getModalTimelog } from '../slice/sliceModal'
 
 const { Text } = Typography
 export default function ModalLogTimesheet(date) {
-  console.log(date)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getModalTimelog(date))
