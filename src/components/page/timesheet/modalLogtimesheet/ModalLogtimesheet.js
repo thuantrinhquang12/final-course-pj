@@ -1,50 +1,88 @@
-import React, { useEffect } from 'react'
-import 'antd/dist/antd.min.css'
-import { Table, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Modal } from 'antd'
+import PropTypes from 'prop-types'
+import { get } from '../../../service/requestApi'
+import TableCS from '../../../common/table/Table'
 import moment from 'moment'
-import { useDispatch, useSelector } from 'react-redux'
-import { getModalTimelog } from '../slice/sliceModal'
+import { dateTime } from '../../../index'
 
-const { Text } = Typography
-export default function ModalLogTimesheet(date) {
-  const dispatch = useDispatch()
+const ModalLogtimesheet = ({ modal, handleClose }) => {
+  const [dateList, setDateList] = useState([])
   useEffect(() => {
-    dispatch(getModalTimelog(date))
-  }, [date])
-  const worksheet = useSelector((state) => {
-    return state.timesheet.worksheet.data
-  })
-
+    const getDateList = async () => {
+      const response = await get(`time-log/?work_date=${modal.date}`)
+      setDateList(response)
+    }
+    getDateList()
+  }, [])
+  console.log('response', dateList)
   const columns = [
     {
-      title: 'No',
+      title: <h4>NO</h4>,
       dataIndex: 'id',
-      key: 'key',
-    },
-    {
-      title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
-      render: (date) => {
-        return <Text>{moment(date).format('YYYY/MM/DD, dddd')} </Text>
+      key: 'id',
+      render: (payload, records) => {
+        return (
+          <p className="resetMargin tb_center">
+            <> {Number(records.key) + 1}</>
+          </p>
+        )
       },
     },
     {
-      title: 'Checktime',
+      title: <h4>DATE</h4>,
+      dataIndex: 'date',
+      key: 'date',
+      render: (payload) => {
+        const check = moment(payload)
+        return (
+          <p className="resetMargin tb_center">{`${payload} ${check.format(
+            'dddd',
+          )}`}</p>
+        )
+      },
+    },
+    {
+      title: <h4>CHECK TIME</h4>,
       dataIndex: 'checktime',
       key: 'checktime',
-      render: (checktime) => {
-        return <Text>{moment(checktime).format('HH:mm')}</Text>
+      render: (payload) => {
+        return (
+          <p className="resetMargin tb_center">
+            {dateTime.formatTime(payload)}
+          </p>
+        )
       },
     },
   ]
+
   return (
-    <>
-      <Table
+    <Modal
+      className="modalTimeLog"
+      title={<h2>Time Logs</h2>}
+      centered
+      visible={modal.open}
+      onCancel={() => handleClose()}
+      width={1000}
+    >
+      <TableCS
+        scroll={{
+          x: 500,
+        }}
+        className="modalTime"
+        data={dateList}
         columns={columns}
-        dataSource={worksheet}
-        pagination={{ position: ['none'] }}
-      ></Table>
-    </>
+        pagination={{
+          pageSize: 100,
+        }}
+      />
+    </Modal>
   )
 }
+
+ModalLogtimesheet.propTypes = {
+  modal: PropTypes.object,
+  handleClose: PropTypes.func,
+}
+
+export default ModalLogtimesheet

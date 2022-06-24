@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Space, Button, Typography, Modal } from 'antd'
+import { Button, Typography } from 'antd'
 import './table-timesheet.scss'
 import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
@@ -9,10 +9,17 @@ import moment from 'moment'
 import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
 import PropTypes from 'prop-types'
 import TableCS from '../../../common/table/Table'
-
+import { useDispatch } from 'react-redux'
+import { getTimeSheet } from '../slice/slice'
+import {
+  DoubleLeftOutlined,
+  LeftOutlined,
+  DoubleRightOutlined,
+  RightOutlined,
+} from '@ant-design/icons'
 const { Text } = Typography
 
-export default function Timesheet({ row }) {
+export default function Timesheet({ row, params }) {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
@@ -24,8 +31,13 @@ export default function Timesheet({ row }) {
     name: '',
   })
 
-  const [visible, setVisible] = useState(false)
-  const [dateTimelog, setDateTimelog] = useState('')
+  const [modal, setModal] = useState({ open: false, date: '' })
+  const dispatch = useDispatch()
+
+  const handleModal = () => {
+    setModal({ open: false, date: '' })
+  }
+
   const handleClickModal = (type) => {
     const modalType = type.toUpperCase()
     switch (modalType) {
@@ -63,16 +75,11 @@ export default function Timesheet({ row }) {
       dataIndex: 'id',
       key: 'id',
 
-      render: (id, row) => {
+      render: (payload, records) => {
         return (
-          <Text
-            onClick={() => {
-              setVisible(true)
-              setDateTimelog(row.work_date)
-            }}
-          >
-            {id}
-          </Text>
+          <p className="resetMargin tb_center">
+            <> {(row.current_page - 1) * 10 + Number(records.key) + 1}</>
+          </p>
         )
       },
     },
@@ -82,16 +89,7 @@ export default function Timesheet({ row }) {
       key: 'work_date',
       width: 110,
       render: (date) => {
-        return (
-          <Text
-            onClick={() => {
-              setVisible(true)
-              setDateTimelog(date)
-            }}
-          >
-            {moment(date).format('DD/MM/YYYY ddd')}{' '}
-          </Text>
-        )
+        return <Text>{moment(date).format('DD/MM/YYYY ddd')} </Text>
       },
     },
     {
@@ -196,8 +194,9 @@ export default function Timesheet({ row }) {
       key: 'action',
       width: 250,
       render: (record) => (
-        <Space>
+        <div className="action">
           <Button
+            className="action_false"
             size="small"
             onClick={() => {
               setCheckModal((prev) => {
@@ -209,10 +208,11 @@ export default function Timesheet({ row }) {
               handleClickModal('forget')
             }}
           >
-            Forget
+            <span className="action_false"> Forget</span>
           </Button>
 
           <Button
+            className="action_false"
             size="small"
             onClick={() => {
               setCheckModal((prev) => {
@@ -224,10 +224,11 @@ export default function Timesheet({ row }) {
               handleClickModal('late_early')
             }}
           >
-            Late/Early
+            <span className="action_false"> Late/Early</span>
           </Button>
 
           <Button
+            className="action_false"
             size="small"
             onClick={() => {
               setCheckModal((prev) => {
@@ -239,9 +240,10 @@ export default function Timesheet({ row }) {
               handleClickModal('leave')
             }}
           >
-            Leave
+            <span className="action_false"> Leave</span>
           </Button>
           <Button
+            className="action_false"
             size="small"
             onClick={() => {
               setCheckModal((prev) => {
@@ -253,47 +255,115 @@ export default function Timesheet({ row }) {
               handleClickModal('ot')
             }}
           >
-            OT
+            <span className="action_false"> OT</span>
           </Button>
-        </Space>
+        </div>
       ),
     },
   ]
 
+  const onShowSizeChange = (page, size) => {
+    dispatch(getTimeSheet({ ...params, page: page, perPage: size }))
+  }
+
+  const onChange = (size, page) => {
+    dispatch(getTimeSheet({ ...params, page: size, perPage: page }))
+  }
+
+  const itemRender = (_, type, originalElement) => {
+    if (type === 'prev') {
+      return (
+        <>
+          <Button
+            icon={<DoubleLeftOutlined />}
+            disabled={row.current_page === 1}
+            onClick={(e) => {
+              e.stopPropagation()
+              dispatch(
+                getTimeSheet({ ...params, page: 1, perPage: row.per_page }),
+              )
+            }}
+            className="ant-pagination-item"
+          ></Button>
+          <Button
+            className="ant-pagination-item"
+            disabled={row.current_page === 1}
+            icon={<LeftOutlined />}
+          ></Button>
+        </>
+      )
+    }
+
+    if (type === 'next') {
+      return (
+        <>
+          <Button
+            className="ant-pagination-item"
+            disabled={row.current_page === row.last_page}
+            icon={<RightOutlined />}
+          ></Button>
+          <Button
+            disabled={row.current_page === row.last_page}
+            icon={<DoubleRightOutlined />}
+            onClick={(e) => {
+              e.stopPropagation()
+              dispatch(
+                getTimeSheet({
+                  ...params,
+                  page: row.last_page,
+                  perPage: row.per_page,
+                }),
+              )
+            }}
+            className="ant-pagination-item"
+          ></Button>
+        </>
+      )
+    }
+
+    return originalElement
+  }
+  console.log('row', row)
   return (
     <>
       <TableCS
+        className="tableTimeSheet"
         scroll={{
           x: 1000,
           y: 'auto',
         }}
-        rowClassName={(record, index) => {
-          return record.checkin_original === null &&
-            record.checkout_original === null
+        rowClassName={(record) => {
+          const checkDate = moment(record.work_date).format('dddd')
+          return checkDate === 'Saturday' || checkDate === 'Sunday'
             ? 'row-null'
             : ''
         }}
-        onRow={(record) => {
-          return () => {
-            onClick: (e) => {
-              setVisible(true)
-              setDateTimelog(record.work_date)
-            }
-          }
-        }}
         columns={columns}
-        data={row ? row : []}
+        data={row ? row.data : []}
+        onRow={(record) => ({
+          onClick: (e) => {
+            if (
+              e.target.className === 'action' ||
+              e.target.className === 'action_false'
+            ) {
+              e.stopPropagation()
+            } else {
+              setModal({ open: true, date: record.work_date })
+            }
+          },
+        })}
+        pagination={{
+          current: row.current_page,
+          total: row.total,
+          onShowSizeChange: onShowSizeChange,
+          itemRender: itemRender,
+          onChange: onChange,
+        }}
       />
-      <Modal
-        date={dateTimelog}
-        title="Time Logs"
-        centered
-        visible={visible}
-        onCancel={() => setVisible(false)}
-        width={1000}
-      >
-        <ModalLogTimesheet />
-      </Modal>
+      {modal.open && (
+        <ModalLogTimesheet modal={modal} handleClose={handleModal} />
+      )}
+
       {isOpen.isOpenForget && (
         <ForgetModal
           isOpen={true}
@@ -334,5 +404,6 @@ export default function Timesheet({ row }) {
   )
 }
 Timesheet.propTypes = {
-  row: PropTypes.array,
+  row: PropTypes.object,
+  params: PropTypes.object,
 }

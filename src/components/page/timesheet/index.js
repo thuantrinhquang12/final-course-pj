@@ -9,50 +9,97 @@ import './searchField.scss'
 import 'antd/dist/antd.min.css'
 import Timesheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
-import { getTimesheet } from './slice/slice'
+import { getTimeSheet } from './slice/slice'
 const { Option } = Select
-const { Text, Title } = Typography
+const { Text } = Typography
 const dateFormat = 'DD/MM/YYYY'
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
+  const [errDate, setErrDate] = useState(false)
   const dispatch = useDispatch()
   const [params, setParams] = useState({
-    page: 3,
-    sort: 'ascending',
-    start: '',
-    end: '',
-  })
-  useEffect(() => {
-    dispatch(getTimesheet({ params }))
-  }, [params])
-  const worksheet = useSelector((state) => {
-    return state.timesheet.worksheet
+    // page: 1,
+    // perPage: 10,
+    sort: 'asc',
+    startDate: null,
+    endDate: moment().subtract(1, 'days'),
   })
 
+  useEffect(() => {
+    dispatch(getTimeSheet({ ...params, page: 1, perPage: 10 }))
+  }, [])
+
+  const worksheet = useSelector((state) => {
+    return state.timeSheet
+  })
+  // console.log('work sheet', worksheet)
   const onFinish = (values) => {
     console.log('search', values)
-    if (values.sort === 'ascending') {
-      if (values.selected === 1) {
-        if (values.selecteddate === 1) {
-          setParams({ page: 3, sort: 'ascending', start: '', end: '' })
-        } else if (values.selecteddate === 2) {
-          setParams({ page: 2, sort: 'ascending', start: '', end: '' })
-        } else {
-          setParams({ page: 1, sort: 'ascending', start: '', end: '' })
-        }
+    if (values.selected === 1) {
+      switch (values.selectedDate) {
+        case 1:
+          setParams((prev) => ({
+            ...prev,
+            startDate: moment().subtract(1, 'year').startOf('year'),
+          }))
+          dispatch(
+            getTimeSheet({
+              ...params,
+              page: worksheet.currentPage,
+              perPage: worksheet.per_page,
+              startDate: moment().subtract(1, 'year').startOf('year'),
+            }),
+          )
+          break
+        case 2:
+          setParams((prev) => ({
+            ...prev,
+            startDate: moment().subtract(1, 'months').startOf('month'),
+          }))
+          dispatch(
+            getTimeSheet({
+              ...params,
+              page: worksheet.currentPage,
+              perPage: worksheet.per_page,
+              startDate: moment().subtract(1, 'months').startOf('month'),
+            }),
+          )
+          break
+        case 3:
+          setParams((prev) => ({
+            ...prev,
+            startDate: moment().startOf('month'),
+          }))
+          dispatch(
+            getTimeSheet({
+              ...params,
+              page: worksheet.currentPage,
+              perPage: worksheet.per_page,
+              startDate: moment().startOf('month'),
+            }),
+          )
+
+          break
+        default:
+          throw new Error('Invalid Selected')
       }
+    } else if (values.selected === 2) {
+      if (params.startDate === null && params.endDate === null) {
+        setErrDate(true)
+        return null
+      }
+      dispatch(
+        getTimeSheet({
+          ...params,
+          page: worksheet.currentPage,
+          perPage: worksheet.per_page,
+        }),
+      )
     } else {
-      if (values.selected === 2) {
-        setParams({
-          page: '',
-          sort: 'descending',
-          start: moment(values.startdate).format('YYYY-MM-DD'),
-          end: moment(values.enddate).format('YYYY-MM-DD'),
-        })
-      }
+      throw new Error('Invalid Selected')
     }
   }
-
+  // console.log('parames', params)
   const handleReset = () => {
     form.resetFields()
     setChoose(1)
@@ -63,6 +110,7 @@ export default function SearchField() {
   const onChangeChoose = (e) => {
     setChoose(e.target.value)
   }
+
   return (
     <>
       <div className="search-field">
@@ -76,11 +124,10 @@ export default function SearchField() {
             onFinish={onFinish}
             scrollToFirstError
             initialValues={{
-              selecteddate: 3,
+              selectedDate: 3,
               selected: 1,
-              sort: 'ascending',
-              // startdate: moment('01/03/2022', dateFormat),
-              // enddate: moment('30/03/2022', dateFormat),
+              sort: 'asc',
+              endDate: params.endDate,
               radioGroup: 2,
             }}
           >
@@ -99,7 +146,7 @@ export default function SearchField() {
                   </Radio.Group>
                 </Form.Item>
                 <div className="selected_data">
-                  <Form.Item name="selecteddate">
+                  <Form.Item name="selectedDate">
                     <Select style={{ width: 150 }} disabled={choose === 2}>
                       <Option value={3}>This month</Option>
                       <Option value={2}>Last month</Option>
@@ -107,22 +154,46 @@ export default function SearchField() {
                     </Select>
                   </Form.Item>
                   <Space direction="horizontal" size={25} align="center">
-                    <Form.Item name="startdate">
+                    <Form.Item name="startDate">
                       <DatePicker
-                        value={moment()}
                         format={dateFormat}
                         disabled={choose === 1}
+                        onChange={(date) => {
+                          if (date) {
+                            const compareDate = date.isBefore(params.endDate)
+                            if (!compareDate && params.endDate !== null) {
+                              setErrDate(true)
+                            } else {
+                              setErrDate(false)
+                            }
+                            setParams((prev) => ({
+                              ...prev,
+                              startDate: date,
+                            }))
+                          }
+                        }}
                       />
                       <span style={{ marginLeft: 20 }}>To</span>
                     </Form.Item>
 
-                    <Form.Item name="enddate">
+                    <Form.Item name="endDate">
                       <DatePicker
-                        value={moment()}
                         format={dateFormat}
                         disabled={choose === 1}
+                        onChange={(date) => {
+                          if (date) {
+                            const compareDate = date.isAfter(params.startDate)
+                            if (params.startDate !== null && !compareDate) {
+                              setErrDate(true)
+                            } else {
+                              setErrDate(false)
+                            }
+                          }
+                          setParams((prev) => ({ ...prev, endDate: date }))
+                        }}
                       />
                     </Form.Item>
+                    {errDate && <p style={{ color: 'red' }}>Invalid Time</p>}
                   </Space>
                 </div>
               </div>
@@ -130,9 +201,17 @@ export default function SearchField() {
               <div className="selected_sort">
                 <Text>Sort by work date</Text>
                 <Form.Item name="sort">
-                  <Select style={{ width: 150 }}>
-                    <Option value="ascending">Ascending</Option>
-                    <Option value="descending">Descending</Option>
+                  <Select
+                    style={{ width: 150 }}
+                    onChange={(value) => {
+                      setParams((prev) => ({
+                        ...prev,
+                        sort: value,
+                      }))
+                    }}
+                  >
+                    <Option value="asc">Ascending</Option>
+                    <Option value="desc">Descending</Option>
                   </Select>
                 </Form.Item>
               </div>
@@ -152,14 +231,9 @@ export default function SearchField() {
             </div>
           </Form>
         </fieldset>
+
         <>
-          <Title level={5}>
-            Total number of record :{' '}
-            {worksheet.per_page ? worksheet.per_page : ''}
-          </Title>
-        </>
-        <>
-          <Timesheet row={worksheet.data}></Timesheet>
+          <Timesheet row={worksheet} params={params}></Timesheet>
         </>
       </div>
     </>

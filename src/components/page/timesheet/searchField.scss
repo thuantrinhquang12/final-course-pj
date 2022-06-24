@@ -53,3 +53,101 @@ fieldset {
   }
   margin-bottom: 10px;
 }
+
+//css của tui
+.tableContainer.tableTimeSheet {
+  .ant-table {
+    .ant-table-container {
+      .ant-table-body {
+        table {
+          .row-null {
+            background-color: #ebef97 !important;
+            td {
+              background-color: #ebef97 !important;
+            }
+            .ant-table-cell-row-hover {
+              background-color: #ebef97 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-table-title {
+    display: none;
+  }
+  table {
+    tbody {
+      tr {
+        td:last-child {
+          padding: 0 !important;
+          .action {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+          }
+        }
+      }
+    }
+  }
+}
+
+.modalTimeLog {
+  .ant-modal-close-x {
+    color: white;
+  }
+  .ant-modal-footer {
+    display: flex;
+    justify-content: center;
+
+    .ant-btn-primary {
+      display: none;
+    }
+  }
+  .ant-modal-header {
+    background-color: #104382;
+    .ant-modal-title {
+      h2 {
+        color: white;
+      }
+    }
+  }
+  // .ant-modal-footer {
+  //   display: none;
+  // }
+
+  .modalTime {
+    .ant-table-title {
+      display: none;
+    }
+    .ant-pagination {
+      display: none;
+    }
+    table {
+      thead {
+        tr {
+          th {
+            text-align: center;
+            background-color: #104382;
+            border-right: 1px solid #bfbfbf !important;
+            h4 {
+              color: white;
+            }
+          }
+        }
+      }
+      tbody {
+        tr {
+          td {
+            .resetMargin {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

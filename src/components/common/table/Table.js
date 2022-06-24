@@ -180,7 +180,6 @@ const CommonTable = ({
                 locale: { items_per_page: '' },
               }
             : {
-                pageSize: page ? page : 10,
                 position: ['bottomCenter'],
                 showTotal: pagination?.showTotal
                   ? pagination?.showTotal
