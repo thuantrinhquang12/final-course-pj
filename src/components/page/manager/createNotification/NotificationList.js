@@ -12,7 +12,7 @@ import moment from 'moment'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { CMTable } from '../../..'
+import { CMTable, dateTime } from '../../..'
 import ModalEditNotice from './ModalEditNotice'
 import { delItemListNoticeDraft, getDataListNoticeDraft } from './slice/slice'
 import distance from '../../../utils/distance'
@@ -116,7 +116,9 @@ const NotificationList = () => {
       key: 'published_date',
       render: (payload, record) => {
         return (
-          <p className="textOverFlow resetMargin">{record.published_date}</p>
+          <p className="tb_center textOverFlow resetMargin">
+            {dateTime.formatDateTable(record.published_date)}
+          </p>
         )
       },
     },
@@ -258,9 +260,9 @@ const NotificationList = () => {
                 </Row>
               )
             }}
+            columns={columns}
             data={dataNoticeDraft.tableData}
             loading={dataNoticeDraft.loading}
-            columns={columns}
             pagination={{
               current: dataNoticeDraft.currentPage,
               total: dataNoticeDraft.total,
@@ -280,9 +282,6 @@ const NotificationList = () => {
             }}
             styleBody={{
               subject: { className: 'textOverflow' },
-              published_date: {
-                position: 'tb_center',
-              },
             }}
             onRow={(record) => {
               return {

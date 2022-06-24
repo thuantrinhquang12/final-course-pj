@@ -36,7 +36,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const [errorTimeOT, setErrorTimeOT] = useState(false)
   const DateOT = Number(+hours + minutes / 60)
   const schema = yup.object().shape({
-    reasonInput: yup.string().required('Please enter reason'),
+    reasonInput: yup.string().trim().required('Please enter reason'),
     timeRequestOT: yup.date().nullable().required('Please enter timeRequestOT'),
   })
   const dispatch = useDispatch()
@@ -202,7 +202,9 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
               </Row>
               <Row>
                 <div className={styles.groupCol}>
-                  <Col flex="160px">Request OT: </Col>
+                  <Col flex="160px" style={{ alignSelf: 'center' }}>
+                    Request OT:
+                  </Col>
                   <Col flex="auto" style={{ position: 'relative' }}>
                     <Controller
                       name="timeRequestOT"
@@ -266,7 +268,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                   </span>
                 </Col>
               </Row>
-              <Row>
+              <Row style={!request?.status ? { margin: 0 } : {}}>
                 <Col xl={4} style={{ marginBottom: '10px' }}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
@@ -286,7 +288,10 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                           autoSize={{ minRows: 5, maxRows: 5 }}
                         />
                         {errors.reasonInput && (
-                          <span className={styles.errorField}>
+                          <span
+                            className={styles.errorField}
+                            style={{ position: 'absolute' }}
+                          >
                             {errors.reasonInput?.message}
                           </span>
                         )}
@@ -309,7 +314,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
                       </strong>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style={{ margin: 0 }}>
                     <>
                       <Col xl={4}>
                         {checkRequestManager(

@@ -1,11 +1,13 @@
 /* eslint-disable object-curly-spacing */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState, useRef } from 'react'
 import {
   DoubleLeftOutlined,
   LeftOutlined,
   DoubleRightOutlined,
   RightOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons'
-import React, { useEffect, useState } from 'react'
 import { Row, Col, Modal, Button } from 'antd'
 import styles from './Index.module.scss'
 import './Index.scss'
@@ -14,10 +16,10 @@ import { getDataListNotice } from '../slice/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveAs } from 'file-saver'
 import distance from '../../../utils/distance'
-
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
   const [heightTable, setHeightTable] = useState(0)
+  const newNameFile = useRef(null)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
@@ -40,7 +42,7 @@ const Index = () => {
       render: (payload, records) => {
         return (
           <p className="resetMargin">
-            <> {(stateNotice.page - 1) * 10 + Number(records.key)}</>
+            <> {(stateNotice.page - 1) * 10 + Number(records.key) + 1}</>
           </p>
         )
       },
@@ -76,16 +78,19 @@ const Index = () => {
       title: <h4>PUBLISHED DATE</h4>,
       dataIndex: 'published_date',
       key: 'published_date',
-      render: (payload) => {
-        const DATE = dateTime.formatDateTimes(new Date(payload))
-        return <div className="resetMargin">{DATE}</div>
+      render: (payload, record) => {
+        return (
+          <div className="resetMargin tb_center">
+            {dateTime.formatDateTable(record.published_date)}
+          </div>
+        )
       },
     },
     {
       title: <h4>ATTACHMENT</h4>,
       dataIndex: 'attachment',
       key: 'attachment',
-      render: (payload, records) => {
+      render: (payload, record) => {
         const redirect = () => {
           const indexofDot = payload.lastIndexOf('.')
           const pathFile = payload.slice(indexofDot, payload.length)
@@ -99,8 +104,8 @@ const Index = () => {
         if (payload) {
           const indexName = payload.lastIndexOf('/')
           nameFile = payload.slice(indexName + 1, payload.length)
+          newNameFile.current = nameFile
         }
-
         return (
           <div
             className="textOverflow colorBlue resetMargin"
@@ -115,11 +120,11 @@ const Index = () => {
       title: <h4>DETAIL</h4>,
       dataIndex: 'detail',
       key: 'detail',
-      render: (payload, records) => {
+      render: (payload, record) => {
         return (
           <div
             className="tb_center colorBlue resetMargin"
-            onClick={() => setModal({ open: true, data: records })}
+            onClick={() => setModal({ open: true, data: record })}
           >
             view
           </div>
@@ -191,6 +196,11 @@ const Index = () => {
   const onChange = (size, page) => {
     dispatch(getDataListNotice({ perPage: page, page: size }))
   }
+  const closeModal = () => {
+    setModal((prev) => {
+      return { ...prev, open: false }
+    })
+  }
 
   return (
     <div className={styles.Home} id="HomeTable">
@@ -247,9 +257,6 @@ const Index = () => {
             styleBody={{
               subject: { className: 'textOverflow' },
               created_by: { position: 'tb_center' },
-              published_date: {
-                position: 'tb_center',
-              },
             }}
             pagination={{
               current: stateNotice.currentPage,
@@ -265,12 +272,13 @@ const Index = () => {
         className="modalNotice"
         title={<h2>Notice Detail</h2>}
         visible={modal.open}
+        footer={[
+          <Button key="cancel" onClick={closeModal}>
+            Cancel
+          </Button>,
+        ]}
         width={700}
-        onCancel={() =>
-          setModal((prev) => {
-            return { ...prev, open: false }
-          })
-        }
+        onCancel={closeModal}
       >
         <Row>
           <Col
@@ -280,125 +288,83 @@ const Index = () => {
             style={{ display: 'flex', borderBottom: '2px solid #ab9f9f' }}
           >
             <Col xs={12} md={12} xl={12}>
-              <h3
-                style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
-              >
-                Author
-              </h3>
-              <Col xs={24} md={24} xl={24}>
-                <div className="formGroup">
-                  <i className="fa-solid fa-user"></i>
-                  <div className="formGroupText">
-                    <p>Name: &nbsp;</p>
-                    <p>
-                      {modal?.data?.created_by ? modal?.data?.created_by : ''}
-                    </p>
-                  </div>
-                </div>
+              <Col xs={24} md={24} xl={24} className="dFlex">
+                <Col xl={7}>Author Name: </Col>
+                <Col xl={17}>
+                  {modal?.data?.created_by ? modal?.data?.created_by : ''}
+                </Col>
               </Col>
-              <Col xs={24} md={24} xl={24}>
-                <div className="formGroup">
-                  <i className="fa-solid fa-envelope"></i>
-                  <div className="formGroupText">
-                    <p>Email: &nbsp;</p>
-                    <p>
-                      {modal?.data?.author_email
-                        ? modal?.data?.author_email
-                        : ''}
-                    </p>
-                  </div>
-                </div>
+              <Col xs={24} md={24} xl={24} className="dFlex">
+                <Col xl={7}>Email: </Col>
+                <Col xl={17}>
+                  {modal?.data?.author_email ? modal?.data?.author_email : ''}
+                </Col>
               </Col>
-              <Col xs={24} md={24} xl={24}>
-                <div className="formGroup">
-                  <i className="fa-solid fa-envelope"></i>
-                  <div className="formGroupText">
-                    <p>Other Email: &nbsp;</p>
-                    <p>
-                      {modal?.data?.author_other_email
-                        ? modal?.data?.author_other_email
-                        : ''}
-                    </p>
-                  </div>
-                </div>
+
+              <Col xs={24} md={24} xl={24} className="dFlex">
+                <Col xl={7}>Other Email: </Col>
+                <Col xl={17}>
+                  {modal?.data?.author_other_email
+                    ? modal?.data?.author_other_email
+                    : ''}
+                </Col>
               </Col>
-              <Col xs={24} md={24} xl={24}>
-                <div className="formGroup">
-                  <i className="fa-solid fa-phone"></i>
-                  <div className="formGroupText">
-                    <p>Phone: &nbsp;</p>
-                    <p>
-                      {modal?.data?.author_phone
-                        ? modal?.data?.author_phone
-                        : ''}
-                    </p>
-                  </div>
-                </div>
+              <Col xs={24} md={24} xl={24} className="dFlex">
+                <Col xl={7}>Phone: </Col>
+                <Col xl={17}>
+                  {modal?.data?.author_phone ? modal?.data?.author_phone : ''}
+                </Col>
               </Col>
             </Col>
             <Col xs={12} md={12} xl={12}>
-              <h3
-                style={{ marginBottom: '20px', color: 'black', fontSize: 20 }}
-              >
-                To Department &nbsp;
-              </h3>
-              <Col xs={24} md={24} xl={24}>
-                <div className="formGroup">
-                  <i className="fa-solid fa-building"></i>
-                  <div className="formGroupText">
-                    <p>To department: &nbsp;</p>
-                    <p>
-                      {Array.isArray(modal?.data?.published_to)
-                        ? modal?.data?.published_to[0].division_name
-                        : 'ALL'}
-                    </p>
-                  </div>
-                </div>
+              <Col xs={24} md={24} xl={24} className="dFlex">
+                <Col xl={8}>To department: </Col>
+                <Col xl={16}>
+                  {Array.isArray(modal?.data?.published_to)
+                    ? modal?.data?.published_to[0].division_name
+                    : 'ALL'}
+                </Col>
               </Col>
-              <Col xs={24} md={24} xl={24}>
-                <div className="formGroup">
-                  <i className="fa-solid fa-calendar"></i>
-                  <div className="formGroupText">
-                    <p>Published date: </p>
-                    <p>{modal?.data?.published_date}</p>
-                  </div>
-                </div>
+              <Col xs={24} md={24} xl={24} className="dFlex">
+                <Col xl={8}>Published date: </Col>
+                <Col xl={18}>
+                  <p>{dateTime.formatDateTable(modal?.data?.published_date)}</p>
+                </Col>
               </Col>
             </Col>
           </Col>
         </Row>
         <Row>
-          <Col xs={24} md={24} xl={24}>
-            <h3 style={{ margin: '20px 0', color: 'black', fontSize: 20 }}>
-              Detail
-            </h3>
+          <Col
+            xs={24}
+            md={24}
+            xl={24}
+            className="dFlex"
+            style={{ marginTop: '15px' }}
+          >
+            <Col xl={3}>Subject: </Col>
+            <Col xl={21}>
+              <span style={{ fontWeight: 600 }}>{modal?.data?.subject}</span>
+            </Col>
           </Col>
-          <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>
-              <span style={{ fontWeight: 700, fontSize: 16 }}>Subject: </span>
-              {modal?.data?.subject}
-            </p>
+          <Col xs={24} md={24} xl={24} className="dFlex">
+            <Col xl={3}>Message: </Col>
+            <Col xl={21}>
+              <span style={{ fontWeight: 600 }}> {modal?.data?.message}</span>
+            </Col>
           </Col>
-          <Col xs={24} md={24} xl={24}>
-            <p
-              className="colorBlue"
-              style={{ fontWeight: 600 }}
-              onClick={() => {
-                saveAs(`${modal.data.attachment}`, `${modal.data.attachment}`)
-              }}
-            >
-              <span style={{ fontWeight: 700, color: 'black' }}>
-                {' '}
-                Attachment:{' '}
-              </span>
-              {modal?.data?.attachment}
-            </p>
-          </Col>
-          <Col xs={24} md={24} xl={24}>
-            <p style={{ fontWeight: 600 }}>
-              <span style={{ fontWeight: 700 }}>Message: </span>
-              {modal?.data?.message}
-            </p>
+          <Col xs={24} md={24} xl={24} className="dFlex" style={{ margin: 0 }}>
+            <Col xl={3}>Attachment: </Col>
+            <Col xl={21}>
+              <p>
+                <span className="colorBlue" style={{ fontWeight: 600 }}>
+                  {newNameFile.current}
+                </span>
+                <DownloadOutlined
+                  style={{ display: 'inline', marginLeft: '10px' }}
+                />
+              </p>
+            </Col>
           </Col>
         </Row>
       </Modal>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Row, Col, Select, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { get, put } from '../../../service/requestApi'
 import PropTypes from 'prop-types'
 import { typePopup } from '../../../index'
@@ -46,7 +47,8 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   const confirm = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -68,7 +70,14 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
         okText="Submit"
         title={<h2>Change Shift</h2>}
         visible={modal.isOpen}
-        footer={null}
+        footer={[
+          <Button key="submit" type="primary" onClick={handleSubmit}>
+            Submit
+          </Button>,
+          <Button key="cancel" onClick={confirm}>
+            Cancel
+          </Button>,
+        ]}
         width={700}
         onCancel={confirm}
         onOk={handleSubmit}
@@ -108,7 +117,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
                   </Col>
                 </Col>
               </Row>
-              <Row>
+              <Row style={{ margin: 0 }}>
                 <Col span={12} className="dFlex">
                   <Col xl={9} style={{ alignSelf: 'center' }}>
                     Change Shift:
@@ -137,16 +146,6 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
                   </Col>
                 </Col>
                 <Col span={12}></Col>
-              </Row>
-              <Row style={{ margin: '24px 0 0 0' }}>
-                <Col span={24} className="btnChangeShift">
-                  <Button key="submit" type="primary" onClick={handleSubmit}>
-                    Submit
-                  </Button>
-                  <Button key="cancel" onClick={confirm}>
-                    Cancel
-                  </Button>
-                </Col>
               </Row>
             </Col>
           </Row>

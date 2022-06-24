@@ -32,6 +32,7 @@ const get = async (url, params = {}) => {
     const response = await instance.get(url, config)
     return response.data
   } catch (error) {
+    console.log(error)
     if (error.response.status === 401) {
       localStorage.clear()
     }
@@ -44,6 +45,7 @@ const post = async (url, data = {}, headers) => {
     const response = await instance.post(url, data, headers)
     return response.data
   } catch (error) {
+    console.log(error)
     if (error.response.status === 401) {
       localStorage.clear()
     }
@@ -56,10 +58,10 @@ const put = async (url, data = {}, headers) => {
     const response = await instance.put(url, data, headers)
     return response.data
   } catch (error) {
+    console.log(error)
     if (error.response.status === 401) {
       localStorage.clear()
     }
-    console.log(error)
   }
 }
 
@@ -68,10 +70,10 @@ const patch = async (url, data = {}) => {
     const response = await instance.patch(url, data)
     return response.data
   } catch (error) {
+    console.log(error)
     if (error.response.status === 401) {
       localStorage.clear()
     }
-    console.log(error)
   }
 }
 
@@ -80,10 +82,10 @@ const del = async (url, data = {}) => {
     const response = await instance.delete(url, data)
     return response.data
   } catch (error) {
+    console.log(error)
     if (error.response.status === 401) {
       localStorage.clear()
     }
-    console.log(error)
   }
 }
 
