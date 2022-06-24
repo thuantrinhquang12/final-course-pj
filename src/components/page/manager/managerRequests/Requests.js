@@ -239,9 +239,13 @@ const Manager = () => {
       title: <h4>DATE CREATED</h4>,
       dataIndex: 'created_at',
       key: 'created_at',
-      render: (date) => (
-        <span className="tb_center">{dateTime.formatDateTime(date)}</span>
-      ),
+      render: (date) => {
+        return (
+          <span className="tb_center">
+            {dateTime.formatDateTimeTable(date)}
+          </span>
+        )
+      },
     },
     {
       title: <h4>STATUS</h4>,

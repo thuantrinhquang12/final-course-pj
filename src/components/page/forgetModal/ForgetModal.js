@@ -37,7 +37,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
-    reasonInput: yup.string().required('Please enter reason'),
+    reasonInput: yup.string().trim().required('Please enter reason'),
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
@@ -272,7 +272,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   />
                 </Col>
               </Row>
-              <Row>
+              <Row style={!request?.status ? { margin: 0 } : {}}>
                 <Col xl={4} style={{ marginBottom: '10px' }}>
                   <span>Reason:</span>
                   <span className={styles.requiredField}>(*)</span>
@@ -315,7 +315,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                       </strong>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style={{ margin: 0 }}>
                     <>
                       <Col xl={4}>
                         {checkRequestManager(

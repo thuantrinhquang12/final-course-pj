@@ -12,6 +12,7 @@ const Dialog = ({
   confirmDisable,
   className,
   widthModal,
+  footer,
 }) => {
   const confirm = () => {
     Modal.confirm({
@@ -43,7 +44,7 @@ const Dialog = ({
         className={
           className ? `${className} modalContainer ` : 'modalContainer'
         }
-        footer={null}
+        footer={footer ?? null}
         visible={isOpen}
         width={widthModal || 1000}
       >
@@ -64,6 +65,7 @@ Dialog.propTypes = {
   confirmDisable: PropTypes.bool,
   className: PropTypes.string,
   widthModal: PropTypes.number,
+  footer: PropTypes.array,
 }
 
 export default Dialog

@@ -14,6 +14,7 @@ import {
   typeStatusRequest,
   typeRequest,
   handleDateTime,
+  handleField,
   buttonForm,
   tryCatch,
   messageRequest,
@@ -67,7 +68,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   }, [])
 
   const schema = yup.object().shape({
-    reasonInput: yup.string().required('Please enter reason'),
+    reasonInput: yup.string().trim().required('Please enter reason'),
     checkDateTime: yup.date().nullable().required('Please enter dateTime'),
   })
 
@@ -80,7 +81,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
     defaultValues: {
       checkDateTime: moment().subtract(1, 'days'),
     },
-
     resolver: yupResolver(schema),
   })
 
@@ -207,7 +207,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
               <>
                 <Row style={{ marginBottom: 0 }}>
                   <Col xs={24} md={24} xl={24}>
-                    <div className={styles.formGroup}>
+                    <div className={styles.formGroup} style={{ marginTop: 0 }}>
                       <Col xs={6} md={6} xl={4}>
                         Registration date:
                       </Col>
@@ -219,7 +219,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                     </div>
                   </Col>
                 </Row>
-                <Row>
+                <Row style={!request?.status ? { margin: 0 } : {}}>
                   <Col xs={24} md={24} xl={24}>
                     <div className={styles.formGroup}>
                       <Col xs={6} md={6} xl={4}>
@@ -298,6 +298,9 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                   disabledDate={(current) =>
                                     current.isAfter(moment())
                                   }
+                                  disabled={handleField.disableField(
+                                    request.status,
+                                  )}
                                   format={dateTime.formatDateTypeYear}
                                   onChange={(e) => {
                                     const res = async () => {
@@ -315,10 +318,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                   }
                                 />
                                 {errors.checkDateTime && (
-                                  <span
-                                    style={{ marginLeft: '10px' }}
-                                    className={styles.errorField}
-                                  >
+                                  <span className={styles.errorField}>
                                     {errors.checkDateTime?.message}
                                   </span>
                                 )}
@@ -377,7 +377,10 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                   </Col>
 
                   <Col xs={24} md={24} xl={24}>
-                    <div className={styles.formGroup}>
+                    <div
+                      className={styles.formGroup}
+                      style={{ marginBottom: 0 }}
+                    >
                       <Col xs={6} md={6} xl={4} style={{ display: 'flex' }}>
                         Reason:
                         <span className={styles.requiredField}> (*)</span>
@@ -393,10 +396,16 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                                 maxLength={100}
                                 placeholder="Please enter not too 100 characters"
                                 autoSize={{ minRows: 5, maxRows: 5 }}
+                                disabled={handleField.disableField(
+                                  request.status,
+                                )}
                                 {...field}
                               />
                               {errors.reasonInput && (
-                                <span className={styles.errorField}>
+                                <span
+                                  className={styles.errorField}
+                                  style={{ position: 'absolute' }}
+                                >
                                   {errors.reasonInput?.message}
                                 </span>
                               )}
@@ -422,7 +431,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
                         </strong>
                       </Col>
                     </Row>
-                    <Row>
+                    <Row style={{ margin: 0 }}>
                       <>
                         <Col xl={4}>
                           {checkRequestManager(

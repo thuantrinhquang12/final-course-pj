@@ -1,30 +1,19 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Row,
-  Select,
-} from 'antd'
+import { Checkbox, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import styles from './CreateNotification.scss'
 import { dateTime, typePopup } from '../../../index'
 import moment from 'moment'
 import { post } from '../../../service/requestApi'
-import TextArea from 'antd/lib/input/TextArea'
 import PropTypes from 'prop-types'
 import { saveAs } from 'file-saver'
 
-const CreateNotification = ({ data, handleModal, confirm }) => {
+const CreateNotification = ({ data, handleModal }) => {
   const [form] = Form.useForm()
   const [selectDivision, setDivision] = useState(true)
 
   const onSubmit = async (values) => {
     const { subject, message, published_to: publishedTo, date, status } = values
     const selectedFile = document.getElementById('myfile').files[0]
-
     const dataSent = {
       published_date: dateTime.formatDate(moment(date)),
       subject,
@@ -58,10 +47,6 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
       )
     }
   }
-
-  // const onReset = () => {
-  //   form.resetFields()
-  // }
 
   let setPublishedTo = []
   if (typeof data?.published_to === 'string') {
@@ -114,6 +99,7 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
       <div className="notificationContainer">
         <Form
           form={form}
+          id="formNotice"
           name="basic"
           initialValues={{
             published_to: setPublishedTo.length > 0 ? setPublishedTo : ['all'],
@@ -167,7 +153,10 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
                     },
                   ]}
                 >
-                  <DatePicker disabled={data} />
+                  <DatePicker
+                    format={dateTime.formatDateTypeTable}
+                    disabled={data}
+                  />
                 </Form.Item>
               </Col>
             </Col>
@@ -262,11 +251,11 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
+          <Row style={{ margin: 0 }}>
             <Col span={4}>
               Message:<span className="requiredField"> (*)</span>
             </Col>
-            <Col span={20}>
+            <Col span={20} style={{ position: 'relative' }}>
               <Form.Item
                 name="message"
                 className={styles.InputField}
@@ -277,32 +266,16 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
                   },
                 ]}
               >
-                <TextArea
+                <Input.TextArea
                   showCount
                   maxLength={100}
-                  placeholder="Please enter message not too 100 characters"
                   autoSize={{ minRows: 5, maxRows: 5 }}
+                  placeholder="Please enter message not too 100 characters"
                   disabled={data}
                 />
               </Form.Item>
             </Col>
           </Row>
-          {!data && (
-            <Form.Item className="ItemSignin">
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button onClick={confirm}>Cancel</Button>
-              {/* <Button htmlType="button" onClick={onReset}>
-                Reset
-              </Button> */}
-            </Form.Item>
-          )}
-          {data && (
-            <Form.Item className="ItemSignin">
-              <Button onClick={handleModal}>Cancel</Button>
-            </Form.Item>
-          )}
         </Form>
       </div>
     </>

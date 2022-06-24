@@ -1,5 +1,6 @@
 /* eslint-disable object-curly-spacing */
-import React, { useEffect, useState } from 'react'
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState, useRef } from 'react'
 import {
   DoubleLeftOutlined,
   LeftOutlined,
@@ -15,11 +16,10 @@ import { getDataListNotice } from '../slice/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveAs } from 'file-saver'
 import distance from '../../../utils/distance'
-
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
   const [heightTable, setHeightTable] = useState(0)
-  const [nameFile, setNameFile] = useState('')
+  const newNameFile = useRef(null)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
@@ -78,9 +78,12 @@ const Index = () => {
       title: <h4>PUBLISHED DATE</h4>,
       dataIndex: 'published_date',
       key: 'published_date',
-      render: (payload) => {
-        const DATE = dateTime.formatDateTimes(new Date(payload))
-        return <div className="resetMargin">{DATE}</div>
+      render: (payload, record) => {
+        return (
+          <div className="resetMargin tb_center">
+            {dateTime.formatDateTable(record.published_date)}
+          </div>
+        )
       },
     },
     {
@@ -101,9 +104,8 @@ const Index = () => {
         if (payload) {
           const indexName = payload.lastIndexOf('/')
           nameFile = payload.slice(indexName + 1, payload.length)
-          setNameFile(nameFile)
+          newNameFile.current = nameFile
         }
-
         return (
           <div
             className="textOverflow colorBlue resetMargin"
@@ -194,6 +196,11 @@ const Index = () => {
   const onChange = (size, page) => {
     dispatch(getDataListNotice({ perPage: page, page: size }))
   }
+  const closeModal = () => {
+    setModal((prev) => {
+      return { ...prev, open: false }
+    })
+  }
 
   return (
     <div className={styles.Home} id="HomeTable">
@@ -250,9 +257,6 @@ const Index = () => {
             styleBody={{
               subject: { className: 'textOverflow' },
               created_by: { position: 'tb_center' },
-              published_date: {
-                position: 'tb_center',
-              },
             }}
             pagination={{
               current: stateNotice.currentPage,
@@ -268,12 +272,13 @@ const Index = () => {
         className="modalNotice"
         title={<h2>Notice Detail</h2>}
         visible={modal.open}
+        footer={[
+          <Button key="cancel" onClick={closeModal}>
+            Cancel
+          </Button>,
+        ]}
         width={700}
-        onCancel={() =>
-          setModal((prev) => {
-            return { ...prev, open: false }
-          })
-        }
+        onCancel={closeModal}
       >
         <Row>
           <Col
@@ -323,7 +328,7 @@ const Index = () => {
               <Col xs={24} md={24} xl={24} className="dFlex">
                 <Col xl={8}>Published date: </Col>
                 <Col xl={18}>
-                  <p>{modal?.data?.published_date}</p>
+                  <p>{dateTime.formatDateTable(modal?.data?.published_date)}</p>
                 </Col>
               </Col>
             </Col>
@@ -338,24 +343,28 @@ const Index = () => {
             style={{ marginTop: '15px' }}
           >
             <Col xl={3}>Subject: </Col>
-            <Col xl={21}>{modal?.data?.subject}</Col>
+            <Col xl={21}>
+              <span style={{ fontWeight: 600 }}>{modal?.data?.subject}</span>
+            </Col>
           </Col>
           <Col xs={24} md={24} xl={24} className="dFlex">
+            <Col xl={3}>Message: </Col>
+            <Col xl={21}>
+              <span style={{ fontWeight: 600 }}> {modal?.data?.message}</span>
+            </Col>
+          </Col>
+          <Col xs={24} md={24} xl={24} className="dFlex" style={{ margin: 0 }}>
             <Col xl={3}>Attachment: </Col>
             <Col xl={21}>
               <p>
                 <span className="colorBlue" style={{ fontWeight: 600 }}>
-                  {nameFile}
+                  {newNameFile.current}
                 </span>
                 <DownloadOutlined
                   style={{ display: 'inline', marginLeft: '10px' }}
                 />
               </p>
             </Col>
-          </Col>
-          <Col xs={24} md={24} xl={24} className="dFlex">
-            <Col xl={3}>Message: </Col>
-            <Col xl={21}> {modal?.data?.message}</Col>
           </Col>
         </Row>
       </Modal>

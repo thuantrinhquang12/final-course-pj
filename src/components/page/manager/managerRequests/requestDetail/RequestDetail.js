@@ -42,7 +42,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           </Row>
           <Row>
             <Col xl={8}>Request for date:</Col>
-            <Col xl={16}>{requestForDate}</Col>
+            <Col xl={16}>{dateTime.formatDateTable(requestForDate)}</Col>
           </Row>
           <Row>
             <Col xl={8}>Form member:</Col>
@@ -74,7 +74,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
               ></Input.TextArea>
             </Col>
           </Row>
-          <Row>
+          <Row style={{ margin: 0 }}>
             <Col xl={8}>Status:</Col>
             <Col xl={16}>
               <strong style={{ color: checkRequestStatusColorText(status) }}>

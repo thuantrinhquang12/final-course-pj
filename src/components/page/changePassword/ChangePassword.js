@@ -153,6 +153,7 @@ const ChangePassword = () => {
             label="Confirm Password:"
             dependencies={['new_password']}
             hasFeedback
+            style={{ margin: 0 }}
             rules={[
               {
                 required: true,
