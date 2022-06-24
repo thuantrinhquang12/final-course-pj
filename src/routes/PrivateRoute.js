@@ -16,6 +16,10 @@ const PrivateRoute = ({ allowedRoles }) => {
       localStorage.clear()
     }
   }
+  if (!tokenAccess) {
+    navigate('/login', { replace: true })
+    localStorage.clear()
+  }
 
   const role = useSelector((state) => state.userInfo?.currentUser?.role)
 

@@ -6,7 +6,7 @@ export const getDataListNotice = createAsyncThunk(
   'noticeList/getDataListNotice',
   async (item) => {
     const response = await get(
-      `/notification?per_page=${item.perPage}&page=${item.page}&sort=asc`,
+      `/notification?per_page=${item.perPage}&page=${item.page}`,
     )
     return response
   },

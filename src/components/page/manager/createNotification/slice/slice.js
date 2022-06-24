@@ -6,7 +6,7 @@ export const getDataListNoticeDraft = createAsyncThunk(
   'noticeListDraft/getDataListNoticeDraft',
   async (item) => {
     const response = await get(
-      `/admin/notifications/list?per_page=${item.perPage}&page=${item.page}&sort=asc`,
+      `/admin/notifications/list?per_page=${item.perPage}&page=${item.page}`,
     )
     return response
   },
