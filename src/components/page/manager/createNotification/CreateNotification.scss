@@ -55,3 +55,16 @@
     color: red;
   }
 }
+.deleteAction {
+  button {
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    color: red !important;
+    .anticon-delete {
+      color: red !important;
+    }
+  }
+}

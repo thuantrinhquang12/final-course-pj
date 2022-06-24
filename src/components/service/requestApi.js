@@ -22,7 +22,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use((configs) => {
   return configs
 }),
-  () => {
+  (error) => {
     return Promise.reject(error)
   }
 
@@ -33,6 +33,10 @@ const get = async (url, params = {}) => {
     return response.data
   } catch (error) {
     console.log(error)
+    if (error.response.status === 401) {
+      localStorage.clear()
+    }
+    return Promise.reject(error)
   }
 }
 
@@ -42,6 +46,9 @@ const post = async (url, data = {}, headers) => {
     return response.data
   } catch (error) {
     console.log(error)
+    if (error.response.status === 401) {
+      localStorage.clear()
+    }
     return error.response.data
   }
 }
@@ -52,6 +59,9 @@ const put = async (url, data = {}, headers) => {
     return response.data
   } catch (error) {
     console.log(error)
+    if (error.response.status === 401) {
+      localStorage.clear()
+    }
   }
 }
 
@@ -61,6 +71,9 @@ const patch = async (url, data = {}) => {
     return response.data
   } catch (error) {
     console.log(error)
+    if (error.response.status === 401) {
+      localStorage.clear()
+    }
   }
 }
 
@@ -70,6 +83,9 @@ const del = async (url, data = {}) => {
     return response.data
   } catch (error) {
     console.log(error)
+    if (error.response.status === 401) {
+      localStorage.clear()
+    }
   }
 }
 

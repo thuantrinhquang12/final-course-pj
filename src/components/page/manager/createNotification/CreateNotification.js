@@ -12,13 +12,13 @@ const CreateNotification = ({ data, handleModal }) => {
   const [selectDivision, setDivision] = useState(true)
 
   const onSubmit = async (values) => {
-    const { subject, message, published_to: publishedTo, date, status } = values
+    const { subject, message, published_to: publishedTo, date } = values
     const selectedFile = document.getElementById('myfile').files[0]
     const dataSent = {
       published_date: dateTime.formatDate(moment(date)),
       subject,
       message,
-      status,
+      status: 1,
       attachment: selectedFile,
       created_by: 1,
       published_to: publishedTo.includes('all')
@@ -164,16 +164,7 @@ const CreateNotification = ({ data, handleModal }) => {
               <Col xl={12} className="dFlex">
                 <Col xl={8}>Status: </Col>
                 <Col sm={12} xl={16} className="status">
-                  <Form.Item
-                    style={{ margin: 0 }}
-                    name="status"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Required to status',
-                      },
-                    ]}
-                  >
+                  <Form.Item style={{ margin: 0 }} name="status">
                     <Select disabled={data}>
                       <Select.Option value={0}>Pending</Select.Option>
                       <Select.Option value={1}>Official</Select.Option>
@@ -192,7 +183,15 @@ const CreateNotification = ({ data, handleModal }) => {
                 File:<span className="requiredField"> (*)</span>
               </Col>
               <Col span={20}>
-                <Form.Item name="file" rules={[]}>
+                <Form.Item
+                  name="file"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Required to file',
+                    },
+                  ]}
+                >
                   <Input type="file" id="myfile" name="myfile" />
                 </Form.Item>
               </Col>
@@ -204,7 +203,15 @@ const CreateNotification = ({ data, handleModal }) => {
               Published To:<span className="requiredField"> (*)</span>
             </Col>
             <Col span={20}>
-              <Form.Item name="published_to">
+              <Form.Item
+                name="published_to"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Required to file',
+                  },
+                ]}
+              >
                 <Checkbox.Group>
                   <Row className="divisionName">
                     <Col span={8}>
@@ -262,6 +269,7 @@ const CreateNotification = ({ data, handleModal }) => {
                 rules={[
                   {
                     required: true,
+                    whitespace: true,
                     message: 'Required to message',
                   },
                 ]}

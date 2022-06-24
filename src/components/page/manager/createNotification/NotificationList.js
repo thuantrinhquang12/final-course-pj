@@ -6,7 +6,7 @@ import {
   LeftOutlined,
   DoubleRightOutlined,
   RightOutlined,
-  CloseCircleOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons'
 import moment from 'moment'
 import { useState } from 'react'
@@ -17,12 +17,13 @@ import ModalEditNotice from './ModalEditNotice'
 import { delItemListNoticeDraft, getDataListNoticeDraft } from './slice/slice'
 import distance from '../../../utils/distance'
 import { PlusOutlined } from '@ant-design/icons'
+import './CreateNotification.scss'
 
 const NotificationList = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
   const [load, setLoad] = useState(false)
+  const [pageChange, setPageChange] = useState({})
   const [heightTable, setHeightTable] = useState(0)
-
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -41,11 +42,16 @@ const NotificationList = () => {
     return state.noticeListDraft
   })
 
+  const onChange = (size, page) => {
+    dispatch(getDataListNoticeDraft({ perPage: page, page: size }))
+    setPageChange({ perPage: page, page: size })
+  }
+
   const confirmCancel = (record) => {
     Modal.confirm({
       title: 'DELETE NOTICE',
-      icon: <CloseCircleOutlined />,
-      content: 'Are you sure delete notice ?',
+      icon: <DeleteOutlined style={{ color: 'red' }} />,
+      content: 'Do you want to remove this message?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -55,9 +61,18 @@ const NotificationList = () => {
         style: { padding: '0 28px' },
         type: 'primary',
       },
-      onCancel() {
-        dispatch(delItemListNoticeDraft(record.id))
-        setLoad(!load)
+      async onCancel() {
+        await dispatch(delItemListNoticeDraft(record.id))
+        if (pageChange.perPage) {
+          await dispatch(
+            getDataListNoticeDraft({
+              perPage: pageChange.perPage,
+              page: pageChange.page,
+            }),
+          )
+        } else {
+          await setLoad((prev) => !prev)
+        }
       },
     })
   }
@@ -115,34 +130,28 @@ const NotificationList = () => {
         return (
           <p className="textOverFlow resetMargin tb_center">
             {moment(record.published_date).unix() > moment().unix()
-              ? 'Bản tương lai'
-              : 'Đã Xuất bản'}
+              ? 'Scheduled'
+              : 'Published'}
           </p>
         )
       },
     },
     {
-      title: <h4> ACTION </h4>,
+      title: <h4> DELETE </h4>,
       dataIndex: 'action',
       key: 'action',
       render: (payload, record) => {
         return (
           <Row>
-            <Col ms={12} md={12} xl={12}>
-              <p
-                className="tb_center colorBlue resetMargin"
-                onClick={() => setModal({ open: true, data: record })}
-              >
-                Details
-              </p>
-            </Col>
-            <Col xs={12} md={12} xl={12}>
-              <p
-                className="tb_center colorBlue resetMargin"
-                onClick={() => confirmCancel(record)}
-              >
-                Delete
-              </p>
+            <Col xs={24} md={24} xl={24}>
+              <div className="deleteAction">
+                <Button
+                  className="tb_center colorBlue resetMargin clickDelete"
+                  onClick={() => confirmCancel(record)}
+                >
+                  <DeleteOutlined className="tb_center colorBlue resetMargin clickDelete" />
+                </Button>
+              </div>
             </Col>
           </Row>
         )
@@ -171,12 +180,12 @@ const NotificationList = () => {
               )
             }}
             className="ant-pagination-item"
-          ></Button>
+          />
           <Button
             className="ant-pagination-item"
             disabled={dataNoticeDraft.currentPage === 1}
             icon={<LeftOutlined />}
-          ></Button>
+          />
         </>
       )
     }
@@ -210,9 +219,11 @@ const NotificationList = () => {
     return originalElement
   }
 
-  const onChange = (size, page) => {
-    dispatch(getDataListNoticeDraft({ perPage: page, page: size }))
-  }
+  const classNameDelete = [
+    'ant-btn ant-btn-default tb_center colorBlue resetMargin clickDelete',
+    'ant-table-cell ant-table-cell-row-hover',
+    'anticon anticon-delete tb_center colorBlue resetMargin clickDelete',
+  ]
 
   return (
     <div id="notification" style={{ paddingTop: '50px' }}>
@@ -266,10 +277,25 @@ const NotificationList = () => {
             sorter={{ published_date: 'date' }}
             width={{
               id: '5%',
-              subject: '20%',
+              subject: '30%',
+              action: '8%',
             }}
             styleBody={{
               subject: { className: 'textOverflow' },
+            }}
+            onRow={(record) => {
+              return {
+                onClick: (e) => {
+                  if (
+                    classNameDelete.includes(e.target.className) ||
+                    typeof e.target.className === 'object'
+                  ) {
+                    return null
+                  } else {
+                    setModal({ open: true, data: record })
+                  }
+                },
+              }
             }}
           />
         </Col>
