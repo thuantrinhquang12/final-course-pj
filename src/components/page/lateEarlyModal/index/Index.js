@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Row, Col, DatePicker, Input, Skeleton } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import * as yup from 'yup'
@@ -35,6 +35,8 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
   const [requestExists, setRequestExists] = useState(false)
   const [overTime, setOverTime] = useState(null)
   const [validateTime, setValidateTime] = useState(false)
+  const checkRef = useRef(1)
+
   const timeRequest = handleFormat(handlePlusTime(row?.late, row?.early))
 
   const getCompensation = async (date) => {
@@ -67,6 +69,21 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
     checkRequestExists()
   }, [])
 
+  useEffect(() => {
+    if (checkRef.current > 3) {
+      let dateTime = moment().subtract(1, 'days')
+      if (request.created_at) {
+        dateTime = new Date(request.compensation_date)
+      }
+      const getTimeOver = async () => {
+        const response = await getCompensation(dateTime)
+        setOverTime(response)
+      }
+      getTimeOver()
+    }
+    checkRef.current++
+  }, [request])
+
   const schema = yup.object().shape({
     reasonInput: yup.string().trim().required('Please enter reason'),
     checkDateTime: yup.date().nullable().required('Please enter dateTime'),
@@ -90,18 +107,6 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
       setRequestExists(true)
     }
   }, [request])
-
-  useEffect(() => {
-    let dateTime = moment().subtract(1, 'days')
-    if (requestExists) {
-      dateTime = new Date(request.compensation_date)
-    }
-    const getTimeOver = async () => {
-      const response = await getCompensation(dateTime)
-      setOverTime(response)
-    }
-    getTimeOver()
-  }, [requestExists])
 
   const onSubmit = async (values, e) => {
     const overTM = +(overTime ? overTime : '00:00').replace(':', '')
