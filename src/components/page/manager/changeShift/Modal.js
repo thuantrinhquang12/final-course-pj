@@ -9,6 +9,7 @@ import { checkShift } from './checkShift'
 const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   const [shift, setShift] = useState(modal.data.shift_id)
   const [shiftList, setShiftList] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const { Option } = Select
 
@@ -25,6 +26,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   }
 
   const handleSubmit = async () => {
+    setLoading(true)
     const response = await put(`admin/shift/update/${modal.data.id}`, {
       shift_id: shift,
     })
@@ -34,6 +36,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
         'Update Success',
         'Change Shift',
       )
+      setLoading(false)
       handleUpdate()
       handleClose()
     } else {
@@ -71,7 +74,12 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
         title={<h2>Change Shift</h2>}
         visible={modal.isOpen}
         footer={[
-          <Button key="submit" type="primary" onClick={handleSubmit}>
+          <Button
+            loading={loading}
+            key="submit"
+            type="primary"
+            onClick={handleSubmit}
+          >
             Submit
           </Button>,
           <Button key="cancel" onClick={confirm}>

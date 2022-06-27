@@ -80,7 +80,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.MANAGER_CONFIRMED,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -99,7 +99,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.MANAGER_REJECT,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -118,7 +118,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.ADMIN_APPROVED,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -137,7 +137,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.ADMIN_REJECT,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -381,7 +381,7 @@ const Manager = () => {
           )}
           footer={
             roleUser === 'Manager'
-              ? rowData.manager_confirmed_status !== 0
+              ? rowData.status !== 0
                 ? [
                     <Button
                       key="cancel"
@@ -432,7 +432,7 @@ const Manager = () => {
                     </Button>,
                   ]
               : roleUser === 'Admin'
-              ? rowData.admin_approved_status !== 0
+              ? rowData.status !== 1
                 ? [
                     <Button
                       key="cancel"

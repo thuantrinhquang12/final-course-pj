@@ -1,6 +1,6 @@
 /* eslint-disable object-curly-spacing */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   DoubleLeftOutlined,
   LeftOutlined,
@@ -16,14 +16,14 @@ import { getDataListNotice } from '../slice/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveAs } from 'file-saver'
 import distance from '../../../utils/distance'
+import { shortenLink } from './cutString'
+
 const Index = () => {
   const [modal, setModal] = useState({ open: false, data: {} })
   const [heightTable, setHeightTable] = useState(0)
-  const newNameFile = useRef(null)
   const stateNotice = useSelector((state) => {
     return state.noticeList
   })
-
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getDataListNotice({ perPage: 10, page: 1 }))
@@ -33,7 +33,6 @@ const Index = () => {
     const height = distance('HomeTable')
     setHeightTable(height.heightTable)
   }, [])
-
   const columns = [
     {
       title: <h4>NO</h4>,
@@ -41,7 +40,7 @@ const Index = () => {
       key: 'id',
       render: (payload, records) => {
         return (
-          <p className="resetMargin">
+          <p className="resetMargin textCenter">
             <> {(stateNotice.page - 1) * 10 + Number(records.key) + 1}</>
           </p>
         )
@@ -52,7 +51,7 @@ const Index = () => {
       dataIndex: 'subject',
       key: 'subject',
       render: (payload) => {
-        return <div className="resetMargin">{payload}</div>
+        return <div>{payload}</div>
       },
     },
     {
@@ -60,7 +59,7 @@ const Index = () => {
       dataIndex: 'created_by',
       key: 'created_by',
       render: (payload) => {
-        return <div className="resetMargin">{payload}</div>
+        return <div>{payload}</div>
       },
     },
     {
@@ -71,7 +70,7 @@ const Index = () => {
         const department = Array.isArray(payload)
           ? payload[0].division_name
           : 'ALL'
-        return <div className="resetMargin tb_center">{department}</div>
+        return <div className="tb_center">{department}</div>
       },
     },
     {
@@ -102,9 +101,7 @@ const Index = () => {
         }
         let nameFile = payload
         if (payload) {
-          const indexName = payload.lastIndexOf('/')
-          nameFile = payload.slice(indexName + 1, payload.length)
-          newNameFile.current = nameFile
+          nameFile = shortenLink(payload)
         }
         return (
           <div
@@ -256,7 +253,7 @@ const Index = () => {
             }}
             styleBody={{
               subject: { className: 'textOverflow' },
-              created_by: { position: 'tb_center' },
+              created_by: { className: 'textOverflow textCenter' },
             }}
             pagination={{
               current: stateNotice.currentPage,
@@ -287,7 +284,14 @@ const Index = () => {
             xl={24}
             style={{ display: 'flex', borderBottom: '2px solid #ab9f9f' }}
           >
-            <Col xs={12} md={12} xl={12}>
+            <Col
+              xs={12}
+              md={12}
+              xl={12}
+              style={{
+                paddingRight: '10px',
+              }}
+            >
               <Col xs={24} md={24} xl={24} className="dFlex">
                 <Col xl={7}>Author Name: </Col>
                 <Col xl={17}>
@@ -316,13 +320,23 @@ const Index = () => {
                 </Col>
               </Col>
             </Col>
-            <Col xs={12} md={12} xl={12}>
+            <Col
+              xs={12}
+              md={12}
+              xl={12}
+              style={{
+                borderLeft: '1px solid rgb(224, 224, 224)',
+                paddingLeft: '10px',
+              }}
+            >
               <Col xs={24} md={24} xl={24} className="dFlex">
                 <Col xl={8}>To department: </Col>
                 <Col xl={16}>
-                  {Array.isArray(modal?.data?.published_to)
-                    ? modal?.data?.published_to[0].division_name
-                    : 'ALL'}
+                  <strong>
+                    {Array.isArray(modal?.data?.published_to)
+                      ? modal?.data?.published_to[0].division_name
+                      : 'ALL'}
+                  </strong>
                 </Col>
               </Col>
               <Col xs={24} md={24} xl={24} className="dFlex">
@@ -358,7 +372,8 @@ const Index = () => {
             <Col xl={21}>
               <p>
                 <span className="colorBlue" style={{ fontWeight: 600 }}>
-                  {newNameFile.current}
+                  {modal?.data?.attachment &&
+                    shortenLink(modal?.data?.attachment)}
                 </span>
                 <DownloadOutlined
                   style={{ display: 'inline', marginLeft: '10px' }}

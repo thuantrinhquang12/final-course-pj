@@ -12,7 +12,7 @@ import moment from 'moment'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { CMTable, dateTime } from '../../..'
+import { CMTable, dateTime, typePopup } from '../../..'
 import ModalEditNotice from './ModalEditNotice'
 import { delItemListNoticeDraft, getDataListNoticeDraft } from './slice/slice'
 import distance from '../../../utils/distance'
@@ -63,6 +63,11 @@ const NotificationList = () => {
       },
       async onCancel() {
         await dispatch(delItemListNoticeDraft(record.id))
+        typePopup.popupNotice(
+          typePopup.SUCCESS_MESSAGE,
+          'Success',
+          'Delete notice success',
+        )
         if (pageChange.perPage) {
           await dispatch(
             getDataListNoticeDraft({
@@ -96,7 +101,7 @@ const NotificationList = () => {
       key: 'author',
       render: (payload, record) => {
         return (
-          <p className="textOverFlow resetMargin tb_center">
+          <p className="textOverflow resetMargin textCenter">
             {record.created_by}
           </p>
         )
@@ -221,7 +226,6 @@ const NotificationList = () => {
 
   const classNameDelete = [
     'ant-btn ant-btn-default tb_center colorBlue resetMargin clickDelete',
-    'ant-table-cell ant-table-cell-row-hover',
     'anticon anticon-delete tb_center colorBlue resetMargin clickDelete',
   ]
 
@@ -278,7 +282,9 @@ const NotificationList = () => {
             width={{
               id: '5%',
               subject: '30%',
+              author: '20%',
               action: '8%',
+              status: '12%',
             }}
             styleBody={{
               subject: { className: 'textOverflow' },
