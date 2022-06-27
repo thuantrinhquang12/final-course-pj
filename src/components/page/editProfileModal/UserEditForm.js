@@ -54,7 +54,6 @@ const UserEditForm = () => {
   const [avatar, setAvatar] = useState(null)
 
   emitter.on('EVENT_GET_AVATAR', (data) => {
-    console.log(data)
     setAvatar(data.data)
   })
   useEffect(() => {

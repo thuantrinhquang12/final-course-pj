@@ -292,7 +292,6 @@ const NotificationList = () => {
             onRow={(record) => {
               return {
                 onClick: (e) => {
-                  console.log(e.target.className)
                   if (
                     classNameDelete.includes(e.target.className) ||
                     typeof e.target.className === 'object'

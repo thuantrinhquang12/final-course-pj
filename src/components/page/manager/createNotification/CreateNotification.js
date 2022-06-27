@@ -7,7 +7,7 @@ import { post } from '../../../service/requestApi'
 import PropTypes from 'prop-types'
 import { saveAs } from 'file-saver'
 
-const CreateNotification = ({ data, handleModal }) => {
+const CreateNotification = ({ data, handleModal, setLoading }) => {
   const [form] = Form.useForm()
   const [selectDivision, setDivision] = useState(true)
 
@@ -27,9 +27,11 @@ const CreateNotification = ({ data, handleModal }) => {
     }
 
     try {
+      setLoading(true)
       await post('/admin/notifications/store', dataSent, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
+      setLoading(false)
       typePopup.popupNotice(
         typePopup.SUCCESS_MESSAGE,
         'Success',
@@ -291,6 +293,7 @@ CreateNotification.propTypes = {
   data: PropTypes.object,
   handleModal: PropTypes.func,
   confirm: PropTypes.func,
+  setLoading: PropTypes.func,
 }
 
 export default CreateNotification
