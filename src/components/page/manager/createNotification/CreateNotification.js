@@ -27,18 +27,15 @@ const CreateNotification = ({ data, handleModal }) => {
     }
 
     try {
-      const res = await post('/admin/notifications/store', dataSent, {
+      await post('/admin/notifications/store', dataSent, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-      if (res.status === true) {
-        typePopup.popupNotice(
-          typePopup.SUCCESS_MESSAGE,
-          'Success',
-          'Create success message',
-        )
-        form.resetFields()
-        handleModal()
-      } else return false
+      typePopup.popupNotice(
+        typePopup.SUCCESS_MESSAGE,
+        'Success',
+        'Create success message',
+      )
+      handleModal()
     } catch (e) {
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,

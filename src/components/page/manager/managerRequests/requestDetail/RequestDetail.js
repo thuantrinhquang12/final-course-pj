@@ -19,6 +19,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
     check_out: checkOut,
     request_type: requestType,
     request_for_date: requestForDate,
+    status: requestStatus,
     full_name: fullName,
     email,
     reason,
@@ -29,6 +30,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
     compensation_time: compensationTime,
     compensation_date: compensationDate,
     manager_confirmed_comment: managerConfirmedComment,
+    admin_approved_comment: adminApprovedComment,
   } = row
   return (
     <div className="requestDetail">
@@ -45,7 +47,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
             <Col xl={16}>{dateTime.formatDateTable(requestForDate)}</Col>
           </Row>
           <Row>
-            <Col xl={8}>Form member:</Col>
+            <Col xl={8}>From member:</Col>
             <Col xl={16}>
               <span>
                 {fullName} ({email})
@@ -56,24 +58,37 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
             <Col xl={8}>Reason:</Col>
             <Col xl={16}>{reason}</Col>
           </Row>
-          {roleUser === 'Admin' && (
+
+          {((roleUser === 'Manager' && requestStatus !== 0) ||
+            roleUser === 'Admin') && (
             <Row>
               <Col xl={8}>Manager Comment:</Col>
-              <Col xl={16}>{managerConfirmedComment}</Col>
+              <Col xl={16}>
+                {roleUser === 'Admin'
+                  ? adminApprovedComment || managerConfirmedComment
+                  : roleUser === 'Manager'
+                  ? managerConfirmedComment
+                  : ''}
+              </Col>
             </Row>
           )}
-          <Row>
-            <Col xl={8}>Comment:</Col>
-            <Col xl={16}>
-              <Input.TextArea
-                ref={refInput}
-                autoSize={{ minRows: 3, maxRows: 3 }}
-                maxLength={100}
-                placeholder="Please enter not too 100 characters"
-                showCount
-              ></Input.TextArea>
-            </Col>
-          </Row>
+          {(roleUser === 'Admin' && requestStatus === 1) ||
+          (roleUser === 'Manager' && requestStatus === 0) ? (
+            <Row>
+              <Col xl={8}>Comment:</Col>
+              <Col xl={16}>
+                <Input.TextArea
+                  ref={refInput}
+                  autoSize={{ minRows: 3, maxRows: 3 }}
+                  maxLength={100}
+                  placeholder="Please enter not too 100 characters"
+                  showCount
+                ></Input.TextArea>
+              </Col>
+            </Row>
+          ) : (
+            <></>
+          )}
           <Row style={{ margin: 0 }}>
             <Col xl={8}>Status:</Col>
             <Col xl={16}>
@@ -117,7 +132,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
             <>
               <Row>
                 <Col xl={12}> Compensation Date:</Col>
-                <Col xl={12}>{compensationDate}</Col>
+                <Col xl={12}>{dateTime.formatDateTable(compensationDate)}</Col>
               </Row>
               <Row>
                 <Col xl={12}>Compensation Time:</Col>

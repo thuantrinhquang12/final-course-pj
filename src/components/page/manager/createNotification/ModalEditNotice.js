@@ -60,7 +60,7 @@ const ModalEditNotice = (props) => {
       title="Create Notifications"
       widthModal={700}
     >
-      <CreateNotification data={data} />
+      <CreateNotification data={data} handleModal={handleModal} />
     </Dialog>
   )
 }

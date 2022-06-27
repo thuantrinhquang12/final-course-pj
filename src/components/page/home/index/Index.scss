@@ -2,6 +2,13 @@
   width: 90%;
   margin: auto;
   padding-top: 50px;
+  .ant-table-body {
+    tr {
+      td {
+        cursor: default !important;
+      }
+    }
+  }
 }
 
 .modalNotice {
