@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 
-import { get, put } from '../../service/requestApi'
+import { get, post } from '../../service/requestApi'
 import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
@@ -77,11 +77,13 @@ const UserEditForm = () => {
       avatar: avatar,
     }
 
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    }
     try {
-      // const data = await put(API + '/update', valueEdit, {
-      //   headers: { 'Content-Type': 'multipart/form-data' },
-      // })
-      const data = await put(API + '/update', valueEdit)
+      const data = await post('/members/update?_method=PUT', valueEdit, {
+        headers,
+      })
       if (data.status) {
         typePopup.popupNotice(
           typePopup.SUCCESS_MESSAGE,

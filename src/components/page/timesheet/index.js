@@ -28,7 +28,6 @@ export default function SearchField() {
   const worksheet = useSelector((state) => {
     return state.timesheet.worksheet
   })
-  console.log(worksheet)
   const onFinish = (values) => {
     if (values.sort === 'ascending') {
       if (values.selected === 1) {

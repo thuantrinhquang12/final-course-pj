@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Dialog from '../../../common/createModal/Modal'
 import { Button, Modal } from 'antd'
 import { CloseCircleOutlined } from '@ant-design/icons'
@@ -8,6 +8,7 @@ import './CreateNotification.scss'
 
 const ModalEditNotice = (props) => {
   const { isOpen, handleModal, data } = props
+  const [loading, setLoading] = useState(false)
 
   const confirm = () => {
     Modal.confirm({
@@ -41,6 +42,7 @@ const ModalEditNotice = (props) => {
                 form="formNotice"
                 htmlType="submit"
                 type="primary"
+                loading={loading}
               >
                 Submit
               </Button>,
@@ -60,7 +62,11 @@ const ModalEditNotice = (props) => {
       title="Create Notifications"
       widthModal={700}
     >
-      <CreateNotification data={data} handleModal={handleModal} />
+      <CreateNotification
+        data={data}
+        handleModal={handleModal}
+        setLoading={setLoading}
+      />
     </Dialog>
   )
 }
