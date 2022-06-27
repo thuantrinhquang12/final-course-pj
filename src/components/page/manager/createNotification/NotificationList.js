@@ -221,7 +221,6 @@ const NotificationList = () => {
 
   const classNameDelete = [
     'ant-btn ant-btn-default tb_center colorBlue resetMargin clickDelete',
-    'ant-table-cell ant-table-cell-row-hover',
     'anticon anticon-delete tb_center colorBlue resetMargin clickDelete',
   ]
 
@@ -286,6 +285,7 @@ const NotificationList = () => {
             onRow={(record) => {
               return {
                 onClick: (e) => {
+                  console.log(e.target.className)
                   if (
                     classNameDelete.includes(e.target.className) ||
                     typeof e.target.className === 'object'

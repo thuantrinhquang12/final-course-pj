@@ -4,5 +4,4 @@ export const LOCAL_STORAGE = {
   ROLE: 'role',
   INF_USER: 'INF_USER',
   DATA: 'DATA',
-  TIME_EXPIRED: 'TIME_EXPIRED',
 }
