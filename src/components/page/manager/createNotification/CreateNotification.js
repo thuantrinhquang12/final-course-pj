@@ -207,7 +207,7 @@ const CreateNotification = ({ data, handleModal, setLoading }) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Required to file',
+                    message: 'Required published to',
                   },
                 ]}
               >
