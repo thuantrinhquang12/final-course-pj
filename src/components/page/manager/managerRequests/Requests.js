@@ -8,8 +8,8 @@ import {
   LeftOutlined,
   DoubleRightOutlined,
   RightOutlined,
-  DeleteOutlined,
   CloseCircleOutlined,
+  CloseCircleTwoTone,
 } from '@ant-design/icons'
 import {
   getRequests,
@@ -155,7 +155,7 @@ const Manager = () => {
         : ''
     Modal.confirm({
       title: 'REQUEST',
-      icon: <DeleteOutlined style={{ color: 'red' }} />,
+      icon: <CloseCircleTwoTone twoToneColor="red" />,
       content: 'Do you want reject request?',
       okText: 'Cancel',
       cancelText: 'OK',

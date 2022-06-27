@@ -95,14 +95,14 @@ const Index = () => {
             <Col xs={24} md={8} xl={6} className={styles.column}>
               <NavLink to="/" className={styles.formGroup}>
                 <i className="fa-solid fa-house-chimney"></i>
-                <h4 style={{ color: 'white' }}>HOME</h4>
+                <h4>HOME</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
             </Col>
             <Col xs={24} md={8} xl={6} className={styles.column}>
               <NavLink to="/timesheet" className={styles.formGroup}>
                 <i className="fa-solid fa-business-time"></i>
-                <h4 style={{ color: 'white' }}>TIMESHEET</h4>
+                <h4>TIMESHEET</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
             </Col>
