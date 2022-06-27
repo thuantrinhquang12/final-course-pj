@@ -2,9 +2,7 @@
   align-content: center;
   width: 100%;
 }
-body {
-  // overflow: scroll;
-}
+
 fieldset {
   margin-bottom: 30px !important;
   border: 1px solid black !important;
@@ -30,10 +28,10 @@ fieldset {
 }
 .selected_sort {
   display: flex;
-  flex-direction: row;
-  flex-grow: 2;
-  width: 100px;
-  justify-content: space-evenly;
+  align-items: baseline;
+  & > span {
+    margin-right: 20px;
+  }
 }
 .selected_choose {
   flex-grow: 1;
@@ -56,6 +54,15 @@ fieldset {
 
 //css của tui
 .tableContainer.tableTimeSheet {
+  table {
+    thead {
+      tr {
+        th {
+          color: white;
+        }
+      }
+    }
+  }
   .ant-table {
     .ant-table-container {
       .ant-table-body {
@@ -88,6 +95,65 @@ fieldset {
             display: flex;
             align-items: center;
             justify-content: space-around;
+
+            label {
+              color: #0d6fd2;
+              cursor: pointer;
+              font-size: 16px;
+              font-weight: 600;
+              text-decoration: underline;
+              position: relative;
+
+              &::after {
+                display: block;
+                content: '';
+                position: absolute;
+                top: 30%;
+                bottom: 10%;
+                right: -5px;
+                width: 1px;
+                background-color: #0d6fd2;
+              }
+            }
+          }
+        }
+
+        .note {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            .note__status {
+              display: block;
+            }
+          }
+
+          .note__status {
+            display: none;
+            cursor: default;
+            position: absolute;
+            right: -140%;
+            min-width: 200px;
+            min-height: 100px;
+            background-color: #ebe3e3;
+            top: 0;
+            z-index: 10;
+            box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+            border-radius: 5px;
+            animation: animation 0.3s ease-in-out;
+
+            .formGroup {
+              display: flex;
+              justify-content: space-around;
+
+              span {
+                font-size: 16px;
+                font-weight: 600;
+              }
+            }
           }
         }
       }
@@ -115,9 +181,6 @@ fieldset {
       }
     }
   }
-  // .ant-modal-footer {
-  //   display: none;
-  // }
 
   .modalTime {
     .ant-table-title {
@@ -149,5 +212,14 @@ fieldset {
         }
       }
     }
+  }
+}
+
+@keyframes animation {
+  from {
+    transform: translateY(50%);
+  }
+  to {
+    transform: translateY(0%);
   }
 }

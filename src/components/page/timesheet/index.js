@@ -6,10 +6,10 @@ import { Radio } from 'antd'
 import { Select } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import './searchField.scss'
-import 'antd/dist/antd.min.css'
-import Timesheet from './tableTimesheet'
+import TimeSheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTimeSheet } from './slice/slice'
+import { typePopup } from '../../index'
 const { Option } = Select
 const { Text } = Typography
 const dateFormat = 'DD/MM/YYYY'
@@ -18,8 +18,6 @@ export default function SearchField() {
   const [errDate, setErrDate] = useState(false)
   const dispatch = useDispatch()
   const [params, setParams] = useState({
-    // page: 1,
-    // perPage: 10,
     sort: 'asc',
     startDate: null,
     endDate: moment().subtract(1, 'days'),
@@ -32,9 +30,8 @@ export default function SearchField() {
   const worksheet = useSelector((state) => {
     return state.timeSheet
   })
-  // console.log('work sheet', worksheet)
+
   const onFinish = (values) => {
-    console.log('search', values)
     if (values.selected === 1) {
       switch (values.selectedDate) {
         case 1:
@@ -84,8 +81,12 @@ export default function SearchField() {
           throw new Error('Invalid Selected')
       }
     } else if (values.selected === 2) {
-      if (params.startDate === null && params.endDate === null) {
-        setErrDate(true)
+      if (errDate) {
+        typePopup.popupNotice(
+          typePopup.ERROR_MESSAGE,
+          'Invalid Date',
+          'Start date cannot be greater than end date',
+        )
         return null
       }
       dispatch(
@@ -99,7 +100,7 @@ export default function SearchField() {
       throw new Error('Invalid Selected')
     }
   }
-  // console.log('parames', params)
+
   const handleReset = () => {
     form.resetFields()
     setChoose(1)
@@ -133,7 +134,7 @@ export default function SearchField() {
           >
             <div className="search-form">
               <div className="selected_choose">
-                <Form.Item name="selected">
+                <Form.Item name="selected" style={{ position: 'relative' }}>
                   <Radio.Group
                     name="radioGroup"
                     onChange={onChangeChoose}
@@ -170,6 +171,11 @@ export default function SearchField() {
                               ...prev,
                               startDate: date,
                             }))
+                          } else {
+                            setParams((prev) => ({
+                              ...prev,
+                              startDate: null,
+                            }))
                           }
                         }}
                       />
@@ -188,12 +194,16 @@ export default function SearchField() {
                             } else {
                               setErrDate(false)
                             }
+                            setParams((prev) => ({ ...prev, endDate: date }))
+                          } else {
+                            setParams((prev) => ({
+                              ...prev,
+                              endDate: moment().subtract(1, 'days'),
+                            }))
                           }
-                          setParams((prev) => ({ ...prev, endDate: date }))
                         }}
                       />
                     </Form.Item>
-                    {errDate && <p style={{ color: 'red' }}>Invalid Time</p>}
                   </Space>
                 </div>
               </div>
@@ -225,7 +235,11 @@ export default function SearchField() {
               >
                 Search
               </Button>
-              <Button size="large" onClick={handleReset}>
+              <Button
+                size="large"
+                onClick={handleReset}
+                style={{ padding: ' 0 30px' }}
+              >
                 Reset
               </Button>
             </div>
@@ -233,7 +247,7 @@ export default function SearchField() {
         </fieldset>
 
         <>
-          <Timesheet row={worksheet} params={params}></Timesheet>
+          <TimeSheet row={worksheet} params={params}></TimeSheet>
         </>
       </div>
     </>

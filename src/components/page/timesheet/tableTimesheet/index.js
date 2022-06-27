@@ -168,6 +168,28 @@ export default function Timesheet({ row, params }) {
       title: 'Lack',
       dataIndex: 'lack',
       key: 'lack',
+      render: (payload, record) => {
+        let color = null
+        if (record.note) {
+          const check = record.note.split('|')
+          check.map((item) => {
+            const status = item.split(' ')
+            if (status[1] === 'Approved') {
+              const lackTime = payload ? payload : '00:00'
+              const compensation = record.compensation
+                ? record.compensation
+                : '00:00'
+              const checkTime =
+                Number(lackTime.replace(':', '')) <
+                Number(compensation.replace(':', ''))
+              color = checkTime ? 'black' : 'yellow'
+            }
+          })
+        } else {
+          color = 'red'
+        }
+        return <p style={{ color: color }}>{payload}</p>
+      },
     },
     {
       title: 'Comp',
@@ -188,6 +210,47 @@ export default function Timesheet({ row, params }) {
       title: 'Note',
       dataIndex: 'note',
       key: 'note',
+      render: (record) => {
+        let arrayNote = record
+        if (arrayNote) {
+          arrayNote = record.split('|')
+          arrayNote = arrayNote.map((item) => {
+            const status = item.split(' ')
+            return {
+              name: status[0],
+              status: status[1],
+            }
+          })
+        }
+
+        return (
+          <div className="note">
+            {record ? (
+              <>
+                <p>Status</p>
+                <div className="note__status">
+                  {arrayNote.map((item, index) => {
+                    const color =
+                      item.status === 'Approved'
+                        ? '#17de17'
+                        : item.status === 'Confirmed'
+                        ? '#3030ed'
+                        : 'red'
+                    return (
+                      <div className="formGroup" key={index}>
+                        <span>{item.name}:</span>
+                        <h4 style={{ color: color }}>{item.status}</h4>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            ) : (
+              ''
+            )}
+          </div>
+        )
+      },
     },
     {
       title: 'Action',
@@ -195,7 +258,7 @@ export default function Timesheet({ row, params }) {
       width: 250,
       render: (record) => (
         <div className="action">
-          <Button
+          <label
             className="action_false"
             size="small"
             onClick={() => {
@@ -209,9 +272,9 @@ export default function Timesheet({ row, params }) {
             }}
           >
             <span className="action_false"> Forget</span>
-          </Button>
+          </label>
 
-          <Button
+          <label
             className="action_false"
             size="small"
             onClick={() => {
@@ -225,9 +288,9 @@ export default function Timesheet({ row, params }) {
             }}
           >
             <span className="action_false"> Late/Early</span>
-          </Button>
+          </label>
 
-          <Button
+          <label
             className="action_false"
             size="small"
             onClick={() => {
@@ -241,8 +304,8 @@ export default function Timesheet({ row, params }) {
             }}
           >
             <span className="action_false"> Leave</span>
-          </Button>
-          <Button
+          </label>
+          <label
             className="action_false"
             size="small"
             onClick={() => {
@@ -256,7 +319,7 @@ export default function Timesheet({ row, params }) {
             }}
           >
             <span className="action_false"> OT</span>
-          </Button>
+          </label>
         </div>
       ),
     },
@@ -323,7 +386,7 @@ export default function Timesheet({ row, params }) {
 
     return originalElement
   }
-  console.log('row', row)
+
   return (
     <>
       <TableCS
@@ -340,6 +403,13 @@ export default function Timesheet({ row, params }) {
         }}
         columns={columns}
         data={row ? row.data : []}
+        width={{
+          id: '5%',
+          work_date: '10%',
+          note: '10%',
+          unpaid_leave: '6%',
+          paid_leave: '6%',
+        }}
         onRow={(record) => ({
           onClick: (e) => {
             if (
