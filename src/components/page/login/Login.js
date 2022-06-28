@@ -27,6 +27,7 @@ const Login = () => {
           tokenAccess: res.access_token,
         }),
       )
+
       localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, res.access_token)
       localStorage.setItem(LOCAL_STORAGE.ROLE, res.data.roles[0].title)
       localStorage.setItem(
@@ -34,8 +35,10 @@ const Login = () => {
         JSON.stringify({
           avatar: res.data.avatar,
           name: res.data.full_name,
+          email: res.data.email,
         }),
       )
+
       typePopup.popupNotice(
         typePopup.SUCCESS_MESSAGE,
         'Success',

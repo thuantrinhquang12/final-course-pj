@@ -70,13 +70,16 @@ const AppRoutesComponent = () => {
               <PrivateRoute allowedRoles={[ROLES.Manager, ROLES.Admin]} />
             }
           >
-            <Route path="/manager" element={<Manager />} />
+            <Route path="/admin/manager" element={<Manager />} />
           </Route>
 
           {/* Admin routes */}
-          <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/notification" element={<NotificationList />} />
-            <Route path="/change-shift" element={<ChangeShift />} />
+          <Route
+            path="/admin"
+            element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}
+          >
+            <Route path="/admin/notification" element={<NotificationList />} />
+            <Route path="/admin/change-shift" element={<ChangeShift />} />
           </Route>
         </Route>
       </Routes>
