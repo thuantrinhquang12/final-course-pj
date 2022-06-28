@@ -99,8 +99,8 @@ export const checkRequestComment = (
 
 export const checkRequestManager = (managerStatus, adminStatus) => {
   if (adminStatus === -1 || adminStatus === 2) {
-    return 'Admin Comment'
+    return 'Admin Comment:'
   } else if (managerStatus === -1 || managerStatus === 1) {
-    return 'Manager Comment'
+    return 'Manager Comment:'
   }
 }

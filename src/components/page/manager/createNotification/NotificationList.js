@@ -1,21 +1,30 @@
 /* eslint-disable object-curly-spacing */
-import { Button, Col, Modal, Row } from 'antd'
-import moment from 'moment'
 import * as React from 'react'
+import { Button, Col, Modal, Row } from 'antd'
+import {
+  DoubleLeftOutlined,
+  LeftOutlined,
+  DoubleRightOutlined,
+  RightOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons'
+import moment from 'moment'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { CMTable } from '../../..'
+import { CMTable, dateTime, typePopup } from '../../..'
 import ModalEditNotice from './ModalEditNotice'
 import { delItemListNoticeDraft, getDataListNoticeDraft } from './slice/slice'
 import distance from '../../../utils/distance'
 import { PlusOutlined } from '@ant-design/icons'
+import './CreateNotification.scss'
 
 const NotificationList = () => {
-  const dispatch = useDispatch()
   const [modal, setModal] = useState({ open: false, data: {} })
   const [load, setLoad] = useState(false)
+  const [pageChange, setPageChange] = useState({})
   const [heightTable, setHeightTable] = useState(0)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const returnData = async () => {
@@ -26,7 +35,6 @@ const NotificationList = () => {
 
   useEffect(() => {
     const height = distance('notification', 50)
-    console.log('height', height)
     setHeightTable(height.heightTable)
   }, [])
 
@@ -34,10 +42,16 @@ const NotificationList = () => {
     return state.noticeListDraft
   })
 
+  const onChange = (size, page) => {
+    dispatch(getDataListNoticeDraft({ perPage: page, page: size }))
+    setPageChange({ perPage: page, page: size })
+  }
+
   const confirmCancel = (record) => {
     Modal.confirm({
       title: 'DELETE NOTICE',
-      content: 'Are you sure ?',
+      icon: <DeleteOutlined style={{ color: 'red' }} />,
+      content: 'Do you want to remove this message?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -47,9 +61,23 @@ const NotificationList = () => {
         style: { padding: '0 28px' },
         type: 'primary',
       },
-      onCancel() {
-        dispatch(delItemListNoticeDraft(record.id))
-        setLoad(!load)
+      async onCancel() {
+        await dispatch(delItemListNoticeDraft(record.id))
+        typePopup.popupNotice(
+          typePopup.SUCCESS_MESSAGE,
+          'Success',
+          'Delete notice success',
+        )
+        if (pageChange.perPage) {
+          await dispatch(
+            getDataListNoticeDraft({
+              perPage: pageChange.perPage,
+              page: pageChange.page,
+            }),
+          )
+        } else {
+          await setLoad((prev) => !prev)
+        }
       },
     })
   }
@@ -59,10 +87,10 @@ const NotificationList = () => {
       title: <h4>NO</h4>,
       dataIndex: 'id',
       key: 'id',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
           <p className="resetMargin tb_center">
-            {(dataNoticeDraft.page - 1) * 10 + Number(recored.key) + 1}
+            {(dataNoticeDraft.page - 1) * 10 + Number(record.key) + 1}
           </p>
         )
       },
@@ -71,10 +99,10 @@ const NotificationList = () => {
       title: <h4>AUTHOR</h4>,
       dataIndex: 'author',
       key: 'author',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
-          <p className="textOverFlow resetMargin tb_center">
-            {recored.created_by}
+          <p className="textOverflow resetMargin textCenter">
+            {record.created_by}
           </p>
         )
       },
@@ -83,56 +111,52 @@ const NotificationList = () => {
       title: <h4>SUBJECT</h4>,
       dataIndex: 'subject',
       key: 'subject',
-      render: (payload, recored) => {
-        return <p className="textOverFlow resetMargin">{recored.subject}</p>
+      render: (payload, record) => {
+        return <p className="textOverFlow resetMargin">{record.subject}</p>
       },
     },
     {
-      title: <h4>Published Date</h4>,
+      title: <h4>PUBLISHED DATE</h4>,
       dataIndex: 'published_date',
       key: 'published_date',
-      render: (payload, recored) => {
+      render: (payload, record) => {
         return (
-          <p className="textOverFlow resetMargin">{recored.published_date}</p>
-        )
-      },
-    },
-    {
-      title: <h4>Status</h4>,
-      dataIndex: 'status',
-      key: 'status',
-      render: (payload, recored) => {
-        return (
-          <p className="textOverFlow resetMargin tb_center">
-            {moment(recored.published_date).unix() > moment().unix()
-              ? 'Bản tương lai'
-              : 'Đã Xuất bản'}
+          <p className="tb_center textOverFlow resetMargin">
+            {dateTime.formatDateTable(record.published_date)}
           </p>
         )
       },
     },
     {
-      title: <h4> ACTION </h4>,
+      title: <h4>STATUS</h4>,
+      dataIndex: 'status',
+      key: 'status',
+      render: (payload, record) => {
+        return (
+          <p className="textOverFlow resetMargin tb_center">
+            {moment(record.published_date).unix() > moment().unix()
+              ? 'Scheduled'
+              : 'Published'}
+          </p>
+        )
+      },
+    },
+    {
+      title: <h4> DELETE </h4>,
       dataIndex: 'action',
       key: 'action',
       render: (payload, record) => {
         return (
           <Row>
-            <Col ms={12} md={12} xl={12}>
-              <p
-                className="tb_center colorBlue resetMargin"
-                onClick={() => setModal({ open: true, data: record })}
-              >
-                Details
-              </p>
-            </Col>
-            <Col xs={12} md={12} xl={12}>
-              <p
-                className="tb_center colorBlue resetMargin"
-                onClick={() => confirmCancel(record)}
-              >
-                Delete
-              </p>
+            <Col xs={24} md={24} xl={24}>
+              <div className="deleteAction">
+                <Button
+                  className="tb_center colorBlue resetMargin clickDelete"
+                  onClick={() => confirmCancel(record)}
+                >
+                  <DeleteOutlined className="tb_center colorBlue resetMargin clickDelete" />
+                </Button>
+              </div>
             </Col>
           </Row>
         )
@@ -148,10 +172,9 @@ const NotificationList = () => {
     if (type === 'prev') {
       return (
         <>
-          <button
-            style={
-              dataNoticeDraft.currentPage === 1 ? { cursor: 'not-allowed' } : {}
-            }
+          <Button
+            disabled={dataNoticeDraft.currentPage === 1}
+            icon={<DoubleLeftOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -162,17 +185,12 @@ const NotificationList = () => {
               )
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-left" />
-          </button>
-          <button
+          />
+          <Button
             className="ant-pagination-item"
-            style={
-              dataNoticeDraft.currentPage === 1 ? { cursor: 'not-allowed' } : {}
-            }
-          >
-            <i className="fa-solid fa-angle-left" />
-          </button>
+            disabled={dataNoticeDraft.currentPage === 1}
+            icon={<LeftOutlined />}
+          />
         </>
       )
     }
@@ -180,22 +198,14 @@ const NotificationList = () => {
     if (type === 'next') {
       return (
         <>
-          <button
+          <Button
             className="ant-pagination-item"
-            style={
-              dataNoticeDraft.currentPage === dataNoticeDraft.lastPage
-                ? { cursor: 'not-allowed' }
-                : {}
-            }
-          >
-            <i className="fa-solid fa-angle-right" />
-          </button>
-          <button
-            style={
-              dataNoticeDraft.currentPage === dataNoticeDraft.lastPage
-                ? { cursor: 'not-allowed' }
-                : {}
-            }
+            icon={<RightOutlined />}
+            disabled={dataNoticeDraft.currentPage === dataNoticeDraft.lastPage}
+          ></Button>
+          <Button
+            disabled={dataNoticeDraft.currentPage === dataNoticeDraft.lastPage}
+            icon={<DoubleRightOutlined />}
             onClick={(e) => {
               e.stopPropagation()
               dispatch(
@@ -206,9 +216,7 @@ const NotificationList = () => {
               )
             }}
             className="ant-pagination-item"
-          >
-            <i className="fa-solid fa-angles-right" />
-          </button>
+          ></Button>
         </>
       )
     }
@@ -216,9 +224,10 @@ const NotificationList = () => {
     return originalElement
   }
 
-  const onChange = (size, page) => {
-    dispatch(getDataListNoticeDraft({ perPage: page, page: size }))
-  }
+  const classNameDelete = [
+    'ant-btn ant-btn-default tb_center colorBlue resetMargin clickDelete',
+    'anticon anticon-delete tb_center colorBlue resetMargin clickDelete',
+  ]
 
   return (
     <div id="notification" style={{ paddingTop: '50px' }}>
@@ -236,7 +245,7 @@ const NotificationList = () => {
               return (
                 <Row style={{ justifyContent: 'space-between' }}>
                   <Col xl={12} md={12} xs={12}>
-                    <h2>List Notice Draft</h2>
+                    <h2>List Notice</h2>
                   </Col>
                   <Col xl={12} md={12} xs={12} style={{ textAlign: 'right' }}>
                     <Button
@@ -249,15 +258,15 @@ const NotificationList = () => {
                       onClick={() => setModal({ open: true })}
                     >
                       <PlusOutlined />
-                      Create Notice Draft
+                      Create Notice
                     </Button>
                   </Col>
                 </Row>
               )
             }}
+            columns={columns}
             data={dataNoticeDraft.tableData}
             loading={dataNoticeDraft.loading}
-            columns={columns}
             pagination={{
               current: dataNoticeDraft.currentPage,
               total: dataNoticeDraft.total,
@@ -272,13 +281,27 @@ const NotificationList = () => {
             sorter={{ published_date: 'date' }}
             width={{
               id: '5%',
-              subject: '20%',
+              subject: '30%',
+              author: '20%',
+              action: '8%',
+              status: '12%',
             }}
             styleBody={{
               subject: { className: 'textOverflow' },
-              published_date: {
-                position: 'tb_center',
-              },
+            }}
+            onRow={(record) => {
+              return {
+                onClick: (e) => {
+                  if (
+                    classNameDelete.includes(e.target.className) ||
+                    typeof e.target.className === 'object'
+                  ) {
+                    return null
+                  } else {
+                    setModal({ open: true, data: record })
+                  }
+                },
+              }
             }}
           />
         </Col>

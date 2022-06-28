@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Input } from 'antd'
-import { dateTime, checkRequest } from '../../../index'
+import { dateTime, checkRequest } from '../../../../index'
 const {
   checkRequestType,
   checkRequestStatus,
@@ -19,6 +19,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
     check_out: checkOut,
     request_type: requestType,
     request_for_date: requestForDate,
+    status: requestStatus,
     full_name: fullName,
     email,
     reason,
@@ -29,10 +30,11 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
     compensation_time: compensationTime,
     compensation_date: compensationDate,
     manager_confirmed_comment: managerConfirmedComment,
+    admin_approved_comment: adminApprovedComment,
   } = row
   return (
     <div className="requestDetail">
-      <Row>
+      <Row style={{ margin: 0 }}>
         <Col xl={15} style={{ paddingRight: '10px' }}>
           <Row>
             <Col xl={8}>Request type:</Col>
@@ -42,10 +44,10 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           </Row>
           <Row>
             <Col xl={8}>Request for date:</Col>
-            <Col xl={16}>{requestForDate}</Col>
+            <Col xl={16}>{dateTime.formatDateTable(requestForDate)}</Col>
           </Row>
           <Row>
-            <Col xl={8}>Form member:</Col>
+            <Col xl={8}>From member:</Col>
             <Col xl={16}>
               <span>
                 {fullName} ({email})
@@ -56,29 +58,42 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
             <Col xl={8}>Reason:</Col>
             <Col xl={16}>{reason}</Col>
           </Row>
-          {roleUser === 'Admin' && (
+
+          {((roleUser === 'Manager' && requestStatus !== 0) ||
+            roleUser === 'Admin') && (
             <Row>
               <Col xl={8}>Manager Comment:</Col>
-              <Col xl={16}>{managerConfirmedComment}</Col>
+              <Col xl={16}>
+                {roleUser === 'Admin'
+                  ? adminApprovedComment || managerConfirmedComment
+                  : roleUser === 'Manager'
+                  ? managerConfirmedComment
+                  : ''}
+              </Col>
             </Row>
           )}
-          <Row>
-            <Col xl={8}>Comment:</Col>
-            <Col xl={16}>
-              <Input.TextArea
-                ref={refInput}
-                autoSize={{ minRows: 3, maxRows: 3 }}
-                maxLength={100}
-                placeholder="Please enter not too 100 characters"
-                showCount
-              ></Input.TextArea>
-            </Col>
-          </Row>
-          <Row>
+          {(roleUser === 'Admin' && requestStatus === 1) ||
+          (roleUser === 'Manager' && requestStatus === 0) ? (
+            <Row>
+              <Col xl={8}>Comment:</Col>
+              <Col xl={16}>
+                <Input.TextArea
+                  ref={refInput}
+                  autoSize={{ minRows: 3, maxRows: 3 }}
+                  maxLength={100}
+                  placeholder="Please enter not too 100 characters"
+                  showCount
+                ></Input.TextArea>
+              </Col>
+            </Row>
+          ) : (
+            <></>
+          )}
+          <Row style={{ margin: 0 }}>
             <Col xl={8}>Status:</Col>
             <Col xl={16}>
               <strong style={{ color: checkRequestStatusColorText(status) }}>
-                {checkRequestStatus(status)}
+                {checkRequestStatus(status).toUpperCase()}
               </strong>
             </Col>
           </Row>
@@ -88,11 +103,11 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           style={{ borderLeft: '1px solid #e0e0e0', paddingLeft: '10px' }}
         >
           <Row>
-            <Col xl={12}>Check-in:</Col>
+            <Col xl={12}>Check In:</Col>
             <Col xl={12}>{dateTime.formatTime(checkIn)}</Col>
           </Row>
           <Row>
-            <Col xl={12}>Check-out:</Col>
+            <Col xl={12}>Check Out:</Col>
             <Col xl={12}>{dateTime.formatTime(checkOut)}</Col>
           </Row>
           {requestType === 1 && (
@@ -117,7 +132,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
             <>
               <Row>
                 <Col xl={12}> Compensation Date:</Col>
-                <Col xl={12}>{compensationDate}</Col>
+                <Col xl={12}>{dateTime.formatDateTable(compensationDate)}</Col>
               </Row>
               <Row>
                 <Col xl={12}>Compensation Time:</Col>

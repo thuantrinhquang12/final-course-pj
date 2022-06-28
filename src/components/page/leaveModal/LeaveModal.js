@@ -37,7 +37,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
   const schema = yup.object().shape({
-    reasonInput: yup.string().required('Please enter reason'),
+    reasonInput: yup.string().trim().required('Please enter reason'),
     rangeInput: yup.array().when('checkboxLeaveAllDay', {
       is: (value) => {
         return (value || []).length === 0
@@ -397,8 +397,8 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                   </Col>
                 </Col>
               </Row>
-              <Row>
-                <Col xl={4} md={6} xs={24} style={{ marginBottom: '10px' }}>
+              <Row style={!request?.status ? { margin: 0 } : {}}>
+                <Col xl={4} md={6} xs={24}>
                   Reason: <span className={styles.requiredField}>(*)</span>
                 </Col>
                 <Col xl={20} md={18} xs={24}>
@@ -416,7 +416,10 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                           {...field}
                         />
                         {errors.reasonInput && (
-                          <span className={styles.errorField}>
+                          <span
+                            className={styles.errorField}
+                            style={{ position: 'absolute' }}
+                          >
                             {errors.reasonInput?.message}
                           </span>
                         )}
@@ -439,7 +442,7 @@ const LeaveModal = ({ isOpen, row, handleCloseLeave }) => {
                       </strong>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style={{ margin: 0 }}>
                     <>
                       <Col xl={4}>
                         {checkRequestManager(

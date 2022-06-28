@@ -10,8 +10,8 @@ import { loginAccess } from '../components/page/login/slice/sliceLogin'
 import Header from '../components/layout/header/index/Index'
 import { NotFound, AuthorError } from '../components'
 import NotificationList from '../components/page/manager/createNotification/NotificationList'
-import ChangeShiff from '../components/page/changeShift/ChangeShift'
-import Manager from '../components/page/manager/manager/Manager'
+import ChangeShift from '../components/page/manager/changeShift/ChangeShift'
+import Manager from '../components/page/manager/managerRequests/Requests'
 
 const AppRoutesComponent = () => {
   const dispatch = useDispatch()
@@ -65,15 +65,18 @@ const AppRoutesComponent = () => {
           </Route>
 
           {/* Manager routes */}
-          <Route element={<PrivateRoute allowedRoles={[ROLES.Manager]} />}>
+          <Route
+            element={
+              <PrivateRoute allowedRoles={[ROLES.Manager, ROLES.Admin]} />
+            }
+          >
             <Route path="/manager" element={<Manager />} />
           </Route>
 
           {/* Admin routes */}
           <Route element={<PrivateRoute allowedRoles={[ROLES.Admin]} />}>
             <Route path="/notification" element={<NotificationList />} />
-            <Route path="/manager" element={<Manager />} />
-            <Route path="/change-shift" element={<ChangeShiff />} />
+            <Route path="/change-shift" element={<ChangeShift />} />
           </Route>
         </Route>
       </Routes>

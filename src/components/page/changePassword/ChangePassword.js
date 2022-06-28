@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { typePopup } from '../../index'
 import './ChangePassword.scss'
 import { patch } from '../../service/requestApi'
@@ -52,7 +53,8 @@ const ChangePassword = () => {
   const confirmCancel = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -88,6 +90,7 @@ const ChangePassword = () => {
             Cancel
           </Button>,
         ]}
+        width={600}
       >
         <Form
           form={form}
@@ -150,6 +153,7 @@ const ChangePassword = () => {
             label="Confirm Password:"
             dependencies={['new_password']}
             hasFeedback
+            style={{ margin: 0 }}
             rules={[
               {
                 required: true,

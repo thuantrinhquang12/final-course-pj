@@ -47,6 +47,7 @@ const requestsSlice = createSlice({
     request: {},
     status: null,
   },
+
   extraReducers: {
     [getRequestsOfDay.pending]: (state) => {
       state.status = 'loading'

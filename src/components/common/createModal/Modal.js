@@ -1,13 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import './Modal.scss'
 
-const Dialog = ({ children, isOpen, title, handleModal, confirmDisable }) => {
+const Dialog = ({
+  children,
+  isOpen,
+  title,
+  handleModal,
+  confirmDisable,
+  className,
+  widthModal,
+  footer,
+}) => {
   const confirm = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -30,10 +41,12 @@ const Dialog = ({ children, isOpen, title, handleModal, confirmDisable }) => {
       <Modal
         title={title}
         onCancel={confirmDisable ? handleModal : confirm}
-        className="modalContainer"
-        footer={null}
+        className={
+          className ? `${className} modalContainer ` : 'modalContainer'
+        }
+        footer={footer ?? null}
         visible={isOpen}
-        width={1000}
+        width={widthModal || 1000}
       >
         {children}
       </Modal>
@@ -50,6 +63,9 @@ Dialog.propTypes = {
   title: PropTypes.string,
   isOpen: PropTypes.bool,
   confirmDisable: PropTypes.bool,
+  className: PropTypes.string,
+  widthModal: PropTypes.number,
+  footer: PropTypes.array,
 }
 
 export default Dialog

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import RequestDetail from '../requestDetail/RequestDetail'
+import RequestDetail from './requestDetail/RequestDetail'
 import { checkConfirm } from './checkConfirm'
 import { Tag, Button, Modal } from 'antd'
 import {
@@ -8,12 +8,14 @@ import {
   LeftOutlined,
   DoubleRightOutlined,
   RightOutlined,
+  CloseCircleOutlined,
+  CloseCircleTwoTone,
 } from '@ant-design/icons'
 import {
   getRequests,
   putRequestsManager,
   putRequestsReject,
-} from './managerSlice'
+} from './slice/managerSlice'
 import {
   checkRequestStatus,
   checkRequestStatusColor,
@@ -26,7 +28,7 @@ import {
   CMTable,
 } from '../../../index'
 import '../../../common/createModal/ModalRequest.scss'
-import './Manager.scss'
+import './Requests.scss'
 
 const Manager = () => {
   const [dataTable, setDataTable] = useState([])
@@ -78,7 +80,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.MANAGER_CONFIRMED,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -97,7 +99,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.MANAGER_REJECT,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -116,7 +118,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.ADMIN_APPROVED,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -135,7 +137,7 @@ const Manager = () => {
           },
         }),
       ),
-      messageRequest.UPDATE,
+      messageRequest.ADMIN_REJECT,
       () => {
         setIsOpen(false)
         setReload(!reload)
@@ -153,7 +155,8 @@ const Manager = () => {
         : ''
     Modal.confirm({
       title: 'REQUEST',
-      content: 'Are you sure reject request?',
+      icon: <CloseCircleTwoTone twoToneColor="red" />,
+      content: 'Do you want reject request?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -169,7 +172,8 @@ const Manager = () => {
   const confirmCloseModal = (e) => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -194,7 +198,9 @@ const Manager = () => {
       dataIndex: 'id',
       key: 'id',
       render: (_, record) => {
-        return <span className="tb_center">{currentPage - 1 + record.key}</span>
+        return (
+          <span className="tb_center">{currentPage - 1 + record.key + 1}</span>
+        )
       },
     },
     {
@@ -227,20 +233,24 @@ const Manager = () => {
       title: <h4>REASON</h4>,
       dataIndex: 'reason',
       key: 'reason',
+      render: (reason) => <p className="textOverflow ">{reason}</p>,
     },
     {
       title: <h4>DATE CREATED</h4>,
       dataIndex: 'created_at',
       key: 'created_at',
-      render: (date) => (
-        <span className="tb_center">{dateTime.formatDateTime(date)}</span>
-      ),
+      render: (date) => {
+        return (
+          <span className="tb_center">
+            {dateTime.formatDateTimeTable(date)}
+          </span>
+        )
+      },
     },
     {
       title: <h4>STATUS</h4>,
       dataIndex: 'status',
       key: 'status',
-      defaultSortOrder: 'ascend',
       render: (_) => {
         return (
           <>
@@ -371,7 +381,7 @@ const Manager = () => {
           )}
           footer={
             roleUser === 'Manager'
-              ? rowData.manager_confirmed_status !== 0
+              ? rowData.status !== 0
                 ? [
                     <Button
                       key="cancel"
@@ -422,7 +432,7 @@ const Manager = () => {
                     </Button>,
                   ]
               : roleUser === 'Admin'
-              ? rowData.admin_approved_status !== 0
+              ? rowData.status !== 1
                 ? [
                     <Button
                       key="cancel"

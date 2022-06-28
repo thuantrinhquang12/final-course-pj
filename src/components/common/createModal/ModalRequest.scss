@@ -10,7 +10,7 @@
     }
     .ant-modal-body {
       .ant-row {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
       }
       .ant-checkbox-inner {
         border: 1px solid #7d7d7d;
@@ -47,6 +47,9 @@
     position: absolute;
     bottom: 0;
     right: 5px;
+  }
+  .ant-modal-close-icon {
+    color: white;
   }
 }
 

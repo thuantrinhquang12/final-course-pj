@@ -128,7 +128,6 @@ const CommonTable = ({
         }
       })
     }
-
     setColumnS(COLUMNS)
     setDataSource(() => {
       return DATAVALID.map((item, index) => {
