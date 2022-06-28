@@ -114,6 +114,12 @@ fieldset {
                 width: 1px;
                 background-color: #0d6fd2;
               }
+
+              &:last-child {
+                &::after {
+                  width: 0;
+                }
+              }
             }
           }
         }
@@ -124,6 +130,9 @@ fieldset {
           display: flex;
           align-items: center;
           justify-content: center;
+          .formGroup {
+            display: flex;
+          }
 
           &:hover {
             .note__status {
@@ -137,7 +146,6 @@ fieldset {
             position: absolute;
             right: -140%;
             min-width: 200px;
-            min-height: 100px;
             background-color: #ebe3e3;
             top: 0;
             z-index: 10;
@@ -167,7 +175,8 @@ fieldset {
   }
   .ant-modal-footer {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    border-top: none;
 
     .ant-btn-primary {
       display: none;
@@ -193,18 +202,29 @@ fieldset {
       thead {
         tr {
           th {
+            padding: 10px;
             text-align: center;
             background-color: #104382;
             border-right: 1px solid #bfbfbf !important;
             h4 {
               color: white;
+              margin: 0;
             }
           }
         }
       }
       tbody {
         tr {
+          &:nth-child(odd) {
+            background-color: #e6f0ff;
+          }
+          &:hover {
+            td {
+              background-color: #95bcf2 !important;
+            }
+          }
           td {
+            padding: 10px;
             .resetMargin {
               margin: 0;
             }

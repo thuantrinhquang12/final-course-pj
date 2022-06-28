@@ -9,10 +9,11 @@ import './searchField.scss'
 import TimeSheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTimeSheet } from './slice/slice'
-import { typePopup } from '../../index'
+import { typePopup, dateTime } from '../../index'
+
 const { Option } = Select
 const { Text } = Typography
-const dateFormat = 'DD/MM/YYYY'
+
 export default function SearchField() {
   const [choose, setChoose] = useState(1)
   const [errDate, setErrDate] = useState(false)
@@ -114,7 +115,7 @@ export default function SearchField() {
 
   return (
     <>
-      <div className="search-field">
+      <div className="search-field" id="WorkSheet">
         <fieldset>
           <legend>My Time Sheet</legend>
           <Form
@@ -128,6 +129,7 @@ export default function SearchField() {
               selectedDate: 3,
               selected: 1,
               sort: 'asc',
+              startDate: params.startDate,
               endDate: params.endDate,
               radioGroup: 2,
             }}
@@ -157,7 +159,7 @@ export default function SearchField() {
                   <Space direction="horizontal" size={25} align="center">
                     <Form.Item name="startDate">
                       <DatePicker
-                        format={dateFormat}
+                        format={dateTime.formatDateTypeDate}
                         disabled={choose === 1}
                         onChange={(date) => {
                           if (date) {
@@ -184,7 +186,7 @@ export default function SearchField() {
 
                     <Form.Item name="endDate">
                       <DatePicker
-                        format={dateFormat}
+                        format={dateTime.formatDateTypeDate}
                         disabled={choose === 1}
                         onChange={(date) => {
                           if (date) {

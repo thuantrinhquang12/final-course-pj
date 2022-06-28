@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Modal } from 'antd'
+import { Modal, Skeleton } from 'antd'
 import PropTypes from 'prop-types'
 import { get } from '../../../service/requestApi'
 import TableCS from '../../../common/table/Table'
@@ -8,14 +8,17 @@ import { dateTime } from '../../../index'
 
 const ModalLogtimesheet = ({ modal, handleClose }) => {
   const [dateList, setDateList] = useState([])
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     const getDateList = async () => {
       const response = await get(`time-log/?work_date=${modal.date}`)
       setDateList(response)
+      setLoading(false)
     }
     getDateList()
   }, [])
-  console.log('response', dateList)
+
   const columns = [
     {
       title: <h4>NO</h4>,
@@ -57,26 +60,33 @@ const ModalLogtimesheet = ({ modal, handleClose }) => {
   ]
 
   return (
-    <Modal
-      className="modalTimeLog"
-      title={<h2>Time Logs</h2>}
-      centered
-      visible={modal.open}
-      onCancel={() => handleClose()}
-      width={1000}
-    >
-      <TableCS
-        scroll={{
-          x: 500,
-        }}
-        className="modalTime"
-        data={dateList}
-        columns={columns}
-        pagination={{
-          pageSize: 100,
-        }}
-      />
-    </Modal>
+    <>
+      {' '}
+      <Modal
+        className="modalTimeLog"
+        title={<h2>Time Logs</h2>}
+        centered
+        visible={modal.open}
+        onCancel={() => handleClose()}
+        width={1000}
+      >
+        {loading ? (
+          <Skeleton active={true} />
+        ) : (
+          <TableCS
+            scroll={{
+              x: 500,
+            }}
+            className="modalTime"
+            data={dateList}
+            columns={columns}
+            pagination={{
+              pageSize: 100,
+            }}
+          />
+        )}
+      </Modal>
+    </>
   )
 }
 

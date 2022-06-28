@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Typography } from 'antd'
 import './table-timesheet.scss'
 import ForgetModal from '../../forgetModal/ForgetModal'
@@ -11,6 +11,7 @@ import PropTypes from 'prop-types'
 import TableCS from '../../../common/table/Table'
 import { useDispatch } from 'react-redux'
 import { getTimeSheet } from '../slice/slice'
+import distance from '../../../utils/distance'
 import {
   DoubleLeftOutlined,
   LeftOutlined,
@@ -30,9 +31,14 @@ export default function Timesheet({ row, params }) {
     row: [],
     name: '',
   })
-
+  const [heightTable, setHeightTable] = useState(0)
   const [modal, setModal] = useState({ open: false, date: '' })
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    const height = distance('WorkSheet', 75)
+    setHeightTable(height.heightTable)
+  }, [])
 
   const handleModal = () => {
     setModal({ open: false, date: '' })
@@ -97,10 +103,12 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'checkin_original',
       key: 'checkin_original',
 
-      render: (checkin) => {
-        if (checkin !== null) {
-          return <Text>{moment(checkin).format('HH:mm')} </Text>
-        } else <Text></Text>
+      render: (checkIn, record) => {
+        if (checkIn !== null) {
+          return <Text>{moment(checkIn).format('HH:mm')} </Text>
+        } else {
+          return <Text>{moment(record.checkin).format('HH:mm')}</Text>
+        }
       },
     },
     {
@@ -108,10 +116,10 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'checkout_original',
       key: 'checkout_original',
 
-      render: (checkout) => {
+      render: (checkout, record) => {
         if (checkout !== null) {
           return <Text>{moment(checkout).format('HH:mm ')} </Text>
-        } else return <Text></Text>
+        } else return <Text>{moment(record.checkout).format('HH:mm ')}</Text>
       },
     },
     {
@@ -192,7 +200,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Comp',
+      title: <p style={{ whiteSpace: 'nowrap' }}>Comp</p>,
       dataIndex: 'compensation',
       key: 'compensation',
     },
@@ -227,7 +235,42 @@ export default function Timesheet({ row, params }) {
           <div className="note">
             {record ? (
               <>
-                <p>Status</p>
+                <h4>
+                  {arrayNote.length === 1 ? (
+                    <div className="formGroup">
+                      <span>{arrayNote[0].name}:</span>
+                      <h4
+                        style={{
+                          color:
+                            arrayNote[0].status === 'Approved'
+                              ? '#17de17'
+                              : arrayNote[0].status === 'Confirmed'
+                              ? '#3030ed'
+                              : 'red',
+                        }}
+                      >
+                        {arrayNote[0].status}
+                      </h4>
+                    </div>
+                  ) : (
+                    <div className="formGroup">
+                      <span>{arrayNote[0].name}:</span>
+                      <h4
+                        style={{
+                          color:
+                            arrayNote[0].status === 'Approved'
+                              ? '#17de17'
+                              : arrayNote[0].status === 'Confirmed'
+                              ? '#3030ed'
+                              : 'red',
+                        }}
+                      >
+                        {arrayNote[0].status}
+                        ...
+                      </h4>
+                    </div>
+                  )}
+                </h4>
                 <div className="note__status">
                   {arrayNote.map((item, index) => {
                     const color =
@@ -391,9 +434,10 @@ export default function Timesheet({ row, params }) {
     <>
       <TableCS
         className="tableTimeSheet"
+        loading={row.isLoading}
         scroll={{
-          x: 1000,
-          y: 'auto',
+          x: 1400,
+          y: heightTable,
         }}
         rowClassName={(record) => {
           const checkDate = moment(record.work_date).format('dddd')
@@ -409,6 +453,10 @@ export default function Timesheet({ row, params }) {
           note: '10%',
           unpaid_leave: '6%',
           paid_leave: '6%',
+          checkin_original: '6%',
+          checkout_original: '6%',
+          in_office: '5%',
+          work_time: '5%',
         }}
         onRow={(record) => ({
           onClick: (e) => {

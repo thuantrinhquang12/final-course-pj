@@ -28,7 +28,6 @@ export const getTimeSheet = createAsyncThunk('getTimeSheet', async (params) => {
       )}&per_page=${perPage}&page=${page}`,
     )
   }
-  // console.log('respon', response)
   return response
 })
 
@@ -52,11 +51,11 @@ const timeSheetSlice = createSlice({
       state.total = action.payload.total
     },
     [getTimeSheet.pending]: (state) => {
-      state.isLoading = false
+      state.isLoading = true
     },
 
     [getTimeSheet.rejected]: (state) => {
-      state.isLoading = false
+      state.isLoading = true
     },
   },
 })
