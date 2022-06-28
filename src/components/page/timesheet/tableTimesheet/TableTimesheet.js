@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Typography } from 'antd'
-import './table-timesheet.scss'
 import ForgetModal from '../../forgetModal/ForgetModal'
 import LeaveModal from '../../leaveModal/LeaveModal'
 import RegisterOT from '../../registerOT/RegisterOT'
 import LateEarlyModal from '../../lateEarlyModal/index/Index'
 import moment from 'moment'
-import ModalLogTimesheet from '../modalLogtimesheet/ModalLogtimesheet'
+import ModalLogTime from '../modalLogTime/ModalLogTime'
 import PropTypes from 'prop-types'
 import TableCS from '../../../common/table/Table'
 import { useDispatch } from 'react-redux'
 import { getTimeSheet } from '../slice/slice'
 import distance from '../../../utils/distance'
+import { handleDateTime } from '../../../index'
 import {
   DoubleLeftOutlined,
   LeftOutlined,
@@ -19,8 +19,9 @@ import {
   RightOutlined,
 } from '@ant-design/icons'
 const { Text } = Typography
+import './TableTimesheet.scss'
 
-export default function Timesheet({ row, params }) {
+const TableTimesheet = ({ row, params }) => {
   const [isOpen, setIsOpen] = useState({
     isOpenForget: false,
     isOpenLeave: false,
@@ -77,10 +78,10 @@ export default function Timesheet({ row, params }) {
   }
   const columns = [
     {
-      title: 'No',
+      title: 'NO',
       dataIndex: 'id',
       key: 'id',
-
+      fixed: 'left',
       render: (payload, records) => {
         return (
           <p className="resetMargin tb_center">
@@ -90,52 +91,52 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Date',
+      title: 'DATE',
       dataIndex: 'work_date',
       key: 'work_date',
-      width: 110,
+      fixed: 'left',
       render: (date) => {
         return <Text>{moment(date).format('DD/MM/YYYY ddd')} </Text>
       },
     },
     {
-      title: 'Check in',
+      title: 'CHECK IN',
       dataIndex: 'checkin_original',
       key: 'checkin_original',
 
       render: (payload, record) => {
-        const checkIn = payload
-          ? payload
-          : record.checkin
+        const checkIn = record.checkin
           ? record.checkin
+          : payload
+          ? payload
           : null
         return (
           <p style={{ textAlign: 'center' }}>
-            {checkIn ? moment(checkIn).format('HH:mm') : '--:--'}
+            {handleDateTime.checkInvalidTime(checkIn)}
           </p>
         )
       },
     },
     {
-      title: 'Check out',
+      title: 'CHECK OUT',
       dataIndex: 'checkout_original',
       key: 'checkout_original',
 
       render: (payload, record) => {
-        const checkOut = payload
-          ? payload
-          : record.checkout
+        const checkOut = record.checkout
           ? record.checkout
+          : payload
+          ? payload
           : null
         return (
           <p style={{ textAlign: 'center' }}>
-            {checkOut ? moment(checkOut).format('HH:mm') : '--:--'}
+            {handleDateTime.checkInvalidTime(checkOut)}
           </p>
         )
       },
     },
     {
-      title: 'Late',
+      title: 'LATE',
       dataIndex: 'late',
       key: 'late',
       render: (late, record) => {
@@ -153,7 +154,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Early',
+      title: 'EARLY',
       dataIndex: 'early',
       key: 'early',
       render: (early, record) => {
@@ -171,7 +172,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'In office',
+      title: 'IN OFFICE',
       dataIndex: 'in_office',
       key: 'in_office',
       render: (office) => {
@@ -179,7 +180,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Ot',
+      title: 'OT',
       dataIndex: 'ot_time',
       key: 'ot_time',
       render: (ot) => {
@@ -187,7 +188,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Work time',
+      title: 'WORK TIME',
       dataIndex: 'work_time',
       key: 'work_time',
       render: (workTime) => {
@@ -204,7 +205,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Lack',
+      title: 'LACK',
       dataIndex: 'lack',
       key: 'lack',
       render: (payload, record) => {
@@ -231,22 +232,22 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: <p style={{ whiteSpace: 'nowrap', margin: '0' }}>Comp</p>,
+      title: <h4>COMP</h4>,
       dataIndex: 'compensation',
       key: 'compensation',
     },
     {
-      title: 'Pleave',
+      title: <h4>PLEAVE</h4>,
       dataIndex: 'paid_leave',
       key: 'paid_leave',
     },
     {
-      title: 'Uleave',
+      title: <h4>ULEAVE</h4>,
       dataIndex: 'unpaid_leave',
       key: 'unpaid_leave',
     },
     {
-      title: 'Note',
+      title: <h4>NOTE</h4>,
       dataIndex: 'note',
       key: 'note',
       render: (record) => {
@@ -266,10 +267,10 @@ export default function Timesheet({ row, params }) {
           <div className="note">
             {record ? (
               <>
-                <h4>
+                <h4 style={{ margin: 0 }}>
                   {arrayNote.length === 1 ? (
                     <div className="formGroup">
-                      <span>{arrayNote[0].name}:</span>
+                      <span>{arrayNote[0].name}: </span>
                       <h4
                         style={{
                           color:
@@ -294,6 +295,8 @@ export default function Timesheet({ row, params }) {
                               : arrayNote[0].status === 'Confirmed'
                               ? '#3030ed'
                               : 'red',
+                          margin: '0 0 0 10px',
+                          position: 'relative',
                         }}
                       >
                         {arrayNote[0].status}
@@ -301,23 +304,27 @@ export default function Timesheet({ row, params }) {
                       </h4>
                     </div>
                   )}
+                  <div className="note__status">
+                    {arrayNote.map((item, index) => {
+                      const color =
+                        item.status === 'Approved'
+                          ? '#17de17'
+                          : item.status === 'Confirmed'
+                          ? '#3030ed'
+                          : 'red'
+                      return (
+                        index !== 0 && (
+                          <div className="formGroup" key={index}>
+                            <span>{item.name}:</span>
+                            <h4 style={{ color: color, margin: ' 0 10px 0 0' }}>
+                              {item.status}
+                            </h4>
+                          </div>
+                        )
+                      )
+                    })}
+                  </div>
                 </h4>
-                <div className="note__status">
-                  {arrayNote.map((item, index) => {
-                    const color =
-                      item.status === 'Approved'
-                        ? '#17de17'
-                        : item.status === 'Confirmed'
-                        ? '#3030ed'
-                        : 'red'
-                    return (
-                      <div className="formGroup" key={index}>
-                        <span>{item.name}:</span>
-                        <h4 style={{ color: color }}>{item.status}</h4>
-                      </div>
-                    )
-                  })}
-                </div>
               </>
             ) : (
               ''
@@ -327,9 +334,9 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: 'Action',
+      title: <h4>ACTION</h4>,
       key: 'action',
-      width: 250,
+      fixed: 'right',
       render: (record) => (
         <div className="action">
           <label
@@ -480,14 +487,40 @@ export default function Timesheet({ row, params }) {
         data={row ? row.data : []}
         width={{
           id: '5%',
-          work_date: '10%',
-          note: '10%',
-          unpaid_leave: '6%',
-          paid_leave: '6%',
+          work_date: '12%',
+          note: '15%',
           checkin_original: '6%',
           checkout_original: '6%',
-          in_office: '5%',
-          work_time: '5%',
+          unpaid_leave: '6%',
+          paid_leave: '6%',
+          in_office: '6%',
+          work_time: '6%',
+          ot_time: '6%',
+          late: '6%',
+          early: '6%',
+          lack: '6%',
+          compensation: '6%',
+          paid_leave: '6%',
+          unpaid_leave: '6%',
+          action: '25%',
+        }}
+        styleHead={{
+          id: { position: 'tb_center' },
+          work_date: { position: 'tb_center' },
+          note: { position: 'tb_center' },
+          checkin_original: { position: 'tb_center' },
+          checkout_original: { position: 'tb_center' },
+          unpaid_leave: { position: 'tb_center' },
+          paid_leave: { position: 'tb_center' },
+          in_office: { position: 'tb_center' },
+          work_time: { position: 'tb_center' },
+          ot_time: { position: 'tb_center' },
+          late: { position: 'tb_center' },
+          early: { position: 'tb_center' },
+          lack: { position: 'tb_center' },
+          compensation: { position: 'tb_center' },
+          paid_leave: { position: 'tb_center' },
+          unpaid_leave: { position: 'tb_center' },
         }}
         onRow={(record) => ({
           onClick: (e) => {
@@ -509,9 +542,7 @@ export default function Timesheet({ row, params }) {
           onChange: onChange,
         }}
       />
-      {modal.open && (
-        <ModalLogTimesheet modal={modal} handleClose={handleModal} />
-      )}
+      {modal.open && <ModalLogTime modal={modal} handleClose={handleModal} />}
 
       {isOpen.isOpenForget && (
         <ForgetModal
@@ -552,7 +583,9 @@ export default function Timesheet({ row, params }) {
     </>
   )
 }
-Timesheet.propTypes = {
+TableTimesheet.propTypes = {
   row: PropTypes.object,
   params: PropTypes.object,
 }
+
+export default TableTimesheet

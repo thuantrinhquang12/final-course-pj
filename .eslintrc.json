@@ -14,7 +14,7 @@
   "plugins": ["react"],
   "rules": {
     "multiline-ternary": "off",
-    "object-curly-spacing": ["error", "always", { "objectsInObjects": false }],
+    "object-curly-spacing": "off",
     "max-len": [
       "error",
       { "ignoreStrings": true, "code": 120, "ignoreTemplateLiterals": true }

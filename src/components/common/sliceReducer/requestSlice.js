@@ -65,6 +65,9 @@ const requestsSlice = createSlice({
     [postRequests.fulfilled]: (state) => {
       state.status = 'successRegister'
     },
+    [postRequests.rejected]: (state) => {
+      state.status = 'rejectsRegister'
+    },
     [putRequests.pending]: (state) => {
       state.status = 'loadingUpdate'
     },

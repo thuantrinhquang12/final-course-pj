@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
-import { Button, Space, Form, DatePicker } from 'antd'
-import { Typography } from 'antd'
-import { Radio } from 'antd'
-import { Select } from 'antd'
-import { SearchOutlined } from '@ant-design/icons'
-import './searchField.scss'
-import TimeSheet from './tableTimesheet'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  Button,
+  Space,
+  Form,
+  DatePicker,
+  Typography,
+  Radio,
+  Select,
+} from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
+import moment from 'moment'
+import TableTimesheet from './tableTimesheet/TableTimesheet'
 import { getTimeSheet } from './slice/slice'
 import { typePopup, dateTime } from '../../index'
+import './SearchBox.scss'
 
 const { Option } = Select
 const { Text } = Typography
 
-export default function SearchField() {
+const SearchBox = () => {
   const [choose, setChoose] = useState(1)
   const [errDate, setErrDate] = useState(false)
   const dispatch = useDispatch()
@@ -240,7 +245,7 @@ export default function SearchField() {
               <Button
                 size="large"
                 onClick={handleReset}
-                style={{ padding: ' 0 30px' }}
+                style={{ padding: ' 0 35px' }}
               >
                 Reset
               </Button>
@@ -249,9 +254,11 @@ export default function SearchField() {
         </fieldset>
 
         <>
-          <TimeSheet row={worksheet} params={params}></TimeSheet>
+          <TableTimesheet row={worksheet} params={params}></TableTimesheet>
         </>
       </div>
     </>
   )
 }
+
+export default SearchBox

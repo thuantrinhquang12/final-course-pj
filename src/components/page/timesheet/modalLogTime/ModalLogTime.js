@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import { get } from '../../../service/requestApi'
 import TableCS from '../../../common/table/Table'
 import moment from 'moment'
-import { dateTime } from '../../../index'
+import { dateTime, handleDateTime } from '../../../index'
 
-const ModalLogtimesheet = ({ modal, handleClose }) => {
+const ModalLogTime = ({ modal, handleClose }) => {
   const [dateList, setDateList] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -39,9 +39,9 @@ const ModalLogtimesheet = ({ modal, handleClose }) => {
       render: (payload) => {
         const check = moment(payload)
         return (
-          <p className="resetMargin tb_center">{`${payload} ${check.format(
-            'dddd',
-          )}`}</p>
+          <p className="resetMargin tb_center">{`${dateTime.formatDateTable(
+            payload,
+          )} ${check.format('dddd')}`}</p>
         )
       },
     },
@@ -52,7 +52,7 @@ const ModalLogtimesheet = ({ modal, handleClose }) => {
       render: (payload) => {
         return (
           <p className="resetMargin tb_center">
-            {dateTime.formatTime(payload)}
+            {handleDateTime.checkInvalidTime(payload)}
           </p>
         )
       },
@@ -80,6 +80,7 @@ const ModalLogtimesheet = ({ modal, handleClose }) => {
             className="modalTime"
             data={dateList}
             columns={columns}
+            width={{ id: '10%' }}
             pagination={{
               pageSize: 100,
             }}
@@ -90,9 +91,9 @@ const ModalLogtimesheet = ({ modal, handleClose }) => {
   )
 }
 
-ModalLogtimesheet.propTypes = {
+ModalLogTime.propTypes = {
   modal: PropTypes.object,
   handleClose: PropTypes.func,
 }
 
-export default ModalLogtimesheet
+export default ModalLogTime

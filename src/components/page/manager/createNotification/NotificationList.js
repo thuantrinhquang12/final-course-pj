@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-spacing */
 import * as React from 'react'
 import { Button, Col, Modal, Row } from 'antd'
 import {
@@ -230,7 +229,7 @@ const NotificationList = () => {
   ]
 
   return (
-    <div id="notification" style={{ paddingTop: '50px' }}>
+    <div id="notification" style={{ paddingTop: '40px' }}>
       <Row
         style={{
           height: '100%',

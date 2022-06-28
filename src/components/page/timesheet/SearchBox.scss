@@ -1,0 +1,63 @@
+.searchList {
+  align-content: center;
+  width: 100%;
+  .ant-picker {
+    padding: 4px 20px;
+  }
+  .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    padding: 0 18px;
+  }
+}
+
+fieldset {
+  margin-bottom: 30px !important;
+  border: 1px solid black !important;
+  legend {
+    width: 150px;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0px;
+  }
+  padding: 0px 20px 0px 50px !important;
+}
+
+.search-field {
+  padding: 40px 50px 0 50px;
+  width: 100%;
+  overflow: unset;
+  background-color: #e9f2ff;
+}
+.search-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.selected_sort {
+  display: flex;
+  align-items: baseline;
+  & > span {
+    margin-right: 20px;
+  }
+}
+.selected_choose {
+  flex-grow: 1;
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  .ant-col.ant-form-item-control {
+    justify-content: center;
+  }
+}
+.selected_date {
+  flex-grow: 1;
+}
+.button-form-search {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  button {
+    margin-left: 30px;
+  }
+  margin-bottom: 10px;
+}

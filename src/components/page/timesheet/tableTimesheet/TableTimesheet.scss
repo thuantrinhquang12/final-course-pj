@@ -1,70 +1,15 @@
-.searchList {
-  align-content: center;
-  width: 100%;
-}
-
-fieldset {
-  margin-bottom: 30px !important;
-  border: 1px solid black !important;
-  legend {
-    width: 150px;
-    font-size: 20px;
-    font-weight: bold;
-    margin: 0px;
-  }
-  padding: 0px 20px 0px 50px !important;
-}
-
-.search-field {
-  padding: 40px 50px 0 50px;
-  width: 100%;
-  overflow: unset;
-  background-color: #e9f2ff;
-}
-.search-form {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-.selected_sort {
-  display: flex;
-  align-items: baseline;
-  & > span {
-    margin-right: 20px;
-  }
-}
-.selected_choose {
-  flex-grow: 1;
-  width: 250px;
-  display: flex;
-  flex-direction: row;
-}
-.selected_date {
-  flex-grow: 1;
-}
-.button-form-search {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  button {
-    margin-left: 50px;
-  }
-  margin-bottom: 10px;
-}
-
-//css của tui
 .tableContainer.tableTimeSheet {
   table {
     thead {
       tr {
         th {
           color: white;
-          padding: 14px 0;
+          padding: 6px 5px;
         }
       }
     }
   }
+
   .ant-table {
     .ant-table-container {
       .ant-table-body {
@@ -146,24 +91,13 @@ fieldset {
             display: none;
             cursor: default;
             position: absolute;
-            right: -140%;
-            min-width: 200px;
+            min-width: 160px;
             background-color: #ebe3e3;
-            top: 0;
+            top: 80%;
             z-index: 10;
             box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
             border-radius: 5px;
             animation: animation 0.3s ease-in-out;
-
-            .formGroup {
-              display: flex;
-              justify-content: space-around;
-
-              span {
-                font-size: 16px;
-                font-weight: 600;
-              }
-            }
           }
         }
       }
@@ -194,6 +128,9 @@ fieldset {
   }
 
   .modalTime {
+    .ant-table .ant-table-container {
+      border-top: 0 !important;
+    }
     .ant-table-title {
       display: none;
     }
