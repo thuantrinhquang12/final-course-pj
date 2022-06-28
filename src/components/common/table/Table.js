@@ -18,6 +18,7 @@ const CommonTable = ({
   onRow,
   width,
   loading,
+  rowClassName,
 }) => {
   const [dataSource, setDataSource] = useState(null)
   const [columnS, setColumnS] = useState(null)
@@ -142,6 +143,7 @@ const CommonTable = ({
   return (
     <>
       <Table
+        rowClassName={rowClassName ? rowClassName : () => {}}
         loading={loading ? loading : false}
         bordered={true}
         onRow={
@@ -177,7 +179,6 @@ const CommonTable = ({
                 locale: { items_per_page: '' },
               }
             : {
-                pageSize: page ? page : 10,
                 position: ['bottomCenter'],
                 showTotal: pagination?.showTotal
                   ? pagination?.showTotal
@@ -222,5 +223,6 @@ CommonTable.propTypes = {
   onRow: PropTypes.func,
   width: PropTypes.object,
   loading: PropTypes.bool,
+  rowClassName: PropTypes.func,
 }
 export default CommonTable

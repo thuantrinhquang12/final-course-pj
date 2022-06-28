@@ -32,7 +32,7 @@ const {
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
-
+  console.log(row)
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
 
