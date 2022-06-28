@@ -43,7 +43,7 @@ export default function SearchField() {
           dispatch(
             getTimeSheet({
               ...params,
-              page: worksheet.currentPage,
+              page: 1,
               perPage: worksheet.per_page,
               startDate: moment().subtract(1, 'year').startOf('year'),
             }),
@@ -57,7 +57,7 @@ export default function SearchField() {
           dispatch(
             getTimeSheet({
               ...params,
-              page: worksheet.currentPage,
+              page: 1,
               perPage: worksheet.per_page,
               startDate: moment().subtract(1, 'months').startOf('month'),
             }),
@@ -71,7 +71,7 @@ export default function SearchField() {
           dispatch(
             getTimeSheet({
               ...params,
-              page: worksheet.currentPage,
+              page: 1,
               perPage: worksheet.per_page,
               startDate: moment().startOf('month'),
             }),
@@ -93,7 +93,7 @@ export default function SearchField() {
       dispatch(
         getTimeSheet({
           ...params,
-          page: worksheet.currentPage,
+          page: 1,
           perPage: worksheet.per_page,
         }),
       )

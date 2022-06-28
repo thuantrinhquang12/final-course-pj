@@ -16,7 +16,7 @@ fieldset {
 }
 
 .search-field {
-  padding: 50px;
+  padding: 40px 50px 0 50px;
   width: 100%;
   overflow: unset;
 }
@@ -59,6 +59,7 @@ fieldset {
       tr {
         th {
           color: white;
+          padding: 14px 0;
         }
       }
     }

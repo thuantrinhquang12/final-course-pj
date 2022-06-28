@@ -36,7 +36,7 @@ export default function Timesheet({ row, params }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const height = distance('WorkSheet', 75)
+    const height = distance('WorkSheet', 70)
     setHeightTable(height.heightTable)
   }, [])
 
@@ -103,12 +103,17 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'checkin_original',
       key: 'checkin_original',
 
-      render: (checkIn, record) => {
-        if (checkIn !== null) {
-          return <Text>{moment(checkIn).format('HH:mm')} </Text>
-        } else {
-          return <Text>{moment(record.checkin).format('HH:mm')}</Text>
-        }
+      render: (payload, record) => {
+        const checkIn = payload
+          ? payload
+          : record.checkin
+          ? record.checkin
+          : null
+        return (
+          <p style={{ textAlign: 'center' }}>
+            {checkIn ? moment(checkIn).format('HH:mm') : '--:--'}
+          </p>
+        )
       },
     },
     {
@@ -116,30 +121,53 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'checkout_original',
       key: 'checkout_original',
 
-      render: (checkout, record) => {
-        if (checkout !== null) {
-          return <Text>{moment(checkout).format('HH:mm ')} </Text>
-        } else return <Text>{moment(record.checkout).format('HH:mm ')}</Text>
+      render: (payload, record) => {
+        const checkOut = payload
+          ? payload
+          : record.checkout
+          ? record.checkout
+          : null
+        return (
+          <p style={{ textAlign: 'center' }}>
+            {checkOut ? moment(checkOut).format('HH:mm') : '--:--'}
+          </p>
+        )
       },
     },
     {
       title: 'Late',
       dataIndex: 'late',
       key: 'late',
-      render: (late) => {
-        if (late === '') {
-          return ''
-        } else return <Text type="danger">{late}</Text>
+      render: (late, record) => {
+        let color = 'red'
+        if (record.note) {
+          const check = record.note.split('|')
+          check.map((item) => {
+            const element = item.split(' ')
+            if (element[0] === 'Late/Early' && element[1] === ' Approved') {
+              color = 'black'
+            }
+          })
+        }
+        return <p style={{ color: color }}>{late ? late : ''}</p>
       },
     },
     {
       title: 'Early',
       dataIndex: 'early',
       key: 'early',
-      render: (early) => {
-        if (early === '') {
-          return ''
-        } else return <Text type="danger">{early}</Text>
+      render: (early, record) => {
+        let color = 'red'
+        if (record.note) {
+          const check = record.note.split('|')
+          check.map((item) => {
+            const element = item.split(' ')
+            if (element[0] === 'Late/Early' && element[1] === ' Approved') {
+              color = 'black'
+            }
+          })
+        }
+        return <p style={{ color: color }}>{early ? early : ''}</p>
       },
     },
     {
@@ -147,9 +175,7 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'in_office',
       key: 'in_office',
       render: (office) => {
-        if (office === null) {
-          return <Text>--:--</Text>
-        } else return <Text type="default">{office}</Text>
+        return <p>{office ? office : '--:--'}</p>
       },
     },
     {
@@ -157,9 +183,7 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'ot_time',
       key: 'ot_time',
       render: (ot) => {
-        if (ot === null) {
-          return <Text>00:00</Text>
-        } else return <Text>{ot}</Text>
+        return <p>{ot ? ot : '00:00'}</p>
       },
     },
     {
@@ -167,9 +191,16 @@ export default function Timesheet({ row, params }) {
       dataIndex: 'work_time',
       key: 'work_time',
       render: (workTime) => {
-        if (workTime === '08:00') {
-          return <Text type="default">{workTime}</Text>
-        } else return <Text type="danger">{workTime}</Text>
+        return (
+          <p
+            style={{
+              color: workTime === '08:00' ? 'black' : 'red',
+              textAlign: 'center',
+            }}
+          >
+            {workTime ? workTime : ''}
+          </p>
+        )
       },
     },
     {
@@ -200,7 +231,7 @@ export default function Timesheet({ row, params }) {
       },
     },
     {
-      title: <p style={{ whiteSpace: 'nowrap' }}>Comp</p>,
+      title: <p style={{ whiteSpace: 'nowrap', margin: '0' }}>Comp</p>,
       dataIndex: 'compensation',
       key: 'compensation',
     },
