@@ -33,7 +33,7 @@ const NotificationList = () => {
   }, [load])
 
   useEffect(() => {
-    const height = distance('notification', 50)
+    const height = distance('notification', 48)
     setHeightTable(height.heightTable)
   }, [])
 
