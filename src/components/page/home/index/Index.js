@@ -28,7 +28,7 @@ const Index = () => {
   }, [])
 
   useEffect(() => {
-    const height = distance('HomeTable')
+    const height = distance('HomeTable', 47)
     setHeightTable(height.heightTable)
   }, [])
   const columns = [
@@ -362,7 +362,7 @@ const Index = () => {
           <Col xs={24} md={24} xl={24} className="dFlex">
             <Col xl={3}>Message: </Col>
             <Col xl={21}>
-              <span style={{ fontWeight: 600 }}> {modal?.data?.message}</span>
+              <span style={{ fontWeight: 500 }}> {modal?.data?.message}</span>
             </Col>
           </Col>
           <Col xs={24} md={24} xl={24} className="dFlex" style={{ margin: 0 }}>

@@ -110,7 +110,11 @@ const SearchBox = () => {
   const handleReset = () => {
     form.resetFields()
     setChoose(1)
-    setParams({ page: 3, sort: 'ascending', start: '', end: '' })
+    setParams({
+      sort: 'asc',
+      startDate: null,
+      endDate: moment().subtract(1, 'days'),
+    })
   }
 
   const [form] = Form.useForm()
@@ -166,6 +170,7 @@ const SearchBox = () => {
                       <DatePicker
                         format={dateTime.formatDateTypeDate}
                         disabled={choose === 1}
+                        value={params.startDate}
                         onChange={(date) => {
                           if (date) {
                             const compareDate = date.isBefore(params.endDate)
@@ -193,6 +198,7 @@ const SearchBox = () => {
                       <DatePicker
                         format={dateTime.formatDateTypeDate}
                         disabled={choose === 1}
+                        value={params.endDate}
                         onChange={(date) => {
                           if (date) {
                             const compareDate = date.isAfter(params.startDate)

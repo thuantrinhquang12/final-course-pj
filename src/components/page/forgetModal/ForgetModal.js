@@ -32,7 +32,6 @@ const {
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
-  console.log(row)
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
 
@@ -206,7 +205,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                           }}
                         />
                         {errors.checkInTime && (
-                          <span className={styles.errorField}>
+                          <span className={styles.errorFieldNoPosition}>
                             {errors.checkInTime?.message}
                           </span>
                         )}
@@ -236,7 +235,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                           {...field}
                         />
                         {errors.checkOutTime && (
-                          <span className={styles.errorField}>
+                          <span className={styles.errorFieldNoPosition}>
                             {errors.checkOutTime?.message}
                           </span>
                         )}

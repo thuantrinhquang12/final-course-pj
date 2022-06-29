@@ -32,7 +32,7 @@ const ChangeShift = () => {
   }, [loading])
 
   useEffect(() => {
-    const height = distance('change_Shift', 65)
+    const height = distance('change_Shift', 57)
     setHeightTable(height.heightTable)
   }, [])
 

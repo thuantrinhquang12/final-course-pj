@@ -41,7 +41,7 @@ const ModalLogTime = ({ modal, handleClose }) => {
         return (
           <p className="resetMargin tb_center">{`${dateTime.formatDateTable(
             payload,
-          )} ${check.format('dddd')}`}</p>
+          )} ${check.format('ddd')}`}</p>
         )
       },
     },
