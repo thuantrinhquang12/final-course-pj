@@ -49,7 +49,7 @@ const bankName = [
 const UserEditForm = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
-  const [loadings, setLoadings] = useState([])
+  const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState(null)
   const [smallAvatar, setSmallAvatar] = useState(null)
 
@@ -64,21 +64,6 @@ const UserEditForm = () => {
       setProfileInfo(res?.data)
     })
   }, [modalVisible])
-
-  const enterLoading = (index) => {
-    setLoadings((prevLoadings) => {
-      const newLoadings = [...prevLoadings]
-      newLoadings[index] = true
-      return newLoadings
-    })
-    setTimeout(() => {
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings]
-        newLoadings[index] = false
-        return newLoadings
-      })
-    }, 2000)
-  }
 
   const onSubmit = async (values) => {
     const valueEdit =
@@ -137,6 +122,7 @@ const UserEditForm = () => {
       'Content-Type': 'multipart/form-data',
     }
     try {
+      setLoading(true)
       const data = await post('/members/update?_method=PUT', valueEdit, {
         headers,
       })
@@ -147,6 +133,7 @@ const UserEditForm = () => {
           messageRequest.UPDATE,
           1,
         )
+        setLoading(false)
         setModalVisible(false)
       }
     } catch (error) {
@@ -272,7 +259,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please fill out this field!',
+                                    message: 'Please fill out this field !',
                                   },
                                 ]}
                               >
@@ -297,7 +284,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please fill out this field!',
+                                    message: 'Please fill out this field !',
                                   },
                                   {
                                     pattern: new RegExp(/^[0-9]+$/),
@@ -334,7 +321,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please fill out this field!',
+                                    message: 'Please fill out this field !',
                                   },
                                 ]}
                               >
@@ -359,7 +346,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please field out this field!',
+                                    message: 'Please field out this field !',
                                   },
                                   {
                                     max: 50,
@@ -434,7 +421,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please fill out this field!',
+                                    message: 'Please fill out this field !',
                                   },
                                   {
                                     max: 50,
@@ -491,7 +478,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please fill out this field!',
+                                    message: 'Please fill out this field !',
                                   },
                                   {
                                     type: 'email',
@@ -571,7 +558,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please input your Bank Name!',
+                                    message: 'Please fill out this field !',
                                   },
                                   {
                                     max: 70,
@@ -610,7 +597,7 @@ const UserEditForm = () => {
                                 rules={[
                                   {
                                     required: true,
-                                    message: 'Please input your Bank Account!',
+                                    message: 'Please fill out this field !',
                                   },
                                   {
                                     max: 20,
@@ -707,7 +694,7 @@ const UserEditForm = () => {
                         rules={[
                           {
                             required: true,
-                            message: 'Please input your Permanent Address!',
+                            message: 'Please fill out this field !',
                           },
                           {
                             max: 255,
@@ -747,7 +734,7 @@ const UserEditForm = () => {
                         rules={[
                           {
                             required: true,
-                            message: 'Please input your Temporary Address!',
+                            message: 'Please fill out this field !',
                           },
                           {
                             max: 255,
@@ -992,7 +979,7 @@ const UserEditForm = () => {
               </div>
               <div className={styles.buttonContainer}>
                 <Button
-                  loading={loadings[0]}
+                  loading={loading}
                   onClick={() => enterLoading(0)}
                   className={styles.button}
                   htmlType="submit"
