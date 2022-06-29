@@ -8,6 +8,7 @@ import { LOCAL_STORAGE } from '../../constant/localStorage'
 
 const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [form] = Form.useForm()
 
@@ -17,11 +18,13 @@ const ChangePassword = () => {
       new_password: newPass,
       new_password_confirmation: passConfirm,
     } = values
+    setLoading(true)
     const res = await patch('/change-password', {
       old_password: oldPassword,
       new_password: newPass,
       new_password_confirmation: passConfirm,
     })
+    setLoading(false)
     try {
       if (res.status === 'success') {
         setIsModalVisible(false)
@@ -84,7 +87,13 @@ const ChangePassword = () => {
         visible={isModalVisible}
         onCancel={confirmCancel}
         footer={[
-          <Button type="primary" htmlType="submit" key="submit" form="myForm">
+          <Button
+            type="primary"
+            htmlType="submit"
+            key="submit"
+            form="myForm"
+            loading={loading}
+          >
             Submit
           </Button>,
           <Button
