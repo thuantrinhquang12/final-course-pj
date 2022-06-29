@@ -146,7 +146,7 @@ const ChangePassword = () => {
           )}
 
           <Form.Item
-            label="Password:"
+            label="New Password:"
             name="new_password"
             rules={[
               {
