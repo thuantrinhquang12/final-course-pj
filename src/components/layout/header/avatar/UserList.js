@@ -1,18 +1,20 @@
 import React from 'react'
 import styles from './Index.module.scss'
-import Cat from './crazyCat.jpg'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
 import UserEditForm from '../../../page/editProfileModal/UserEditForm'
 import { ProfileOutlined, KeyOutlined, LogoutOutlined } from '@ant-design/icons'
+import { LOCAL_STORAGE } from '../../../constant/localStorage'
+
 const UserList = () => {
+  const info = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
+  const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
+
   return (
     <div className={styles.UserList}>
       <div className={styles.UserHeader}>
-        <div className={styles.UserHeader__Image}>
-          <img src={Cat} alt="CrazyCat" />
-        </div>
-        <h3>Crazy Cat</h3>
+        <h3>{info?.name}</h3>
+        <h4>{role}</h4>
       </div>
       <div className={styles.UserBody}>
         <div className={styles.UserGroup}>
