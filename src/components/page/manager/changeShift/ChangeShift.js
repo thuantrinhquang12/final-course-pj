@@ -170,14 +170,14 @@ const ChangeShift = () => {
         <Col xs={24} md={22} xl={22}>
           <Input
             size="large"
-            placeholder="Enter your name"
+            placeholder="Search for name..."
             prefix={<SearchOutlined />}
             onChange={handleSearchUser}
           />
           <TableCs
             className="Table__User"
             title={() => {
-              return <h2>UserMember List</h2>
+              return <h2>List Member Shift </h2>
             }}
             data={changeShift.userList}
             columns={columns}
