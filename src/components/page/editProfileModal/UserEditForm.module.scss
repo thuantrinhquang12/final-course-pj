@@ -1,5 +1,5 @@
 .fieldset {
-  margin: 50px auto;
+  margin: 10px auto;
   border: 1px solid black;
   legend {
     width: 100px;
@@ -15,6 +15,7 @@
   justify-content: center;
   margin-top: 50px;
   margin-right: 20px;
+  position: relative;
   .infoForm {
     display: flex;
     flex-direction: column;
@@ -41,6 +42,15 @@
   .requiredField {
     color: red;
     margin-left: 2px;
+  }
+  .button {
+    color: #fff;
+    border-color: #1890ff;
+    background: #1890ff;
+    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+    position: absolute;
+    right: 0;
   }
 }
 
@@ -71,6 +81,18 @@
     &:hover {
       color: rgb(166, 166, 240);
     }
+  }
+}
+.descriptionTable {
+  border: none !important;
+}
+.descriptionRow {
+  margin-bottom: 20px;
+  .descriptionCol {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 14px;
+    overflow: hidden;
   }
 }
 

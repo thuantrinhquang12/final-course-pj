@@ -1,6 +1,7 @@
 import React from 'react'
 import { Avatar } from 'antd'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { get } from '../../service/requestApi'
 
 import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
@@ -9,8 +10,15 @@ import defaultImage from './avatarDefault.png'
 const UserAvatar = () => {
   const [avatarFile, setAvatarFile] = useState(null)
   const [smallAvatarFile, setSmallAvatarFile] = useState(null)
+  const [profileInfo, setProfileInfo] = useState([])
 
-  const handleChange = function loadFile(event) {
+  useEffect(() => {
+    get('/members/edit').then((res) => {
+      setProfileInfo(res?.data)
+    })
+  }, [])
+
+  const handleChange = (event) => {
     if (event.target.files.length > 0) {
       const targetImg = event.target.files[0]
       emitter.emit('EVENT_GET_AVATAR', { data: targetImg })
@@ -36,9 +44,10 @@ const UserAvatar = () => {
     }
   }
 
-  const handleChangeForSmall = function loadFileForSmall(event) {
+  const handleChangeForSmall = (event) => {
     if (event.target.files.length > 0) {
       const targetImg = event.target.files[0]
+      emitter.emit('EVENT_GET_SMALL_AVATAR', { data: targetImg })
       const idxDot = targetImg.name.lastIndexOf('.') + 1
       const extFile = targetImg.name
         .substr(idxDot, targetImg.name.length)
@@ -68,7 +77,7 @@ const UserAvatar = () => {
           <Avatar
             shape="square"
             className={styles.avatar}
-            src={avatarFile ?? defaultImage}
+            src={avatarFile ?? profileInfo.avatar_official ?? defaultImage}
           />
           <label htmlFor="upload-avatar" className={styles.uploadLabel}>
             Choose File
@@ -86,7 +95,7 @@ const UserAvatar = () => {
             <Avatar
               shape="square"
               className={styles.smallAvatar}
-              src={smallAvatarFile ?? defaultImage}
+              src={smallAvatarFile ?? profileInfo.avatar ?? defaultImage}
             />
           </label>
           <label htmlFor="upload-small-avatar" className={styles.uploadLabel}>
