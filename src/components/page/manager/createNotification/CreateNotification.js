@@ -6,10 +6,14 @@ import moment from 'moment'
 import { post } from '../../../service/requestApi'
 import PropTypes from 'prop-types'
 import { saveAs } from 'file-saver'
+import { useSelector, useDispatch } from 'react-redux'
+import { getDataListNoticeDraft } from './slice/slice'
 
 const CreateNotification = ({ data, handleModal, setLoading }) => {
   const [form] = Form.useForm()
   const [selectDivision, setDivision] = useState(true)
+  const notePage = useSelector((state) => state.noticeListDraft)
+  const dispatch = useDispatch()
 
   const onSubmit = async (values) => {
     const { subject, message, published_to: publishedTo, date } = values
@@ -31,6 +35,12 @@ const CreateNotification = ({ data, handleModal, setLoading }) => {
       await post('/admin/notifications/store', dataSent, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
+      await dispatch(
+        getDataListNoticeDraft({
+          perPage: notePage.per_page,
+          page: notePage.page,
+        }),
+      )
       setLoading(false)
       typePopup.popupNotice(
         typePopup.SUCCESS_MESSAGE,
