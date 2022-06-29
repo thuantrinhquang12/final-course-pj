@@ -20,7 +20,7 @@
               background-color: #ebef97 !important;
             }
             .ant-table-cell-row-hover {
-              background-color: #ebef97 !important;
+              background-color: #95bcf2 !important;
             }
           }
         }
@@ -79,6 +79,8 @@
           justify-content: center;
           .formGroup {
             display: flex;
+            padding-left: 10px;
+            justify-content: flex-start;
           }
 
           &:hover {
@@ -86,7 +88,6 @@
               display: block;
             }
           }
-
           .note__status {
             display: none;
             cursor: default;

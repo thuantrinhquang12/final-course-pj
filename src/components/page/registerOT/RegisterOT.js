@@ -37,7 +37,7 @@ const RegisterOT = ({ isOpen, row, handleCloseOT }) => {
   const DateOT = Number(+hours + minutes / 60)
   const schema = yup.object().shape({
     reasonInput: yup.string().trim().required('Please enter reason'),
-    timeRequestOT: yup.date().nullable().required('Please enter timeRequestOT'),
+    timeRequestOT: yup.date().nullable().required('Please enter time'),
   })
   const dispatch = useDispatch()
 

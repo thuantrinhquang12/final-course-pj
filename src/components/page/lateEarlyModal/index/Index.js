@@ -86,7 +86,7 @@ const Index = ({ handleCloseLateEarly, isOpen, row }) => {
 
   const schema = yup.object().shape({
     reasonInput: yup.string().trim().required('Please enter reason'),
-    checkDateTime: yup.date().nullable().required('Please enter dateTime'),
+    checkDateTime: yup.date().nullable().required('Please enter date'),
   })
 
   const {

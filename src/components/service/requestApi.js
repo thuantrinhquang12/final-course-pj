@@ -15,7 +15,6 @@ instance.interceptors.request.use(
     return configs
   },
   async (error) => {
-    console.log(error)
     await Promise.reject(error)
   },
 )
@@ -28,8 +27,6 @@ instance.interceptors.response.use(
     const accessToken = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
     if (error.response.status === 401 && accessToken) {
       localStorage.clear()
-    } else {
-      console.error(error)
     }
     return await Promise.reject(error)
   },
@@ -45,14 +42,6 @@ const post = async (url, data = {}, headers) => {
   const response = await instance.post(url, data, headers)
   return response.data
 }
-// const post = async (url, data = {}, headers) => {
-//   try {
-//     const response = await instance.post(url, data, headers)
-//     return response.data
-//   } catch (error) {
-//     return error.response.data
-//   }
-// }
 
 const put = async (url, data = {}, headers) => {
   const response = await instance.put(url, data, headers)

@@ -279,6 +279,8 @@ const TableTimesheet = ({ row, params }) => {
                               : arrayNote[0].status === 'Confirmed'
                               ? '#3030ed'
                               : 'red',
+                          margin: '0 0 0 10px',
+                          position: 'relative',
                         }}
                       >
                         {arrayNote[0].status}
@@ -316,7 +318,7 @@ const TableTimesheet = ({ row, params }) => {
                         index !== 0 && (
                           <div className="formGroup" key={index}>
                             <span>{item.name}:</span>
-                            <h4 style={{ color: color, margin: ' 0 10px 0 0' }}>
+                            <h4 style={{ color: color, margin: ' 0 0 0 5px' }}>
                               {item.status}
                             </h4>
                           </div>

@@ -29,12 +29,14 @@ import {
 } from '../../../index'
 import '../../../common/createModal/ModalRequest.scss'
 import './Requests.scss'
+import distance from '../../../utils/distance'
 
 const Manager = () => {
   const [dataTable, setDataTable] = useState([])
   const [rowData, setRowData] = useState({})
   const [isOpen, setIsOpen] = useState(false)
   const [reload, setReload] = useState(false)
+  const [heighTable, setHeightTable] = useState(0)
   const commentInput = useRef(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
@@ -42,6 +44,11 @@ const Manager = () => {
   const dispatch = useDispatch()
   const { role: roleUser } = useSelector((state) => state.userInfo?.currentUser)
   const { requests, status } = useSelector((state) => state.managerRequest)
+
+  useEffect(() => {
+    const height = distance('RequestMN', 47)
+    setHeightTable(height.heightTable)
+  }, [])
 
   useEffect(() => {
     const getDataRequests = async () => {
@@ -313,7 +320,7 @@ const Manager = () => {
   }
 
   return (
-    <div>
+    <div id="RequestMN">
       {dataTable && (
         <>
           <CMTable
@@ -347,7 +354,7 @@ const Manager = () => {
             sorter={{ created_at: 'date', status: 'number' }}
             scroll={{
               x: 1000,
-              y: 350,
+              y: heighTable,
             }}
             styleHead={{
               id: { position: 'tb_center' },

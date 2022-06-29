@@ -142,7 +142,7 @@ const RequestDetail = ({ row, refInput, roleUser }) => {
           )}
           {requestType === 5 && (
             <Row>
-              <Col xl={12}>OT:</Col>
+              <Col xl={12}>OT Time:</Col>
               <Col xl={12}>{otTime}</Col>
             </Row>
           )}
