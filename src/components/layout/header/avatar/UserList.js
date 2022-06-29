@@ -4,7 +4,7 @@ import Cat from './crazyCat.jpg'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
 import UserEditForm from '../../../page/editProfileModal/UserEditForm'
-
+import { ProfileOutlined, KeyOutlined, LogoutOutlined } from '@ant-design/icons'
 const UserList = () => {
   return (
     <div className={styles.UserList}>
@@ -16,15 +16,15 @@ const UserList = () => {
       </div>
       <div className={styles.UserBody}>
         <div className={styles.UserGroup}>
-          <i className="fa-solid fa-hammer"></i>
+          <ProfileOutlined />
           <UserEditForm />
         </div>
         <div className={styles.UserGroup}>
-          <i className="fa-solid fa-key"></i>
+          <KeyOutlined />
           <ChangePassword />
         </div>
         <div className={styles.UserGroup}>
-          <i className="fa-solid fa-arrow-right-from-bracket"></i>
+          <LogoutOutlined />
           <Logout />
         </div>
       </div>

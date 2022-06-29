@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './Index.module.scss'
 import { Row, Col } from 'antd'
+import { HomeOutlined, AuditOutlined, UserAddOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import { Dropdown, Menu } from 'antd'
@@ -52,14 +53,14 @@ const Index = () => {
             <Col xs={24} md={1} xl={3}></Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>
               <NavLink to="/" className={styles.formGroup}>
-                <i className="fa-solid fa-house-chimney"></i>
+                <HomeOutlined />
                 <h4>HOME</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
             </Col>
             <Col xs={24} md={7} xl={6} className={styles.column}>
               <NavLink to="/timesheet" className={styles.formGroup}>
-                <i className="fa-solid fa-business-time"></i>
+                <AuditOutlined />
                 <h4>TIMESHEET</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
@@ -73,7 +74,7 @@ const Index = () => {
                     className={styles.formGroup}
                     onClick={(e) => e.preventDefault()}
                   >
-                    <i className="fa-solid fa-bars-progress"></i>
+                    <UserAddOutlined />
                     <h4>MANAGER</h4>
                     <div className={styles.progress} id="progress"></div>
                   </NavLink>
@@ -81,7 +82,7 @@ const Index = () => {
               )}
               {role === 'Manager' && (
                 <NavLink to={'/admin/manager'} className={styles.formGroup}>
-                  <i className="fa-solid fa-bars-progress"></i>
+                  <UserAddOutlined />
                   <h4>MANAGER</h4>
                   <div className={styles.progress} id="progress"></div>
                 </NavLink>
@@ -94,14 +95,14 @@ const Index = () => {
             <Col xs={24} md={8} xl={10}></Col>
             <Col xs={24} md={8} xl={6} className={styles.column}>
               <NavLink to="/" className={styles.formGroup}>
-                <i className="fa-solid fa-house-chimney"></i>
+                <HomeOutlined />
                 <h4>HOME</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
             </Col>
             <Col xs={24} md={8} xl={6} className={styles.column}>
               <NavLink to="/timesheet" className={styles.formGroup}>
-                <i className="fa-solid fa-business-time"></i>
+                <AuditOutlined />
                 <h4>TIMESHEET</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
