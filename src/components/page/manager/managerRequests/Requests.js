@@ -46,7 +46,7 @@ const Manager = () => {
   const { requests, status } = useSelector((state) => state.managerRequest)
 
   useEffect(() => {
-    const height = distance('RequestMN', 47)
+    const height = distance('RequestMN', 48)
     setHeightTable(height.heightTable)
   }, [])
 
@@ -327,7 +327,7 @@ const Manager = () => {
             title={() => {
               return (
                 <>
-                  <h2>Requests</h2>
+                  <h2>List Request</h2>
                 </>
               )
             }}
@@ -490,7 +490,7 @@ const Manager = () => {
               : ''
           }
           className="modalRequestContainer"
-          width={1000}
+          width={900}
         >
           <RequestDetail
             row={rowData}
