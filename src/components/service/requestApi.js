@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_ENDPOINT,
-  timeout: 5000,
+  timeout: 10000,
 })
 
 instance.interceptors.request.use(
@@ -14,64 +14,51 @@ instance.interceptors.request.use(
     }
     return configs
   },
-  (error) => {
-    Promise.reject(error)
+  async (error) => {
+    console.log(error)
+    await Promise.reject(error)
   },
 )
 
-instance.interceptors.response.use((configs) => {
-  return configs
-}),
-  () => {
-    return Promise.reject(error)
-  }
+instance.interceptors.response.use(
+  (configs) => {
+    return configs
+  },
+  async (error) => {
+    const accessToken = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
+    if (error.response.status === 401 && accessToken) {
+      localStorage.clear()
+    } else {
+      console.error(error)
+    }
+    return await Promise.reject(error)
+  },
+)
 
 const get = async (url, params = {}) => {
-  try {
-    const config = { params }
-    const response = await instance.get(url, config)
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
+  const config = { params }
+  const response = await instance.get(url, config)
+  return response.data
 }
 
 const post = async (url, data = {}, headers) => {
-  try {
-    const response = await instance.post(url, data, headers)
-    return response.data
-  } catch (error) {
-    console.log(error)
-    return error.response.data
-  }
+  const response = await instance.post(url, data, headers)
+  return response.data
 }
 
 const put = async (url, data = {}, headers) => {
-  try {
-    const response = await instance.put(url, data, headers)
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await instance.put(url, data, headers)
+  return response.data
 }
 
 const patch = async (url, data = {}) => {
-  try {
-    const response = await instance.patch(url, data)
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await instance.patch(url, data)
+  return response.data
 }
 
 const del = async (url, data = {}) => {
-  try {
-    const response = await instance.delete(url, data)
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
+  const response = await instance.delete(url, data)
+  return response.data
 }
 
 export { get, post, put, patch, del }
-export default instance

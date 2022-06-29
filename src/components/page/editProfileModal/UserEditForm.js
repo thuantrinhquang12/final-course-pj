@@ -3,7 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import moment from 'moment'
 
-import instance, { get } from '../../service/requestApi'
+import { get, post } from '../../service/requestApi'
 import emitter from '../../utils/emitter'
 import styles from './UserEditForm.module.scss'
 import UserAvatar from './UserAvatar'
@@ -12,7 +12,6 @@ import Dialog from '../../common/createModal/Modal'
 import { messageRequest } from '../../index'
 import { dateTime, typePopup } from '../../index'
 
-const API = '/members'
 const dateFormat = 'DD/MM/YYYY'
 const bankName = [
   {
@@ -50,39 +49,96 @@ const bankName = [
 const UserEditForm = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [profileInfo, setProfileInfo] = useState([])
+  const [loadings, setLoadings] = useState([])
   const [avatar, setAvatar] = useState(null)
+  const [smallAvatar, setSmallAvatar] = useState(null)
+
   emitter.on('EVENT_GET_AVATAR', (data) => {
-    setAvatar(data.avatar)
+    setAvatar(data.data)
+  })
+  emitter.on('EVENT_GET_SMALL_AVATAR', (data) => {
+    setSmallAvatar(data.data)
   })
   useEffect(() => {
-    get(API + '/edit').then((res) => {
+    get('/members/edit').then((res) => {
       setProfileInfo(res?.data)
     })
   }, [modalVisible])
 
-  const onSubmit = async (values) => {
-    const valueEdit = {
-      ...values,
-      birth_date: dateTime.formatDate(values.birth_date),
-      identity_card_date: dateTime.formatDate(values.identity_card_date),
-      passport_expiration: values.passport_expiration
-        ? dateTime.formatDate(values.passport_expiration)
-        : '',
-      nick_name: values.nickname,
-      gender: values.gender,
-      marital_status: values.marital_status,
-      start_date: dateTime.formatDate(values.start_date),
-    }
+  const enterLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings]
+      newLoadings[index] = true
+      return newLoadings
+    })
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings]
+        newLoadings[index] = false
+        return newLoadings
+      })
+    }, 2000)
+  }
 
+  const onSubmit = async (values) => {
+    const valueEdit =
+      avatar && smallAvatar
+        ? {
+            ...values,
+            birth_date: dateTime.formatDate(values.birth_date),
+            identity_card_date: dateTime.formatDate(values.identity_card_date),
+            passport_expiration: values.passport_expiration
+              ? dateTime.formatDate(values.passport_expiration)
+              : '',
+            nick_name: values.nickname,
+            gender: values.gender,
+            marital_status: values.marital_status,
+            avatar_official: avatar,
+            avatar: smallAvatar,
+          }
+        : smallAvatar
+        ? {
+            ...values,
+            birth_date: dateTime.formatDate(values.birth_date),
+            identity_card_date: dateTime.formatDate(values.identity_card_date),
+            passport_expiration: values.passport_expiration
+              ? dateTime.formatDate(values.passport_expiration)
+              : '',
+            nick_name: values.nickname,
+            gender: values.gender,
+            marital_status: values.marital_status,
+            avatar: smallAvatar,
+          }
+        : avatar
+        ? {
+            ...values,
+            birth_date: dateTime.formatDate(values.birth_date),
+            identity_card_date: dateTime.formatDate(values.identity_card_date),
+            passport_expiration: values.passport_expiration
+              ? dateTime.formatDate(values.passport_expiration)
+              : '',
+            nick_name: values.nickname,
+            gender: values.gender,
+            marital_status: values.marital_status,
+            avatar_official: avatar,
+          }
+        : {
+            ...values,
+            birth_date: dateTime.formatDate(values.birth_date),
+            identity_card_date: dateTime.formatDate(values.identity_card_date),
+            passport_expiration: values.passport_expiration
+              ? dateTime.formatDate(values.passport_expiration)
+              : '',
+            nick_name: values.nickname,
+            gender: values.gender,
+            marital_status: values.marital_status,
+          }
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    }
     try {
-      const data = await instance({
-        method: 'put',
-        url: API + '/update',
-        params: valueEdit,
-        data: {
-          avatar: avatar,
-        },
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const data = await post('/members/update?_method=PUT', valueEdit, {
+        headers,
       })
       if (data.status) {
         typePopup.popupNotice(
@@ -93,8 +149,7 @@ const UserEditForm = () => {
         )
         setModalVisible(false)
       }
-    } catch (e) {
-      console.log('err', e)
+    } catch (error) {
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
         'Message',
@@ -103,13 +158,13 @@ const UserEditForm = () => {
       )
     }
   }
-  console.log('profileInfo: ', profileInfo)
   return (
     <>
       <h3 onClick={() => setModalVisible(true)}>Edit Profile</h3>
       <Dialog
         isOpen={modalVisible}
         handleModal={() => setModalVisible(!modalVisible)}
+        title="Edit Profile"
       >
         <fieldset className={styles.fieldset}>
           <legend>My Profile</legend>
@@ -936,7 +991,12 @@ const UserEditForm = () => {
                 </div>
               </div>
               <div className={styles.buttonContainer}>
-                <Button className={styles.button} htmlType="submit">
+                <Button
+                  loading={loadings[0]}
+                  onClick={() => enterLoading(0)}
+                  className={styles.button}
+                  htmlType="submit"
+                >
                   Update
                 </Button>
               </div>

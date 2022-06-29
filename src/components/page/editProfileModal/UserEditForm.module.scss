@@ -1,5 +1,5 @@
 .fieldset {
-  margin: 50px auto;
+  margin: 10px auto;
   border: 1px solid black;
   legend {
     width: 100px;
@@ -41,6 +41,13 @@
   .requiredField {
     color: red;
     margin-left: 2px;
+  }
+  .button {
+    color: #fff;
+    border-color: #1890ff;
+    background: #1890ff;
+    text-shadow: 0 -1px 0 rgb(0 0 0 / 12%);
+    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
   }
 }
 
