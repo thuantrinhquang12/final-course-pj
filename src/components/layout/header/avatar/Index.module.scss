@@ -38,15 +38,14 @@
 
     .UserList {
       position: absolute;
-      top: 120%;
+      top: 150%;
       min-width: 250px;
-      min-height: 300px;
+      max-height: 300px;
       right: 10px;
-      background-color: white;
+      background-color: #e9f2ff;
+      color: #23466d;
       box-shadow: rgb(149 157 165 / 20%) 0px 8px 24px;
-      border-radius: 10px;
-      animation-name: example;
-      animation-duration: 0.3s;
+      z-index: 2;
       display: none;
 
       &::after {
@@ -62,10 +61,11 @@
 
       .UserHeader {
         display: flex;
+        flex-direction: column;
         margin: 20px 10px;
-        border-bottom: 2px solid #dcd3d3;
-        padding-bottom: 15px;
-
+        border-bottom: 1px solid #23466d;
+        padding-bottom: 5px;
+        text-align: center;
         .UserHeader__Image {
           width: 70px;
           height: 70px;
@@ -81,8 +81,12 @@
           font-size: 23px;
           display: flex;
           align-items: center;
-          justify-content: flex-end;
-          margin-left: auto;
+          margin: 0 auto;
+          color: #23466d;
+        }
+        h4 {
+          color: #23466d;
+          font-weight: bold;
         }
       }
 
@@ -90,8 +94,7 @@
         width: 100%;
 
         .UserGroup {
-          margin: 20px 10px;
-          border-bottom: 2px solid #dcd3d3;
+          margin: 0px 10px;
           display: flex;
           align-items: baseline;
           padding-bottom: 20px;
@@ -101,7 +104,7 @@
             border-bottom: none;
           }
           h3 {
-            color: grey;
+            color: #23466d;
             margin: 0 20px;
           }
         }
@@ -185,7 +188,7 @@
 
             .formGroup {
               padding: 15px 0;
-              font-size: 18px;
+              font-size: 14px;
               display: flex;
               justify-content: flex-end;
               flex-direction: row-reverse;
@@ -224,6 +227,17 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+
+.subMenu {
+  background-color: #e9f2ff;
+  text-align: left;
+  h3 {
+    color: #23466d !important;
+    margin-left: 10px;
+    font-size: 14px;
+    margin: 0 auto;
   }
 }
 
