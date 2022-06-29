@@ -30,7 +30,14 @@ const SearchBox = () => {
   })
 
   useEffect(() => {
-    dispatch(getTimeSheet({ ...params, page: 1, perPage: 10 }))
+    dispatch(
+      getTimeSheet({
+        ...params,
+        page: 1,
+        perPage: 10,
+        startDate: moment().startOf('month'),
+      }),
+    )
   }, [])
 
   const worksheet = useSelector((state) => {
@@ -138,7 +145,6 @@ const SearchBox = () => {
               selectedDate: 3,
               selected: 1,
               sort: 'asc',
-              startDate: params.startDate,
               endDate: params.endDate,
               radioGroup: 2,
             }}
