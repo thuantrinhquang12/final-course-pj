@@ -3,20 +3,32 @@ import { Row, Col } from 'antd'
 import { NavLink } from 'react-router-dom'
 import { Dropdown, Menu } from 'antd'
 import { ProfileOutlined, KeyOutlined, LogoutOutlined } from '@ant-design/icons'
-
 import { LOCAL_STORAGE } from '../../../constant/localStorage'
 import UserEditForm from '../../../page/editProfileModal/UserEditForm'
 import ChangePassword from '../../../page/changePassword/ChangePassword'
 import Logout from '../../../page/logout/Logout'
 import styles from './Index.module.scss'
+import avatarDefault from './avatarDefault.png'
 
 const Index = () => {
   const info = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
-
+  const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
   const menu = (
     <Menu
       className={styles.subMenu}
       items={[
+        {
+          key: '0',
+          type: 'group',
+          label: (
+            <div style={{ borderBottom: '1px solid #333', cursor: 'default' }}>
+              <strong> {info.name}</strong>
+              <div style={{ fontStyle: 'italic', fontSize: '13px' }}>
+                {role}
+              </div>
+            </div>
+          ),
+        },
         {
           key: '1',
           label: <UserEditForm>Edit Profile</UserEditForm>,
@@ -31,7 +43,7 @@ const Index = () => {
         },
         {
           key: '3',
-          label: <Logout>Logout</Logout>,
+          label: <Logout>Sign Out</Logout>,
           icon: (
             <LogoutOutlined style={{ color: '#23466d', fontSize: '14px' }} />
           ),
@@ -52,7 +64,14 @@ const Index = () => {
             >
               <div className={styles.formImg}>
                 <div className={styles.Image}>
-                  <img src={info?.avatar} alt="CrazyCat" />
+                  <img
+                    src={
+                      !info?.avatar.includes('13.215.174.125')
+                        ? avatarDefault
+                        : info?.avatar
+                    }
+                    alt="Avatar"
+                  />
                 </div>
               </div>
             </NavLink>

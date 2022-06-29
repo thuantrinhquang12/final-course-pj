@@ -17,7 +17,7 @@ const Logout = () => {
 
   return (
     <Spin spinning={loading}>
-      <h3 onClick={onClick}>Logout</h3>
+      <h3 onClick={onClick}>Sign Out</h3>
     </Spin>
   )
 }

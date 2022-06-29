@@ -10,7 +10,6 @@ import { LOCAL_STORAGE } from '../../../constant/localStorage'
 
 const Index = () => {
   const info = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
-  const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
   return (
     <>
       <div className={styles.Navbar} id="Header_TimeSheet">
@@ -42,8 +41,9 @@ const Index = () => {
                 color: '#23466d',
               }}
             >
-              <Row>Hi, {info?.name.split(' ').pop()}!</Row>
-              <Row style={{ fontSize: '12px' }}>{role}</Row>
+              <Row style={{ marginTop: '10px' }}>
+                Hi, {info?.name.split(' ').pop()}!
+              </Row>
             </Col>
           </Row>
         </div>
