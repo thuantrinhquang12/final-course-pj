@@ -34,6 +34,7 @@
               th {
                 text-align: center;
                 background-color: #104382;
+                border-bottom: #104382;
                 border-right: 1px solid #bfbfbf !important;
                 &:last-child {
                   border-right: 0px solid #bfbfbf !important;
@@ -42,6 +43,9 @@
                   color: white;
                   margin: 0;
                 }
+              }
+              .ant-table-cell-scrollbar {
+                box-shadow: 0 0 0 1px #104382;
               }
             }
           }

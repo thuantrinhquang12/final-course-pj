@@ -1,35 +1,24 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Checkbox,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Row,
-  Select,
-} from 'antd'
+import { Checkbox, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import styles from './CreateNotification.scss'
 import { dateTime, typePopup } from '../../../index'
 import moment from 'moment'
 import { post } from '../../../service/requestApi'
-import TextArea from 'antd/lib/input/TextArea'
 import PropTypes from 'prop-types'
 import { saveAs } from 'file-saver'
 
-const CreateNotification = ({ data, handleModal, confirm }) => {
+const CreateNotification = ({ data, handleModal, setLoading }) => {
   const [form] = Form.useForm()
   const [selectDivision, setDivision] = useState(true)
 
   const onSubmit = async (values) => {
-    const { subject, message, published_to: publishedTo, date, status } = values
+    const { subject, message, published_to: publishedTo, date } = values
     const selectedFile = document.getElementById('myfile').files[0]
-
     const dataSent = {
       published_date: dateTime.formatDate(moment(date)),
       subject,
       message,
-      status,
+      status: 1,
       attachment: selectedFile,
       created_by: 1,
       published_to: publishedTo.includes('all')
@@ -38,18 +27,17 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
     }
 
     try {
-      const res = await post('/admin/notifications/store', dataSent, {
+      setLoading(true)
+      await post('/admin/notifications/store', dataSent, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-      if (res.status === true) {
-        typePopup.popupNotice(
-          typePopup.SUCCESS_MESSAGE,
-          'Success',
-          'Create success message',
-        )
-        form.resetFields()
-        handleModal()
-      } else return false
+      setLoading(false)
+      typePopup.popupNotice(
+        typePopup.SUCCESS_MESSAGE,
+        'Success',
+        'Create success message',
+      )
+      handleModal()
     } catch (e) {
       typePopup.popupNotice(
         typePopup.ERROR_MESSAGE,
@@ -58,10 +46,6 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
       )
     }
   }
-
-  // const onReset = () => {
-  //   form.resetFields()
-  // }
 
   let setPublishedTo = []
   if (typeof data?.published_to === 'string') {
@@ -114,6 +98,7 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
       <div className="notificationContainer">
         <Form
           form={form}
+          id="formNotice"
           name="basic"
           initialValues={{
             published_to: setPublishedTo.length > 0 ? setPublishedTo : ['all'],
@@ -167,7 +152,10 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
                     },
                   ]}
                 >
-                  <DatePicker disabled={data} />
+                  <DatePicker
+                    format={dateTime.formatDateTypeTable}
+                    disabled={data}
+                  />
                 </Form.Item>
               </Col>
             </Col>
@@ -175,16 +163,7 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
               <Col xl={12} className="dFlex">
                 <Col xl={8}>Status: </Col>
                 <Col sm={12} xl={16} className="status">
-                  <Form.Item
-                    style={{ margin: 0 }}
-                    name="status"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Required to status',
-                      },
-                    ]}
-                  >
+                  <Form.Item style={{ margin: 0 }} name="status">
                     <Select disabled={data}>
                       <Select.Option value={0}>Pending</Select.Option>
                       <Select.Option value={1}>Official</Select.Option>
@@ -203,7 +182,15 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
                 File:<span className="requiredField"> (*)</span>
               </Col>
               <Col span={20}>
-                <Form.Item name="file" rules={[]}>
+                <Form.Item
+                  name="file"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Required to file',
+                    },
+                  ]}
+                >
                   <Input type="file" id="myfile" name="myfile" />
                 </Form.Item>
               </Col>
@@ -215,7 +202,15 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
               Published To:<span className="requiredField"> (*)</span>
             </Col>
             <Col span={20}>
-              <Form.Item name="published_to">
+              <Form.Item
+                name="published_to"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Required published to',
+                  },
+                ]}
+              >
                 <Checkbox.Group>
                   <Row className="divisionName">
                     <Col span={8}>
@@ -262,47 +257,32 @@ const CreateNotification = ({ data, handleModal, confirm }) => {
               </Form.Item>
             </Col>
           </Row>
-          <Row>
+          <Row style={{ margin: 0 }}>
             <Col span={4}>
               Message:<span className="requiredField"> (*)</span>
             </Col>
-            <Col span={20}>
+            <Col span={20} style={{ position: 'relative' }}>
               <Form.Item
                 name="message"
                 className={styles.InputField}
                 rules={[
                   {
                     required: true,
+                    whitespace: true,
                     message: 'Required to message',
                   },
                 ]}
               >
-                <TextArea
+                <Input.TextArea
                   showCount
                   maxLength={100}
-                  placeholder="Please enter message not too 100 characters"
                   autoSize={{ minRows: 5, maxRows: 5 }}
+                  placeholder="Please enter message not too 100 characters"
                   disabled={data}
                 />
               </Form.Item>
             </Col>
           </Row>
-          {!data && (
-            <Form.Item className="ItemSignin">
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button onClick={confirm}>Cancel</Button>
-              {/* <Button htmlType="button" onClick={onReset}>
-                Reset
-              </Button> */}
-            </Form.Item>
-          )}
-          {data && (
-            <Form.Item className="ItemSignin">
-              <Button onClick={handleModal}>Cancel</Button>
-            </Form.Item>
-          )}
         </Form>
       </div>
     </>
@@ -313,6 +293,7 @@ CreateNotification.propTypes = {
   data: PropTypes.object,
   handleModal: PropTypes.func,
   confirm: PropTypes.func,
+  setLoading: PropTypes.func,
 }
 
 export default CreateNotification

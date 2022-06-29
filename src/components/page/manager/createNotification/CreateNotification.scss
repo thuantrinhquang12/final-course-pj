@@ -38,7 +38,7 @@
     content: attr(data-count);
     pointer-events: none;
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     right: 5px;
   }
   .dFlex {
@@ -53,5 +53,18 @@
   }
   .requiredField {
     color: red;
+  }
+}
+.deleteAction {
+  button {
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    color: red !important;
+    .anticon-delete {
+      color: red !important;
+    }
   }
 }

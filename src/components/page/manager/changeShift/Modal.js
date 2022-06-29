@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Row, Col, Select, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { get, put } from '../../../service/requestApi'
 import PropTypes from 'prop-types'
 import { typePopup } from '../../../index'
@@ -8,6 +9,7 @@ import { checkShift } from './checkShift'
 const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   const [shift, setShift] = useState(modal.data.shift_id)
   const [shiftList, setShiftList] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const { Option } = Select
 
@@ -24,6 +26,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   }
 
   const handleSubmit = async () => {
+    setLoading(true)
     const response = await put(`admin/shift/update/${modal.data.id}`, {
       shift_id: shift,
     })
@@ -33,6 +36,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
         'Update Success',
         'Change Shift',
       )
+      setLoading(false)
       handleUpdate()
       handleClose()
     } else {
@@ -46,7 +50,8 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
   const confirm = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -68,7 +73,19 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
         okText="Submit"
         title={<h2>Change Shift</h2>}
         visible={modal.isOpen}
-        footer={null}
+        footer={[
+          <Button
+            loading={loading}
+            key="submit"
+            type="primary"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>,
+          <Button key="cancel" onClick={confirm}>
+            Cancel
+          </Button>,
+        ]}
         width={700}
         onCancel={confirm}
         onOk={handleSubmit}
@@ -108,7 +125,7 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
                   </Col>
                 </Col>
               </Row>
-              <Row>
+              <Row style={{ margin: 0 }}>
                 <Col span={12} className="dFlex">
                   <Col xl={9} style={{ alignSelf: 'center' }}>
                     Change Shift:
@@ -137,16 +154,6 @@ const ModalChangeShift = ({ modal, handleClose, handleUpdate }) => {
                   </Col>
                 </Col>
                 <Col span={12}></Col>
-              </Row>
-              <Row style={{ margin: '24px 0 0 0' }}>
-                <Col span={24} className="btnChangeShift">
-                  <Button key="submit" type="primary" onClick={handleSubmit}>
-                    Submit
-                  </Button>
-                  <Button key="cancel" onClick={confirm}>
-                    Cancel
-                  </Button>
-                </Col>
               </Row>
             </Col>
           </Row>

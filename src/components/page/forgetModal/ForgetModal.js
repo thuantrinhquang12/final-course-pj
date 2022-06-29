@@ -32,12 +32,11 @@ const {
 
 const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
   const [requestExists, setRequestExists] = useState(false)
-
   const dispatch = useDispatch()
   const { request, status } = useSelector((state) => state.requests)
 
   const schema = yup.object().shape({
-    reasonInput: yup.string().required('Please enter reason'),
+    reasonInput: yup.string().trim().required('Please enter reason'),
     checkInTime: yup.date().nullable().required('Please enter check-in'),
     checkOutTime: yup.date().nullable().required('Please enter check-out'),
   })
@@ -186,7 +185,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               </Row>
               <Row>
                 <Col xl={4} className={styles.dFlex}>
-                  Check-in: <span className={styles.requiredField}>(*)</span>
+                  <span> Check-in:</span>
+                  <span className={styles.requiredField}> (*)</span>
                 </Col>
                 <Col xl={20}>
                   <Controller
@@ -205,7 +205,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                           }}
                         />
                         {errors.checkInTime && (
-                          <span className={styles.errorField}>
+                          <span className={styles.errorFieldNoPosition}>
                             {errors.checkInTime?.message}
                           </span>
                         )}
@@ -219,7 +219,8 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
               </Row>
               <Row>
                 <Col xl={4} className={styles.dFlex}>
-                  Check-out: <span className={styles.requiredField}>(*)</span>
+                  <span> Check-out:</span>
+                  <span className={styles.requiredField}> (*)</span>
                 </Col>
                 <Col xl={20}>
                   <Controller
@@ -234,7 +235,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                           {...field}
                         />
                         {errors.checkOutTime && (
-                          <span className={styles.errorField}>
+                          <span className={styles.errorFieldNoPosition}>
                             {errors.checkOutTime?.message}
                           </span>
                         )}
@@ -270,9 +271,10 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                   />
                 </Col>
               </Row>
-              <Row>
+              <Row style={!request?.status ? { margin: 0 } : {}}>
                 <Col xl={4} style={{ marginBottom: '10px' }}>
-                  Reason: <span className={styles.requiredField}>(*)</span>
+                  <span>Reason:</span>
+                  <span className={styles.requiredField}>(*)</span>
                 </Col>
                 <Col xl={20}>
                   <Controller
@@ -312,7 +314,7 @@ const ForgetModal = ({ isOpen, row, handleCloseForget }) => {
                       </strong>
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style={{ margin: 0 }}>
                     <>
                       <Col xl={4}>
                         {checkRequestManager(

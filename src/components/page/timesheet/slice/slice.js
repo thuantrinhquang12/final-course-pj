@@ -1,40 +1,61 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { get } from '../../../service/requestApi'
 import reducerRegistry from '../../../../store/reducerRegister'
+import { dateTime } from '../../../index'
 
-export const getTimesheet = createAsyncThunk(
-  'getTimesheet',
-  async ({ params }) => {
-    const { page, sort, start, end } = params
-    if (sort == 'ascending') {
-      const res = await get(`/worksheet?page=${page}`)
-      return res
-    } else {
-      const res = await get(
-        `/worksheet?sort=desc&start_date=${start}&end_date=${end}&per_page=30`,
-      )
-      return res
-    }
-  },
-)
+export const getTimeSheet = createAsyncThunk('getTimeSheet', async (params) => {
+  const { page, sort, startDate, endDate, perPage } = params
+
+  let response = null
+  if (!startDate) {
+    response = await get(
+      `/worksheet?sort=${sort}&end_date=${dateTime.formatDate(
+        endDate,
+      )}&per_page=${perPage}&page=${page}`,
+    )
+  } else if (!endDate) {
+    response = await get(
+      `/worksheet?sort=${sort}&start_date=${dateTime.formatDate(
+        startDate,
+      )}&per_page=${perPage}&page=${page}`,
+    )
+  } else {
+    response = await get(
+      `/worksheet?sort=${sort}&start_date=${dateTime.formatDate(
+        startDate,
+      )}&end_date=${dateTime.formatDate(
+        endDate,
+      )}&per_page=${perPage}&page=${page}`,
+    )
+  }
+  return response
+})
 
 const timeSheetSlice = createSlice({
-  name: 'timesheet',
+  name: 'timeSheet',
   initialState: {
-    worksheet: [],
+    data: [],
+    current_page: 1,
+    per_page: 10,
+    last_page: 1,
     isLoading: false,
+    total: 0,
   },
   extraReducers: {
-    [getTimesheet.fulfilled]: (state, action) => {
-      state.worksheet = action.payload
+    [getTimeSheet.fulfilled]: (state, action) => {
+      state.data = action.payload.data
+      state.current_page = action.payload.current_page
+      state.per_page = action.payload.per_page
+      state.last_page = action.payload.last_page
       state.isLoading = false
+      state.total = action.payload.total
     },
-    [getTimesheet.pending]: (state) => {
-      ;(state.worksheet = []), (state.isLoading = true)
+    [getTimeSheet.pending]: (state) => {
+      state.isLoading = true
     },
 
-    [getTimesheet.rejected]: (state) => {
-      state.isLoading = false
+    [getTimeSheet.rejected]: (state) => {
+      state.isLoading = true
     },
   },
 })

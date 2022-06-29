@@ -22,14 +22,14 @@ const Index = () => {
       items={[
         {
           key: '1',
-          label: <Link to={'/manager'}>List requests</Link>,
+          label: <Link to={'/admin/manager'}>List requests</Link>,
           icon: (
             <DatabaseOutlined style={{ color: '#23466d', fontSize: '14px' }} />
           ),
         },
         {
           key: '2',
-          label: <Link to={'/change-shift'}>Change shift</Link>,
+          label: <Link to={'/admin/change-shift'}>Change shift</Link>,
           icon: (
             <ClockCircleOutlined
               style={{ color: '#23466d', fontSize: '14px' }}
@@ -38,7 +38,7 @@ const Index = () => {
         },
         {
           key: '3',
-          label: <Link to={'/notification'}>Create notice</Link>,
+          label: <Link to={'/admin/notification'}>Create notice</Link>,
           icon: <FormOutlined style={{ color: '#23466d', fontSize: '14px' }} />,
         },
       ]}
@@ -66,17 +66,26 @@ const Index = () => {
             </Col>
 
             <Col xs={24} md={7} xl={6} className={styles.column}>
-              <Dropdown overlay={menu}>
-                <NavLink
-                  to={'/a'}
-                  className={styles.formGroup}
-                  onClick={(e) => e.preventDefault()}
-                >
+              {role === 'Admin' && (
+                <Dropdown overlay={menu}>
+                  <NavLink
+                    to={'/admin'}
+                    className={styles.formGroup}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <i className="fa-solid fa-bars-progress"></i>
+                    <h4>MANAGER</h4>
+                    <div className={styles.progress} id="progress"></div>
+                  </NavLink>
+                </Dropdown>
+              )}
+              {role === 'Manager' && (
+                <NavLink to={'/admin/manager'} className={styles.formGroup}>
                   <i className="fa-solid fa-bars-progress"></i>
                   <h4>MANAGER</h4>
                   <div className={styles.progress} id="progress"></div>
                 </NavLink>
-              </Dropdown>
+              )}
             </Col>
           </>
         )}
@@ -86,14 +95,14 @@ const Index = () => {
             <Col xs={24} md={8} xl={6} className={styles.column}>
               <NavLink to="/" className={styles.formGroup}>
                 <i className="fa-solid fa-house-chimney"></i>
-                <h4 style={{ color: 'white' }}>HOME</h4>
+                <h4>HOME</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
             </Col>
             <Col xs={24} md={8} xl={6} className={styles.column}>
               <NavLink to="/timesheet" className={styles.formGroup}>
                 <i className="fa-solid fa-business-time"></i>
-                <h4 style={{ color: 'white' }}>TIMESHEET</h4>
+                <h4>TIMESHEET</h4>
                 <div className={styles.progress} id="progress"></div>
               </NavLink>
             </Col>

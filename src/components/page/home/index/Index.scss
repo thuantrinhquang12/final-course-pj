@@ -1,7 +1,14 @@
 .tableNotice {
   width: 90%;
   margin: auto;
-  padding-top: 50px;
+  padding-top: 40px;
+  .ant-table-body {
+    tr {
+      td {
+        cursor: default !important;
+      }
+    }
+  }
 }
 
 .modalNotice {
@@ -18,13 +25,17 @@
       }
     }
   }
-
+  .ant-modal-body {
+    .ant-row {
+      .ant-col {
+        h3 {
+          margin: 0;
+        }
+      }
+    }
+  }
   .ant-modal-close-x {
     color: white;
-  }
-
-  .ant-modal-footer {
-    display: none;
   }
 
   .formGroup {
@@ -32,13 +43,13 @@
     align-items: baseline;
     font-weight: 600;
 
-    i {
-      margin-right: 10px;
-    }
-
     .formGroupText {
       display: flex;
       flex-wrap: wrap;
     }
+  }
+  .dFlex {
+    display: flex;
+    margin: 0 0 15px 0;
   }
 }

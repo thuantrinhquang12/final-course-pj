@@ -32,7 +32,7 @@ const ChangeShift = () => {
   }, [loading])
 
   useEffect(() => {
-    const height = distance('change_Shift', 65)
+    const height = distance('change_Shift', 57)
     setHeightTable(height.heightTable)
   }, [])
 
@@ -135,6 +135,18 @@ const ChangeShift = () => {
       },
     },
     {
+      title: <h4>WORK TYPE</h4>,
+      dataIndex: 'part_time',
+      key: 'part_time',
+      render: (payload, record) => {
+        return (
+          <div className="tb_center">
+            {payload === 0 ? 'Full time' : 'Part time'}
+          </div>
+        )
+      },
+    },
+    {
       title: <h4>DIVISION NAME</h4>,
       dataIndex: 'division_name',
       key: 'division_name',
@@ -148,23 +160,6 @@ const ChangeShift = () => {
       key: 'shift_name',
       render: (payload, record) => {
         return <div className="tb_center">{payload}</div>
-      },
-    },
-    {
-      title: <h4>ACTION</h4>,
-      dataIndex: 'shift_name',
-      key: 'shift_name',
-      render: (payload, record) => {
-        return (
-          <div className="tb_center">
-            <Button
-              type="primary"
-              onClick={() => setModal({ isOpen: true, data: record })}
-            >
-              Change Shift
-            </Button>
-          </div>
-        )
       },
     },
   ]
@@ -181,7 +176,7 @@ const ChangeShift = () => {
           />
           <TableCs
             className="Table__User"
-            title={(record, index) => {
+            title={() => {
               return <h2>UserMember List</h2>
             }}
             data={changeShift.userList}
@@ -189,6 +184,7 @@ const ChangeShift = () => {
             width={{
               id: '5%',
               member_name: '20%',
+              part_time: '15%',
               division_name: '15%',
               shift_name: '15%',
             }}
@@ -196,6 +192,13 @@ const ChangeShift = () => {
             scroll={{
               x: 1000,
               y: heightTable,
+            }}
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  setModal({ isOpen: true, data: record })
+                },
+              }
             }}
             pagination={{
               current: currentPage,

@@ -7,14 +7,10 @@ import { useSelector } from 'react-redux'
 const PrivateRoute = ({ allowedRoles }) => {
   const location = useLocation()
   const navigate = useNavigate()
-
   const tokenAccess = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN)
-  const timeUsedToken = localStorage.getItem(LOCAL_STORAGE.TIME_EXPIRED)
-  if (tokenAccess) {
-    if (Date.now() > timeUsedToken) {
-      navigate('/login', { replace: true })
-      localStorage.clear()
-    }
+
+  if (!tokenAccess) {
+    navigate('/login', { replace: true })
   }
 
   const role = useSelector((state) => state.userInfo?.currentUser?.role)

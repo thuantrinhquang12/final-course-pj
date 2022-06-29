@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import { Form, Input, Modal, Button } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import { typePopup } from '../../index'
 import './ChangePassword.scss'
 import { patch } from '../../service/requestApi'
+import { LOCAL_STORAGE } from '../../constant/localStorage'
 
 const ChangePassword = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [error, setError] = useState(false)
   const [form] = Form.useForm()
+
   const onFinish = async (values) => {
     const {
       old_password: oldPassword,
@@ -49,10 +52,12 @@ const ChangePassword = () => {
     form.resetFields()
     setError(false)
   }
+
   const confirmCancel = () => {
     Modal.confirm({
       title: 'Modal',
-      content: 'Are you sure close modal ?',
+      icon: <CloseCircleOutlined />,
+      content: 'Do you want close modal ?',
       okText: 'Cancel',
       cancelText: 'OK',
       okButtonProps: {
@@ -67,6 +72,8 @@ const ChangePassword = () => {
       },
     })
   }
+
+  const emailUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
 
   return (
     <div>
@@ -102,7 +109,7 @@ const ChangePassword = () => {
             span: 15,
           }}
           initialValues={{
-            email: 'tuanda@vnext.com',
+            email: emailUser?.email,
           }}
           onFinish={onFinish}
           autoComplete="off"
@@ -151,6 +158,7 @@ const ChangePassword = () => {
             label="Confirm Password:"
             dependencies={['new_password']}
             hasFeedback
+            style={{ margin: 0 }}
             rules={[
               {
                 required: true,

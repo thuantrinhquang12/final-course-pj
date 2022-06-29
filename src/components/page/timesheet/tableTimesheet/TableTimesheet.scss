@@ -1,0 +1,185 @@
+.tableContainer.tableTimeSheet {
+  table {
+    thead {
+      tr {
+        th {
+          color: white;
+          padding: 6px 5px;
+        }
+      }
+    }
+  }
+
+  .ant-table {
+    .ant-table-container {
+      .ant-table-body {
+        table {
+          .row-null {
+            background-color: #ebef97 !important;
+            td {
+              background-color: #ebef97 !important;
+            }
+            .ant-table-cell-row-hover {
+              background-color: #95bcf2 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-table-title {
+    display: none;
+  }
+  table {
+    tbody {
+      tr {
+        td:last-child {
+          padding: 0 !important;
+          .action {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+
+            label {
+              color: #0d6fd2;
+              cursor: pointer;
+              font-size: 16px;
+              font-weight: 600;
+              text-decoration: underline;
+              position: relative;
+
+              &::after {
+                display: block;
+                content: '';
+                position: absolute;
+                top: 30%;
+                bottom: 10%;
+                right: -5px;
+                width: 1px;
+                background-color: #0d6fd2;
+              }
+
+              &:last-child {
+                &::after {
+                  width: 0;
+                }
+              }
+            }
+          }
+        }
+
+        .note {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .formGroup {
+            display: flex;
+            padding-left: 10px;
+            justify-content: flex-start;
+          }
+
+          &:hover {
+            .note__status {
+              display: block;
+            }
+          }
+          .note__status {
+            display: none;
+            cursor: default;
+            position: absolute;
+            min-width: 160px;
+            background-color: #ebe3e3;
+            top: 80%;
+            z-index: 10;
+            box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+            border-radius: 5px;
+            animation: animation 0.3s ease-in-out;
+          }
+        }
+      }
+    }
+  }
+}
+
+.modalTimeLog {
+  .ant-modal-close-x {
+    color: white;
+  }
+  .ant-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: none;
+
+    .ant-btn-primary {
+      display: none;
+    }
+  }
+  .ant-modal-header {
+    background-color: #104382;
+    .ant-modal-title {
+      h2 {
+        color: white;
+      }
+    }
+  }
+
+  .modalTime {
+    .ant-table .ant-table-container {
+      border-top: 0 !important;
+    }
+    .ant-table-title {
+      display: none;
+    }
+    .ant-pagination {
+      display: none;
+    }
+    table {
+      thead {
+        tr {
+          th {
+            padding: 10px;
+            text-align: center;
+            background-color: #104382;
+            border-right: 1px solid #bfbfbf !important;
+            h4 {
+              color: white;
+              margin: 0;
+            }
+          }
+        }
+      }
+      tbody {
+        tr {
+          &:nth-child(odd) {
+            background-color: #e6f0ff;
+          }
+          &:hover {
+            td {
+              background-color: #95bcf2 !important;
+            }
+          }
+          td {
+            padding: 10px;
+            .resetMargin {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes animation {
+  from {
+    transform: translateY(50%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
