@@ -16,11 +16,20 @@
     "static/media/rocket.svg": "/static/media/rocket.9d88a52a8c7e9a9f79d4e0e28f788772.svg",
     "static/media/overlayStars.svg": "/static/media/overlayStars.a862e028b2a7ceb63224.svg",
     "index.html": "/index.html",
+<<<<<<< HEAD
     "main.e7ebd4d1.css.map": "/static/css/main.e7ebd4d1.css.map",
     "main.f8422b2e.js.map": "/static/js/main.f8422b2e.js.map"
   },
   "entrypoints": [
     "static/css/main.e7ebd4d1.css",
     "static/js/main.f8422b2e.js"
+=======
+    "main.0b0f716d.css.map": "/static/css/main.0b0f716d.css.map",
+    "main.9e51896c.js.map": "/static/js/main.9e51896c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0b0f716d.css",
+    "static/js/main.9e51896c.js"
+>>>>>>> 39389f7a073b2555fb3b10482c3f18f905d413c1
   ]
 }
