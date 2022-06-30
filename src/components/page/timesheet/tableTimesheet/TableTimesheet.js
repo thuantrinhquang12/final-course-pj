@@ -83,11 +83,7 @@ const TableTimesheet = ({ row, params }) => {
       key: 'id',
       fixed: 'left',
       render: (payload, records) => {
-        return (
-          <p className="resetMargin tb_center">
-            <> {(row.current_page - 1) * 10 + Number(records.key) + 1}</>
-          </p>
-        )
+        return <p>{(row.current_page - 1) * 10 + Number(records.key) + 1}</p>
       },
     },
     {
@@ -110,11 +106,7 @@ const TableTimesheet = ({ row, params }) => {
           : payload
           ? payload
           : null
-        return (
-          <p style={{ textAlign: 'center' }}>
-            {handleDateTime.checkInvalidTime(checkIn)}
-          </p>
-        )
+        return <p>{handleDateTime.checkInvalidTime(checkIn)}</p>
       },
     },
     {
@@ -128,11 +120,7 @@ const TableTimesheet = ({ row, params }) => {
           : payload
           ? payload
           : null
-        return (
-          <p style={{ textAlign: 'center' }}>
-            {handleDateTime.checkInvalidTime(checkOut)}
-          </p>
-        )
+        return <p>{handleDateTime.checkInvalidTime(checkOut)}</p>
       },
     },
     {
@@ -196,7 +184,6 @@ const TableTimesheet = ({ row, params }) => {
           <p
             style={{
               color: workTime === '08:00' ? 'black' : 'red',
-              textAlign: 'center',
             }}
           >
             {workTime ? workTime : ''}
@@ -222,7 +209,7 @@ const TableTimesheet = ({ row, params }) => {
               const checkTime =
                 Number(lackTime.replace(':', '')) <
                 Number(compensation.replace(':', ''))
-              color = checkTime ? 'black' : 'yellow'
+              color = checkTime ? 'black' : '#ffaa02'
             }
           })
         } else {
@@ -262,6 +249,7 @@ const TableTimesheet = ({ row, params }) => {
             }
           })
         }
+        console.log(arrayNote)
 
         return (
           <div className="note">

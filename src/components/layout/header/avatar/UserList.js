@@ -9,7 +9,6 @@ import { LOCAL_STORAGE } from '../../../constant/localStorage'
 const UserList = () => {
   const info = JSON.parse(localStorage.getItem(LOCAL_STORAGE.INF_USER))
   const role = localStorage.getItem(LOCAL_STORAGE.ROLE)
-
   return (
     <div className={styles.UserList}>
       <div className={styles.UserHeader}>

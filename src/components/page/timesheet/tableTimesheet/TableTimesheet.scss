@@ -14,13 +14,22 @@
     .ant-table-container {
       .ant-table-body {
         table {
-          .row-null {
-            background-color: #ebef97 !important;
-            td {
-              background-color: #ebef97 !important;
+          .ant-table-tbody {
+            tr {
+              td {
+                p {
+                  text-align: center;
+                }
+              }
             }
-            .ant-table-cell-row-hover {
-              background-color: #95bcf2 !important;
+            .row-null {
+              background-color: #ebef97 !important;
+              td {
+                background-color: #ebef97 !important;
+              }
+              .ant-table-cell-row-hover {
+                background-color: #95bcf2 !important;
+              }
             }
           }
         }
@@ -92,9 +101,10 @@
             display: none;
             cursor: default;
             position: absolute;
-            min-width: 160px;
-            background-color: #ebe3e3;
+            min-width: 150px;
+            background-color: #e9f2ff;
             top: 80%;
+            left: 20px;
             z-index: 10;
             box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
             border-radius: 5px;

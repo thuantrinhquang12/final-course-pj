@@ -10,7 +10,6 @@ import {
   ClockCircleOutlined,
   DatabaseOutlined,
 } from '@ant-design/icons'
-
 import { LOCAL_STORAGE } from '../../../constant/localStorage'
 import './index.scss'
 
