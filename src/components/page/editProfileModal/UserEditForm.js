@@ -979,7 +979,6 @@ const UserEditForm = () => {
               <div className={styles.buttonContainer}>
                 <Button
                   loading={loading}
-                  onClick={() => enterLoading(0)}
                   className={styles.button}
                   htmlType="submit"
                 >

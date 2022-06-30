@@ -19,23 +19,26 @@ const ChangePassword = () => {
       new_password_confirmation: passConfirm,
     } = values
     setLoading(true)
-    const res = await patch('/change-password', {
-      old_password: oldPassword,
-      new_password: newPass,
-      new_password_confirmation: passConfirm,
-    })
-    setLoading(false)
+
     try {
+      const res = await patch('/change-password', {
+        old_password: oldPassword,
+        new_password: newPass,
+        new_password_confirmation: passConfirm,
+      })
+      setLoading(false)
       if (res.status === 'success') {
         setIsModalVisible(false)
+        setLoading(false)
         form.resetFields()
         typePopup.popupNotice(
           typePopup.SUCCESS_MESSAGE,
           'Success',
           'Change Password Successful',
         )
-      } else return false
+      }
     } catch (e) {
+      setLoading(false)
       setError(true)
       form.resetFields()
       typePopup.popupNotice(
@@ -140,7 +143,14 @@ const ChangePassword = () => {
             <Input.Password />
           </Form.Item>
           {error && (
-            <p style={{ color: 'red', paddingLeft: '29.16666667%' }}>
+            <p
+              style={{
+                color: 'red',
+                paddingLeft: '29.16666667%',
+                position: 'relative',
+                top: '-20px',
+              }}
+            >
               Wrong old password !!!
             </p>
           )}
