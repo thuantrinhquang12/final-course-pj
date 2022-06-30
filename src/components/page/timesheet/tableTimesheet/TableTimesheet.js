@@ -249,7 +249,6 @@ const TableTimesheet = ({ row, params }) => {
             }
           })
         }
-        console.log(arrayNote)
 
         return (
           <div className="note">

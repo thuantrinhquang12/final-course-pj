@@ -18,7 +18,7 @@ const ModalLogTime = ({ modal, handleClose }) => {
     }
     getDateList()
   }, [])
-
+  console.log('dataList', dateList)
   const columns = [
     {
       title: <h4>NO</h4>,
@@ -78,7 +78,7 @@ const ModalLogTime = ({ modal, handleClose }) => {
               x: 500,
             }}
             className="modalTime"
-            data={dateList}
+            data={Array.isArray(dateList) ? dateList : []}
             columns={columns}
             width={{ id: '10%' }}
             pagination={{
